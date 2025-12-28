@@ -1,0 +1,64 @@
+---
+title: rEFui Runtime
+weight: 4
+---
+
+# rEFui Runtime
+
+Methanol uses [rEFui](https://github.com/SudoMaker/rEFui) as its JSX runtime. You do not need to learn rEFui to write docs, but it is useful for theme and component authors who want to build richer UI.
+
+Methanol uses rEFui on both sides:
+
+- **Server/SSG:** render JSX to HTML during `build` (and on the dev server).
+- **Client:** hydrate only client components as small “islands”, leaving the rest of the page as static HTML.
+
+## When It Matters
+
+- Writing custom templates (`theme.template`)
+- Building interactive components in `components/`
+- Using `rawHTML` and context helpers
+
+## JSX Runtime
+
+Methanol compiles MDX with the automatic JSX runtime and `refui` as the import source. You can still write standard JSX components.
+
+```jsx
+export default function Callout(props, ...children) {
+	return <div class="callout">{...children}</div>
+}
+```
+
+## Component Demo (Web)
+
+If you want to experiment with rEFui outside Methanol, use the DOM renderer with a small reactive component:
+
+```jsx
+import { signal } from 'refui'
+import { createDOMRenderer } from 'refui/dom'
+import { defaults } from 'refui/browser'
+
+const DOMRenderer = createDOMRenderer(defaults)
+
+const App = () => {
+	const count = signal(0)
+	const increment = () => {
+		count.value += 1
+	}
+
+	return (R) => (
+		<>
+			<h1>Hello, rEFui</h1>
+			<button on:click={increment}>Click me! Count is {count}</button>
+			<p>Double: {$(() => count.value * 2)}</p>
+		</>
+	)
+}
+
+DOMRenderer.render(document.body, App)
+```
+
+In Methanol, you typically export components and let the MDX renderer handle mounting.
+
+## Reference
+
+See the [rEFui repository](https://github.com/SudoMaker/rEFui) for detailed runtime and renderer documentation.

@@ -1,0 +1,53 @@
+---
+title: Page-specific Scripts and Styles
+weight: 7
+---
+
+# Page-specific Scripts and Styles
+
+Methanol can automatically include a script or stylesheet that sits next to a page file, using the same base name.
+
+## How It Works
+
+If you have:
+
+```
+pages/
+  guide/
+    components.mdx
+    components.css
+    components.js
+```
+
+then `components.css` and `components.js` are injected into the page head when `/guide/components` renders.
+
+## Supported Extensions
+
+Styles:
+
+- `.css`
+
+Scripts:
+
+- `.js`
+- `.mjs`
+- `.cjs`
+- `.ts`
+- `.mts`
+- `.cts`
+
+## Example
+
+```
+pages/
+  about.mdx
+  about.css
+  about.ts
+```
+
+`about.css` and `about.ts` will be loaded only on `/about`.
+
+## Notes
+
+- These files are resolved relative to the page’s directory.
+- Global assets (`pages/style.css`, `pages/index.js/ts`) still apply to all pages.

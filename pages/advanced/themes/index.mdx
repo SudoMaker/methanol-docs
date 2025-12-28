@@ -1,0 +1,123 @@
+---
+title: Themes
+weight: 3
+---
+
+# Themes
+
+Themes control layout (HTML template), default MDX components, and optional theme pages/assets. The default theme in the Methanol repo is a good reference.
+
+## Theme Shape
+
+```jsx
+export default () => ({
+	theme: {
+		root: './theme',
+		componentsDir: './components',
+		pagesDir: './pages',
+		publicDir: './public',
+		sources: {
+			'/theme': './sources'
+		},
+		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+			<>
+				{HTMLRenderer.rawHTML`<!doctype html>`}
+				<html lang="en">
+					<head>
+						<meta charset="UTF-8" />
+						<meta name="viewport" content="width=device-width" />
+						<ExtraHead />
+						<title>{ctx.page?.title || ctx.site?.name}</title>
+					</head>
+					<body>
+						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
+						<Page />
+					</body>
+				</html>
+			</>
+		),
+		components: {
+			Callout: ({ children }) => <div class="callout">{children}</div>
+		}
+	}
+})
+```
+
+### Required
+
+- `theme.root` is required and defines the base directory for theme paths.
+
+### Defaults and Validation
+
+- `componentsDir`, `pagesDir`, `publicDir` can be:
+	- omitted (defaults to `./components`, `./pages`, `./public` under the theme root; missing dirs are skipped)
+	- set to `false` (disables that feature for the theme)
+	- set explicitly (must exist or Methanol throws)
+
+## Theme Layout Files
+
+Suggested structure:
+
+```
+theme/
+  index.js          # exports the theme object
+  page.jsx          # template component
+  components/       # default MDX components
+  pages/            # optional theme pages
+  public/           # optional public assets
+  sources/          # assets mapped by theme.sources
+```
+
+## Template Contract
+
+`theme.template` receives:
+
+- `Page`: JSX component for the current page content
+- `ExtraHead`: extra `<head>` content (page assets + Methanol runtime + per-page `<Head>`/`head` output)
+- `ctx`: page/site context (`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`)
+- `HTMLRenderer`: refui HTML renderer (for `rawHTML`/`serialize`, or for manually rendering JSX components)
+- `components`: merged components object (theme components + user components)
+
+Return a JSX tree.
+
+**Important:** put `<ExtraHead />` inside `<head>`. Without it, per-page `<Head>`/`head` and automatic page assets won’t be injected.
+
+## Theme Components
+
+`theme.components` provides default MDX components. User components in the project `components/` override theme components by name.
+
+The template also receives `components`, which is the merged result (useful for layout-level components like nav/search).
+
+## Theme Pages
+
+Theme pages follow the same routing rules as user pages. User routes always override theme routes.
+
+A theme-provided `/404` is used only when the user project does not define its own 404 page.
+
+## Theme Public Assets
+
+If the theme provides a `publicDir`, Methanol copies its files into the user public directory at dev/build start. When the user sets `publicDir`, theme files are still copied into it; files with the same name are skipped. If the user does not have a public directory, Methanol falls back to the theme public directory.
+
+## Theme Sources
+
+`theme.sources` maps virtual URLs to files. This is handled by Methanol’s resolver (not Vite aliases).
+
+```js
+export default () => ({
+	theme: {
+		root: './theme',
+		sources: {
+			'/theme': './sources'
+		}
+	}
+})
+```
+
+## Theme Hooks
+
+A theme can also provide build hooks (same shape as user config hooks):
+
+- `preBuild` (dev startup + before build)
+- `preBundle` (after pages are rendered, before Vite bundles)
+- `postBundle` (after Vite bundles, before Pagefind)
+- `postBuild` (after build)

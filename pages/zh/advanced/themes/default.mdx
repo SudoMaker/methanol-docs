@@ -1,0 +1,33 @@
+---
+title: 默认主题
+weight: 1
+---
+
+# 默认主题
+
+默认主题（Methanol 仓库中的 `themes/default`）提供基础布局、侧边栏和样式。
+
+## 功能
+
+- 基于页面树的侧边栏导航
+- 可选的标题目录
+- 目录 index 带 `lang` 时显示语言选择器
+- 集成 Pagefind 搜索 UI
+
+## 语言选择器
+
+当目录 `index.mdx` 中存在 `frontmatter.lang`（含根目录）时，会显示语言选择器。显示标签来自 `lang`，当前选择由 `ctx.language` 决定。
+
+## 搜索（Pagefind）
+
+在配置中设置 `pagefind: true` 并安装 Pagefind 后即可启用搜索。
+
+```bash
+npm i -D pagefind
+```
+
+当 `pagefind` 启用时，Methanol 会在构建后运行 Pagefind CLI，并将结果写入 `dist/pagefind`。
+
+## Starry Night 样式
+
+主题 CSS 内置了 Starry Night 样式。

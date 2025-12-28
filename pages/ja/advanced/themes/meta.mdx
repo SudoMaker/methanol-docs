@@ -1,0 +1,37 @@
+---
+title: デフォルトテーマのメタタグ
+weight: 2
+---
+
+# デフォルトテーマのメタタグ
+
+デフォルトテーマは値がある場合のみメタタグを出力します。
+
+## ロゴとファビコンの解決順
+
+優先順位:
+
+1) 現在ページの `frontmatter.logo` / `frontmatter.favicon`
+2) ルート index の `frontmatter.logo` / `frontmatter.favicon`
+3) 設定の `site.logo` / `site.favicon`
+4) テーマのデフォルト値
+
+値がなければ対応する `<link rel="icon">` は出力されません。
+
+## メタ説明
+
+- `frontmatter.excerpt`（別名: `description`）は `<meta name="description" content={...} />` として出力されます。
+
+## Open Graph
+
+- `frontmatter.ogTitle` → `og:title`
+- `frontmatter.ogDescription` → `og:description`
+- `frontmatter.ogImage` → `og:image`
+- `frontmatter.ogUrl` → `og:url`
+
+## Twitter Card
+
+- `frontmatter.twitterCard` → `twitter:card`
+- `frontmatter.twitterTitle` → `twitter:title`
+- `frontmatter.twitterDescription` → `twitter:description`
+- `frontmatter.twitterImage` → `twitter:image`

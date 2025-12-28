@@ -1,0 +1,123 @@
+---
+title: 主题
+weight: 3
+---
+
+# 主题
+
+主题控制布局（HTML 模板）、默认 MDX 组件，以及可选的主题页面/资源。Methanol 仓库里的默认主题是很好的参考。
+
+## 主题结构
+
+```jsx
+export default () => ({
+	theme: {
+		root: './theme',
+		componentsDir: './components',
+		pagesDir: './pages',
+		publicDir: './public',
+		sources: {
+			'/theme': './sources'
+		},
+		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+			<>
+				{HTMLRenderer.rawHTML`<!doctype html>`}
+				<html lang="en">
+					<head>
+						<meta charset="UTF-8" />
+						<meta name="viewport" content="width=device-width" />
+						<ExtraHead />
+						<title>{ctx.page?.title || ctx.site?.name}</title>
+					</head>
+					<body>
+						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
+						<Page />
+					</body>
+				</html>
+			</>
+		),
+		components: {
+			Callout: ({ children }) => <div class="callout">{children}</div>
+		}
+	}
+})
+```
+
+### 必填
+
+- `theme.root` 必须指定，作为主题路径的基准目录。
+
+### 默认值与校验
+
+- `componentsDir` / `pagesDir` / `publicDir` 支持三种写法：
+	- 省略（默认使用主题根目录下的 `./components` / `./pages` / `./public`；目录不存在则跳过）
+	- 设置为 `false`（禁用该功能）
+	- 显式设置（目录不存在会报错）
+
+## 主题目录结构
+
+建议结构：
+
+```
+theme/
+  index.js          # 主题对象
+  page.jsx          # 模板组件
+  components/       # 默认 MDX 组件
+  pages/            # 可选主题页面
+  public/           # 可选静态资源
+  sources/          # theme.sources 映射的资源
+```
+
+## 模板约定
+
+`theme.template` 接收：
+
+- `Page`: 当前页面内容的 JSX 组件
+- `ExtraHead`: 注入到 `<head>` 的额外内容（页面资源 + Methanol 运行时 + 页面 `<Head>`/`head` 输出）
+- `ctx`: 页面/站点上下文（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`）
+- `HTMLRenderer`: refui HTML 渲染器（用于提供 rawHTML 与 serialize，或者用于手动渲染 JSX 组件）
+- `components`: 合并后的组件对象（主题组件 + 用户组件）
+
+返回一个 JSX 树即可。
+
+**重要：**请把 `<ExtraHead />` 放在 `<head>` 里，否则页面的 `<Head>`/`head` 与自动注入的资源不会生效。
+
+## 主题组件
+
+`theme.components` 提供主题默认 MDX 组件。用户 `components/` 中同名组件会覆盖主题组件。
+
+模板同样会收到 `components`（适合在布局里使用，例如导航/搜索等）。
+
+## 主题页面
+
+主题页面遵循与用户页面相同的路由规则。用户页面始终优先。
+
+主题提供的 `/404` 只有在用户未提供 404 页面时才会生效。
+
+## 主题 public 资源
+
+如果主题有 `publicDir`，在 dev/build 开始时会被复制到用户 public 目录。即使用户设置了 `publicDir`，主题资源也会复制进去，若存在同名文件则跳过。若用户侧没有 public 目录，则会回退使用主题的 public 目录。
+
+## 主题 sources
+
+`theme.sources` 将虚拟 URL 映射到文件。它由 Methanol 的 resolver 处理，并非 Vite alias。
+
+```js
+export default () => ({
+	theme: {
+		root: './theme',
+		sources: {
+			'/theme': './sources'
+		}
+	}
+})
+```
+
+## 主题 Hooks
+
+主题也可以提供构建 hooks（与用户配置的 hook 形状一致）：
+
+- `preBuild`（dev 启动 + build 前）
+- `preBundle`（页面渲染完成后、Vite 打包前）
+- `postBundle`（Vite 打包后、Pagefind 前）
+- `postBuild`（build 后）

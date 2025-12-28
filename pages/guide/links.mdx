@@ -1,0 +1,40 @@
+---
+title: Links and Navigation
+weight: 2
+---
+
+# Links and Navigation
+
+Methanol uses file-based routing. Link to pages using their route paths.
+
+## Internal Links
+
+Use site routes (no file extension):
+
+```md
+[Writing basics](/guide/writing)
+```
+
+Renders as: [Writing basics](/guide/writing)
+
+If you move or rename a page, update the route in your links.
+
+## External Links
+
+Use full URLs for external sites:
+
+```md
+[Example](https://example.com)
+```
+
+Renders as: [Example](https://example.com)
+
+## Navigation Order
+
+Use frontmatter fields to control order and visibility:
+
+- `weight`: lower numbers come first
+- `hidden`: hide from the sidebar
+- `isRoot`: use on an `index.mdx` to define a navigation root
+
+Full details are in the [Frontmatter reference](/reference/frontmatter).

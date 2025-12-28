@@ -1,0 +1,70 @@
+---
+title: 検索
+weight: 6
+---
+
+# 検索
+
+Methanol は [Pagefind](https://pagefind.app) を統合した静的検索を提供します。検索はデフォルトで無効です。
+
+検索は本番ビルドでのみ利用できます。dev サーバーでは Pagefind のインデックスや UI を配信しません。
+
+## インストール
+
+プロジェクトにローカルで追加:
+
+```bash
+npm i -D pagefind
+```
+
+グローバルに追加することもできます。
+
+```bash
+npm i -g pagefind
+```
+
+## 有効化・無効化
+
+`methanol.config.*` に `pagefind` を追加します。
+
+```js
+// methanol.config.js
+export default () => ({
+	pagefind: true
+})
+```
+
+明示的に無効化する場合:
+
+```js
+// methanol.config.js
+export default () => ({
+	pagefind: false
+})
+```
+
+## 設定
+
+```js
+export default () => ({
+	pagefind: {
+		enabled: true,
+		excerptLength: 30,
+		build: {
+			outputSubdir: 'pagefind',
+			verbose: true
+		}
+	}
+})
+```
+
+`enabled` と `build` 以外のキーは Pagefind UI オプションに渡されます。
+
+## 別の検索に置き換える
+
+別の検索システムを使いたい場合:
+
+1) `pagefind: false` で無効化
+2) 独自 UI とインデックス作成フローを用意
+
+デフォルトテーマは `pagefind` が有効なときだけ UI を表示するため、無効化すれば自由に実装できます。

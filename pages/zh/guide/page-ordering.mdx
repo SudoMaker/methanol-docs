@@ -1,0 +1,32 @@
+---
+title: 页面排序
+weight: 4
+starryNight: true
+---
+
+# 页面排序
+
+Methanol 会基于 `pages/` 生成导航。每个目录内的条目按以下规则排序：
+
+1) `/`（根目录的 index 页面）永远在最前
+2) 同一目录下，`index.mdx` 会排在其它页面之前（同时，`index.mdx` 的 frontmatter 也决定该目录在导航中的显示名称与排序）
+3) `weight` 升序（数字越小越靠前）；没有 `weight` 的会排在有 `weight` 的后面
+4) `date` 降序（越新越靠前）；没有 `date` 的会排在有 `date` 的后面
+5) 最后按 `title`（否则按文件/目录名）字母序排序
+
+## 实用建议
+
+- 目录的排序通常写在该目录的 `index.mdx` 里。
+- 想要稳定顺序用 `weight`；想要“最新优先”用 `date`。
+- 以 `_` 或 `.` 开头的文件/目录不会出现在导航中。
+
+## 示例
+
+```mdx
+---
+title: 指南
+weight: 10
+---
+```
+
+另见：[Frontmatter 参考](/zh/reference/frontmatter)

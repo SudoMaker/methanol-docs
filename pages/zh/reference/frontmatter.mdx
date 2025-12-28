@@ -1,0 +1,62 @@
+---
+title: Frontmatter
+weight: 3
+starryNight: true
+---
+
+# Frontmatter
+
+Frontmatter 是页面顶部的 YAML 区块，用来描述页面元数据，并影响导航、排序等行为。
+
+```mdx
+---
+title: 指南
+weight: 10
+hidden: false
+isRoot: true
+exclude: false
+date: 2025-01-01
+starryNight: true
+---
+```
+
+## 字段
+
+- `title`: 页面标题（用于导航与 `<title>`）
+- `excerpt` / `description`: 用于 meta 标签的简短描述（别名字段，任选其一即可）
+- `weight`: 导航顺序，数值越小越靠前
+- `hidden`: 在导航中隐藏（`/404` 与 `isRoot` 默认隐藏）；隐藏页仍可直接访问并正常渲染
+- `isRoot`: 将 `index.mdx` 作为导航根目录
+- `exclude`: 从 dev/build 中排除；用于目录 `index` 时会排除整个目录
+- `date`: 当 `weight` 相同时用于排序
+- `lang`: 语言选择器的显示标签；只会从目录的 `index.mdx` 读取（包括根目录 `/`）
+- `langCode`: HTML 的 `lang` 属性使用的语言代码；只会从目录的 `index.mdx` 读取（包括根目录 `/`）
+- `starryNight`: 页面级高亮覆盖（`true`/`false`/配置对象）
+
+## 说明
+
+- `isRoot` 仅适用于 `index` 页面。
+- `isRoot` 页面默认隐藏；若要显示在导航中，设置 `hidden: false`。
+- 以 `_` 或 `.` 开头的文件/目录会被永久排除出导航。
+- frontmatter 的 `starryNight` 会覆盖全局与 CLI 配置。
+- frontmatter 使用 [gray-matter](https://github.com/jonschlinkert/gray-matter) 解析。
+
+## 演示
+
+- [隐藏板块](/zh/hidden/)
+- [隐藏页面](/zh/hidden-page)
+- [自定义 HTML 页面](/custom.html)
+
+## 语言索引示例
+
+只在对应语言目录的 `index` 页面设置 `lang` / `langCode`：
+
+```mdx
+---
+title: 简体中文
+lang: 简体中文
+langCode: zh
+isRoot: true
+hidden: true
+---
+```

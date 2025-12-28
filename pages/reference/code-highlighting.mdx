@@ -1,0 +1,83 @@
+---
+title: Code Highlighting
+weight: 5
+starryNight: true
+---
+
+# Code Highlighting
+
+Methanol uses [Starry Night](https://github.com/wooorm/starry-night) for code highlighting (via `rehype-starry-night`). It is off by default for performance.
+
+## Enable or Disable
+
+Add `starryNight` in your `methanol.config.*` file:
+
+```js
+// methanol.config.js
+export default () => ({
+	starryNight: true
+})
+```
+
+Disable explicitly:
+
+```js
+// methanol.config.js
+export default () => ({
+	starryNight: false
+})
+```
+
+CLI (one-off):
+
+```bash
+npx methanol build --code-highlighting
+npx methanol build --code-highlighting false
+```
+
+## Per-Page Override
+
+Frontmatter always wins:
+
+```mdx
+---
+starryNight: true
+---
+```
+
+## Replace With Your Own Tool
+
+To use a different highlighter:
+
+1) Disable Starry Night (`starryNight: false`).
+2) Add your own MDX plugin in `mdx` config.
+
+```js
+export default () => ({
+	starryNight: false,
+	mdx: () => ({
+		rehypePlugins: [/* your highlighter */]
+	})
+})
+```
+
+## Styles
+
+Methanol does not inject code styles for you. Your theme controls which CSS is loaded.
+
+## Extra Languages
+
+Starry Night ships with a base set of grammars. To add more, include extra languages in `starryNight.grammars`:
+
+```js
+import { common } from '@wooorm/starry-night'
+import sourceMDX from '@wooorm/starry-night/source.mdx'
+
+export default () => ({
+	starryNight: {
+		grammars: [...common, sourceMDX]
+	}
+})
+```
+
+Please note, you'll need to install `@wooorm/starry-night` in your project to load the grammar.

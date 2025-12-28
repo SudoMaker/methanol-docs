@@ -1,0 +1,121 @@
+---
+title: テーマ
+weight: 3
+---
+
+# テーマ
+
+テーマはレイアウト（HTML テンプレート）、デフォルトの MDX コンポーネント、テーマページ/アセットを制御します。Methanol リポジトリのデフォルトテーマは良い参考になります。
+
+## テーマの形
+
+```jsx
+export default () => ({
+	theme: {
+		root: './theme',
+		componentsDir: './components',
+		pagesDir: './pages',
+		publicDir: './public',
+		sources: {
+			'/theme': './sources'
+		},
+		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+			<>
+				{HTMLRenderer.rawHTML`<!doctype html>`}
+				<html lang="en">
+					<head>
+						<meta charset="UTF-8" />
+						<meta name="viewport" content="width=device-width" />
+						<ExtraHead />
+						<title>{ctx.page?.title || ctx.site?.name}</title>
+					</head>
+					<body>
+						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
+						<Page />
+					</body>
+				</html>
+			</>
+		),
+		components: {
+			Callout: ({ children }) => <div class="callout">{children}</div>
+		}
+	}
+})
+```
+
+### 必須
+
+- `theme.root` は必須で、テーマの基準ディレクトリを定義します。
+
+### デフォルトと検証
+
+- `componentsDir` / `pagesDir` / `publicDir` は次のいずれかにできます:
+	- 省略（テーマルート配下の `./components` / `./pages` / `./public` をデフォルトとして使い、存在しなければスキップ）
+	- `false`（その機能を無効化）
+	- 明示指定（存在しないとエラー）
+
+## テーマの構成例
+
+```
+theme/
+  index.js          # テーマ定義
+  page.jsx          # テンプレート
+  components/       # デフォルトの MDX コンポーネント
+  pages/            # テーマページ（任意）
+  public/           # 公開アセット（任意）
+  sources/          # theme.sources でマップするアセット
+```
+
+## テンプレート契約
+
+`theme.template` に渡されるもの:
+
+- `Page`: 現在ページ本文の JSX コンポーネント
+- `ExtraHead`: `<head>` に注入される追加内容（ページアセット + Methanol ランタイム + ページの `<Head>`/`head` 出力）
+- `ctx`: ページ/サイトのコンテキスト（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`）
+- `HTMLRenderer`: refui HTML レンダラー（`rawHTML`/`serialize` の利用、または JSX コンポーネントの手動レンダリングに使用）
+- `components`: マージ済みの components オブジェクト（テーマ + ユーザー）
+
+JSX ツリーを返してください。
+
+**重要:** `<head>` の中に `<ExtraHead />` を置いてください。これがないと、ページの `<Head>`/`head` と自動アセットが挿入されません。
+
+## テーマコンポーネント
+
+`theme.components` はデフォルトの MDX コンポーネントを提供します。`components/` のユーザーコンポーネントが同名の場合は上書きします。
+
+テンプレートにも `components` が渡されます（ナビ/検索などレイアウト用コンポーネントに便利です）。
+
+## テーマページ
+
+テーマページはユーザーと同じルーティング規則です。ユーザールートが常に優先されます。
+
+テーマ側の `/404` は、ユーザーが 404 ページを用意していない場合のみ使われます。
+
+## テーマの public アセット
+
+テーマに `publicDir` がある場合、dev/build の開始時にユーザーの public ディレクトリへコピーされます。ユーザーが `publicDir` を指定していても、テーマのファイルはそこにコピーされ、同名のファイルはスキップされます。ユーザー側に public ディレクトリがない場合は、テーマの public がフォールバックとして使われます。
+
+## テーマソース
+
+`theme.sources` は仮想 URL とファイルをマップします。これは Vite の alias ではなく、Methanol の resolver が処理します。
+
+```js
+export default () => ({
+	theme: {
+		root: './theme',
+		sources: {
+			'/theme': './sources'
+		}
+	}
+})
+```
+
+## テーマフック
+
+テーマ側もビルドフックを提供できます（ユーザー設定と同じ形です）:
+
+- `preBuild`（dev 起動時 + build 前）
+- `preBundle`（ページのレンダリング後、Vite のバンドル前）
+- `postBundle`（Vite のバンドル後、Pagefind の前）
+- `postBuild`（build 後）

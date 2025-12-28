@@ -1,0 +1,81 @@
+---
+title: Quick Start
+weight: 2
+starryNight: true
+---
+
+# Quick Start
+
+Methanol turns a folder of Markdown and MDX files into a static site with routing, navigation, and a build pipeline.
+
+No special setup is required: create `pages/index.mdx`, add more files/folders, and Methanol will build routes and navigation automatically.
+
+## Run for a Quick Try
+
+For a fast start, run Methanol directly with `npx`:
+
+```bash
+npx methanol dev
+```
+
+Open `http://localhost:5173`.
+
+## Use an Existing Markdown Folder
+
+If you already have Markdown or MDX files in a folder, point Methanol at it:
+
+```bash
+npx methanol dev ./my-docs
+```
+
+That folder becomes the content root, so `./my-docs/index.mdx` maps to `/`.
+
+## Faster Local Workflow
+
+If you want a faster CLI startup, install globally and use `methanol` directly:
+
+```bash
+npm install methanol -g
+methanol dev
+```
+
+## Build for Production
+
+```bash
+npx methanol build
+npx methanol serve
+```
+
+`serve` runs a local preview using the production output in `dist/`.
+
+## Project Layout
+
+```
+pages/        # MDX/MD pages (or use docs/)
+components/   # JSX/TSX components used in MDX
+public/       # static assets copied as-is
+build/        # intermediate HTML (optional)
+dist/         # production output
+```
+
+## First Page
+
+Create a file at `pages/index.mdx`:
+
+```mdx
+---
+title: Home
+---
+
+# Welcome
+
+This is my site.
+```
+
+The file path becomes the route:
+
+```
+pages/index.mdx       -> /
+pages/guide.mdx       -> /guide
+pages/blog/post.mdx   -> /blog/post
+```

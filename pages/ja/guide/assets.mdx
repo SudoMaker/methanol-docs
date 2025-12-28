@@ -1,0 +1,50 @@
+---
+title: 画像とアセット
+weight: 5
+---
+
+# 画像とアセット
+
+静的アセットは `public/` に置き、ページ固有のファイルは相対パスで参照します。
+
+## Public フォルダ
+
+`public/` の内容はサイトのルートから配信されます。
+
+```
+public/
+  logo.png
+  downloads/
+    brochure.pdf
+```
+
+MDX から使う例:
+
+```md
+![Logo](/logo.png)
+[Download the brochure](/downloads/brochure.pdf)
+```
+
+## ローカルファイル
+
+ページの横に置いた画像を相対パスで参照できます。
+
+```
+pages/
+  guide/
+    writing.mdx
+    writing-diagram.png
+```
+
+```md
+![Diagram](./writing-diagram.png)
+```
+
+## グローバルスタイルとスクリプト
+
+`pages/style.css` を置くと全ページに読み込まれます。`pages/index.js` または `pages/index.ts` を置くとモジュールスクリプトとして読み込まれます。
+
+```html
+<link rel="stylesheet" href="/style.css" />
+<script type="module" src="/index.js"></script>
+```

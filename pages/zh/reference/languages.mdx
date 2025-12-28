@@ -1,0 +1,76 @@
+---
+title: 语言
+weight: 7
+---
+
+# 语言（多语言目录）
+
+Methanol 采用“多语言目录”的方式实现多语言：只要在某个目录的 `index.mdx` 里设置 `lang`，这个目录就会被识别为一个语言入口。这样无需额外的 i18n 系统，也能用很轻量的方式组织多份翻译内容。
+
+## 工作方式
+
+- 带 `lang` 的 `index.mdx` 所对应的目录会成为 **语言根目录**。
+- 语言选择器显示 `lang` 的值。
+- 当前路由会匹配最近的语言根目录作为激活语言。
+- HTML 的 `lang` 属性优先使用 `langCode`（包括根目录的 `index`）；如果没有提供，则回退到目录名。
+
+示例结构：
+
+```
+pages/
+  index.mdx          # root language
+  zh/
+    index.mdx        # Chinese language root
+    guide.mdx
+  fr/
+    index.mdx        # French language root
+    guide.mdx
+```
+
+示例 frontmatter：
+
+```mdx
+---
+title: 简体中文
+lang: 简体中文
+langCode: zh
+isRoot: true
+hidden: true
+---
+```
+
+## 语言选择器
+
+默认主题会在发现带 `lang` 的目录 `index.mdx` 时显示语言选择器（包括根 `/`）。它使用：
+
+- `lang` 作为显示标签
+- `ctx.language` 作为当前选择
+
+## 导航根路径
+
+语言根目录通常会配合 `isRoot: true` 使用，用来把侧边栏导航限定在该语言目录中。
+
+注意：`isRoot` 页面默认隐藏，如需显示在侧边栏，请设置 `hidden: false`。
+
+这样不同语言就可以有各自独立的导航结构。
+
+## `ctx.languages` 内容
+
+`ctx.languages` 是从带 `lang` 的目录 `index` 收集到的数组：
+
+```js
+{
+	routePath: '/zh',
+	href: '/zh/',
+	label: '简体中文',
+	code: 'zh'
+}
+```
+
+当根目录的 `index.mdx` 也设置了 `lang` 时，根语言同样会出现在列表里。
+
+## 提示
+
+- `isRoot` 页面默认隐藏；需要显示时设置 `hidden: false`。
+- 让路径成对出现（例如 `/guide` 与 `/zh/guide`），结构更直观。
+- 在语言索引页设置 `isRoot: true`，可以避免默认语言入口显示在路由列表中，同时保留导航范围。

@@ -1,0 +1,62 @@
+---
+title: Frontmatter
+weight: 3
+starryNight: true
+---
+
+# Frontmatter
+
+Frontmatter はページ先頭に置く YAML ブロックです。ページのメタ情報、並び順、ナビゲーションの動作を制御します。
+
+```mdx
+---
+title: ガイド
+weight: 10
+hidden: false
+isRoot: true
+exclude: false
+date: 2025-01-01
+starryNight: true
+---
+```
+
+## フィールド
+
+- `title`: ナビゲーションと `<title>` に使うページ名
+- `excerpt` / `description`: メタタグ用の短い説明（エイリアス。どちらでも可）
+- `weight`: ナビゲーションの順序（小さいほど上）
+- `hidden`: ナビゲーションから非表示（`/404` と `isRoot` はデフォルトで非表示）
+- `isRoot`: `index.mdx` をナビゲーションのルートとして扱う
+- `exclude`: ビルド/開発から除外。ディレクトリの `index` に付けると配下も除外
+- `date`: 同じ `weight` のときの並び替えに使用
+- `lang`: 言語セレクタの表示ラベル。ディレクトリの `index.mdx` のみで参照（`/` を含む）
+- `langCode`: HTML の `lang` 属性に使う言語コード。ディレクトリの `index.mdx` のみで参照（`/` を含む）
+- `starryNight`: ページ単位のハイライト上書き（`true`/`false`/オプション）
+
+## メモ
+
+- `isRoot` は `index.mdx` にのみ適用されます。
+- `isRoot` のページはデフォルトで非表示です。ナビゲーションに出したい場合は `hidden: false` を指定します。
+- `_` または `.` で始まるファイル/ディレクトリは常にナビゲーションから除外されます。
+- frontmatter の `starryNight` はグローバル設定と CLI より優先されます。
+- frontmatter の解析には [gray-matter](https://github.com/jonschlinkert/gray-matter) を使用します。
+
+## デモ
+
+- [非表示セクション](/ja/hidden/)
+- [非表示ページ](/ja/hidden-page)
+- [カスタム HTML ページ](/custom.html)
+
+## 言語インデックス例
+
+言語フォルダの `index` のみに `lang` を付けます。
+
+```mdx
+---
+title: 日本語
+lang: 日本語
+langCode: ja
+isRoot: true
+hidden: true
+---
+```

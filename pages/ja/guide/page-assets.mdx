@@ -1,0 +1,53 @@
+---
+title: ページ専用のスクリプトとスタイル
+weight: 7
+---
+
+# ページ専用のスクリプトとスタイル
+
+Methanol はページと同じディレクトリにある同名のスクリプト／スタイルを自動で読み込みます。
+
+## 動作
+
+次のような構成があるとします。
+
+```
+pages/
+  guide/
+    components.mdx
+    components.css
+    components.js
+```
+
+このとき `/guide/components` を表示すると `components.css` と `components.js` が head に挿入されます。
+
+## 対応拡張子
+
+スタイル:
+
+- `.css`
+
+スクリプト:
+
+- `.js`
+- `.mjs`
+- `.cjs`
+- `.ts`
+- `.mts`
+- `.cts`
+
+## 例
+
+```
+pages/
+  about.mdx
+  about.css
+  about.ts
+```
+
+`about.css` と `about.ts` は `/about` のみで読み込まれます。
+
+## 注意点
+
+- これらのファイルはページのディレクトリを基準に解決されます。
+- グローバルアセット（`pages/style.css`、`pages/index.js/ts`）はすべてのページに適用されます。

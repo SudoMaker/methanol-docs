@@ -1,0 +1,258 @@
+---
+title: Configuration
+weight: 2
+---
+
+# Configuration
+
+Methanol reads configuration from:
+
+```
+methanol.config.{js,mjs,cjs,ts,jsx,tsx,mts,cts}
+```
+
+If no config is present, Methanol uses defaults based on the current directory.
+
+## Config Shape
+
+The config file must export a function. The function receives a context object and returns a config object.
+
+```js
+export default ({ mode, root, HTMLRenderer }) => ({
+	// config values
+})
+```
+
+Context fields:
+
+- `mode`: `development` or `production`
+- `root`: project root
+- `HTMLRenderer`: refui HTML utilities (`rawHTML`, `serialize`, etc.)
+
+## Core Options
+
+### `root`
+
+Project root. Defaults to the current working directory.
+
+### `site`
+
+Site metadata used by templates:
+
+- `site.name`: site title
+- `site.logo`: optional logo path
+- `site.favicon`: optional favicon path
+
+### `pagefind`
+
+Enable or configure Pagefind search. Default: `false`.
+
+```js
+pagefind: false
+// or
+pagefind: { enabled: true }
+// or
+pagefind: {
+	enabled: true,
+	excerptLength: 30,
+	build: {
+		outputSubdir: 'pagefind',
+		verbose: true
+	}
+}
+```
+
+Notes:
+
+- Keys other than `enabled` and `build` are forwarded to the Pagefind JS `options()` call.
+- `build` is the only build options entry.
+
+### `starryNight`
+
+Controls code highlighting (rehype-starry-night). Default: `false`.
+
+```js
+starryNight: false
+// or
+starryNight: true
+// or
+starryNight: {
+	// options forwarded to rehype-starry-night
+}
+```
+
+- If `starryNight` is an object, highlighting is enabled unless `enabled: false` is set.
+- Per-page frontmatter `starryNight` always overrides this value.
+- CLI `--code-highlighting` can enable or disable highlighting for a run.
+
+### `pagesDir`
+
+Where MDX/MD files live (routes). Default: `pages` with a fallback to `docs` if `pages/` does not exist.
+
+### `componentsDir`
+
+Where JSX/TSX components live. Default: `components`.
+
+If you explicitly set `pagesDir` or `componentsDir` (including via CLI), Methanol throws if the directory does not exist.
+
+### `publicDir`
+
+Static assets folder (copied as-is). Default: `public`. Set `false` to disable.
+
+### `distDir`
+
+Output folder for production builds. Default: `dist`.
+
+### `buildDir`
+
+Intermediate build directory (used with `emitIntermediate`). Default: `build`.
+
+### `intermediateDir`
+
+Explicit directory to write intermediate HTML output (build only).
+
+### `emitIntermediate`
+
+Boolean. When true, Methanol writes intermediate HTML to `build/` during build.
+
+### `theme`
+
+Theme configuration. See [Advanced themes](/advanced/themes/) for full usage.
+
+Key fields:
+
+- `theme.root`: theme root directory (required)
+- `theme.template`: HTML template function (receives `{ ctx, Page, ExtraHead, HTMLRenderer, components }`)
+- `theme.components`: default MDX components
+- `theme.componentsDir`: folder of theme components
+- `theme.pagesDir`: folder of theme pages
+- `theme.publicDir`: theme public assets
+- `theme.sources`: virtual file map used by Methanol’s resolver
+- `theme.mdx`: default MDX options merged with user `mdx`
+- `theme.vite`: default Vite config merged with user `vite`
+
+### `mdx`
+
+Customize MDX compilation. This function receives `{ mode, root }` and should return MDX options.
+
+### `vite`
+
+Merge custom Vite config. This function receives `{ command, mode, root, isPreview }`.
+
+#### Offline access (PWA)
+
+To add offline access, you can use [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app).
+
+Example (from this docs site):
+
+```js
+import { VitePWA } from 'vite-plugin-pwa'
+
+export default () => ({
+	vite: {
+		plugins: [
+			VitePWA({
+				injectRegister: 'auto',
+				registerType: 'autoUpdate',
+				workbox: {
+					globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+				}
+			})
+		]
+	}
+})
+```
+
+### `preBuild` / `preBundle` / `postBundle` / `postBuild`
+
+Hooks for customizing the build pipeline.
+
+- `preBuild` runs in dev startup and before build.
+- `preBundle` runs only during build, after pages are rendered and before Vite bundles assets.
+- `postBundle` runs only during build, after Vite bundles assets and before Pagefind indexing.
+- `postBuild` runs only after build (not in dev).
+- Hooks can be a function or an array of functions.
+- Hook order: user `preBuild` → theme `preBuild` → render → user `preBundle` → theme `preBundle` → bundle → theme `postBundle` → user `postBundle` → (optional) Pagefind → theme `postBuild` → user `postBuild`.
+
+Hook context:
+
+- `mode`, `root`, `command`, `isDev`, `isBuild`, `isPreview`
+- `HTMLRenderer`
+- `site` (same shape as `ctx.site`)
+- `data` (mutable object for sharing data between hooks)
+
+Bundle/post-build hooks also receive:
+
+- `pagesContext`
+- `pages`
+- `pagesTree`
+- `pagesByRoute`
+
+Example:
+
+```js
+export default () => ({
+	preBuild: ({ data, site }) => {
+		data.startedAt = Date.now()
+		console.log('Building', site.name)
+	},
+	preBundle: ({ pages }) => {
+		console.log('Rendered pages:', pages.length)
+	},
+	postBuild: ({ data, pages }) => {
+		console.log('Duration (ms):', Date.now() - data.startedAt)
+		console.log('Pages:', pages.length)
+	}
+})
+```
+
+## CLI Overrides
+
+Command line options override config values:
+
+- `--input` and `--components` override `pagesDir` and `componentsDir`
+- `--assets` overrides `publicDir`
+- `--output` overrides `distDir`
+- `--site-name` overrides `site.name`
+- `--config` selects a specific config file
+- Positional `input`/`output` match `--input`/`--output` (dev uses only `input`)
+
+## Example
+
+```js
+import tailwindcss from '@tailwindcss/vite'
+
+export default ({ mode }) => ({
+	site: { name: 'My Docs' },
+	theme: {
+		root: '.',
+		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+			<>
+				{HTMLRenderer.rawHTML`<!doctype html>`}
+				<html lang="en">
+					<head>
+						<meta charset="UTF-8" />
+						<meta name="viewport" content="width=device-width" />
+						<ExtraHead />
+						<title>{ctx.page?.title || ctx.site?.name}</title>
+					</head>
+					<body>
+						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
+						<Page />
+					</body>
+				</html>
+			</>
+		),
+		components: {
+			Callout: ({ children }) => <div class="callout">{children}</div>
+		}
+	},
+	mdx: () => ({
+		development: mode !== 'production'
+	}),
+	vite: () => ({
+		server: { port: 5173 },
+		plugins: [tailwindcss()]
+	})
+})
+```

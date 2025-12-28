@@ -1,0 +1,258 @@
+---
+title: 配置
+weight: 2
+---
+
+# 配置
+
+Methanol 会尝试读取以下配置文件：
+
+```
+methanol.config.{js,mjs,cjs,ts,jsx,tsx,mts,cts}
+```
+
+如果没有配置文件，Methanol 则会基于当前目录推断并使用默认值。
+
+## 配置形态
+
+配置文件需要导出一个函数，此函数需要接收上下文并返回配置对象。
+
+```js
+export default ({ mode, root, HTMLRenderer }) => ({
+	// config values
+})
+```
+
+上下文字段：
+
+- `mode`: `development` 或 `production`
+- `root`: 项目根目录
+- `HTMLRenderer`: refui HTML 工具（`rawHTML`、`serialize` 等）
+
+## 核心属性
+
+### `root`
+
+项目根目录。默认为当前工作目录。
+
+### `site`
+
+模板使用的站点信息：
+
+- `site.name`: 站点标题
+- `site.logo`: 可选 logo 路径
+- `site.favicon`: 可选 favicon 路径
+
+### `pagesDir`
+
+MDX/MD 文件目录（路由来源）。默认为 `pages`；当 `pages/` 不存在时，则会寻找 `docs`。
+
+### `componentsDir`
+
+JSX/TSX 组件目录。默认为 `components`。
+
+如果显式设置 `pagesDir` 或 `componentsDir`（包含 CLI），目录不存在将会报错。
+
+### `publicDir`
+
+静态资源目录（原样复制）。默认为 `public`。设为 `false` 可禁用。
+
+### `distDir`
+
+生产构建输出目录。默认为 `dist`。
+
+### `buildDir`
+
+中间构建目录（用于 `emitIntermediate`）。默认为 `build`。
+
+### `intermediateDir`
+
+中间状态 HTML 输出目录（仅 build 时生效）。
+
+### `emitIntermediate`
+
+布尔值。为 `true` 时在构建期间写入中间 HTML 到 `build/`。
+
+### `theme`
+
+主题配置。详细用法见 [主题（进阶）](/zh/advanced/themes/)。
+
+关键字段：
+
+- `theme.root`: 主题根目录（必填）
+- `theme.template`: HTML 模板函数（接收 `{ ctx, Page, ExtraHead, HTMLRenderer, components }`）
+- `theme.components`: 默认 MDX 组件
+- `theme.componentsDir`: 主题组件目录
+- `theme.pagesDir`: 主题页面目录
+- `theme.publicDir`: 主题 public 资源
+- `theme.sources`: 由 Methanol 解析的虚拟路径映射
+- `theme.mdx`: 与用户 `mdx` 合并的默认 MDX 配置
+- `theme.vite`: 与用户 `vite` 合并的默认 Vite 配置
+
+### `mdx`
+
+自定义 MDX 配置。该函数接收 `{ mode, root }` 并返回 MDX 选项。
+
+### `vite`
+
+自定义 Vite 配置。该函数接收 `{ command, mode, root, isPreview }`。
+
+#### 离线访问（PWA）
+
+如果你希望站点支持离线访问，可以使用 [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app)。
+
+示例（来自本 docs 站点的配置）：
+
+```js
+import { VitePWA } from 'vite-plugin-pwa'
+
+export default () => ({
+	vite: {
+		plugins: [
+			VitePWA({
+				injectRegister: 'auto',
+				registerType: 'autoUpdate',
+				workbox: {
+					globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+				}
+			})
+		]
+	}
+})
+```
+
+### `preBuild` / `preBundle` / `postBundle` / `postBuild`
+
+用于扩展构建流程的 hooks。
+
+- `preBuild` 在 dev 启动时与 build 前执行。
+- `preBundle` 仅在 build 时执行：页面渲染完成后、Vite 打包之前。
+- `postBundle` 仅在 build 时执行：Vite 打包完成后、Pagefind 建索引之前。
+- `postBuild` 只在 build 后执行（dev 不执行）。
+- 这些 hook 都可以是函数或函数数组。
+- 执行顺序：user `preBuild` → theme `preBuild` → render → user `preBundle` → theme `preBundle` → bundle → theme `postBundle` → user `postBundle` →（可选）Pagefind → theme `postBuild` → user `postBuild`。
+
+钩子上下文：
+
+- `mode`, `root`, `command`, `isDev`, `isBuild`, `isPreview`
+- `HTMLRenderer`
+- `site`（与 `ctx.site` 同形）
+- `data`（可变对象，用于跨钩子共享数据）
+
+`preBundle` / `postBundle` / `postBuild` 还会收到：
+
+- `pagesContext`
+- `pages`
+- `pagesTree`
+- `pagesByRoute`
+
+示例：
+
+```js
+export default () => ({
+	preBuild: ({ data, site }) => {
+		data.startedAt = Date.now()
+		console.log('Building', site.name)
+	},
+	preBundle: ({ pages }) => {
+		console.log('Rendered pages:', pages.length)
+	},
+	postBuild: ({ data, pages }) => {
+		console.log('Duration (ms):', Date.now() - data.startedAt)
+		console.log('Pages:', pages.length)
+	}
+})
+```
+
+### `pagefind`
+
+启用或配置 Pagefind 搜索。默认：`false`。
+
+```js
+pagefind: false
+// or
+pagefind: { enabled: true }
+// or
+pagefind: {
+	enabled: true,
+	excerptLength: 30,
+	build: {
+		outputSubdir: 'pagefind',
+		verbose: true
+	}
+}
+```
+
+说明：
+
+- `enabled` 和 `build` 以外的键会传给 Pagefind JS 的 `options()`。
+- `build` 是唯一的构建配置入口。
+
+### `starryNight`
+
+控制代码高亮（rehype-starry-night）。默认：`false`。
+
+```js
+starryNight: false
+// or
+starryNight: true
+// or
+starryNight: {
+	// options forwarded to rehype-starry-night
+}
+```
+
+- 当 `starryNight` 为对象时，除非设置 `enabled: false`，否则视为启用。
+- 页面 frontmatter 的 `starryNight` 优先级最高。
+- CLI 参数 `--code-highlighting` 可运行时切换是否启用全局代码高亮。
+
+## CLI 覆盖
+
+命令行参数会覆盖配置文件参数：
+
+- `--input` 和 `--components` 覆盖 `pagesDir` 与 `componentsDir`
+- `--assets` 覆盖 `publicDir`
+- `--output` 覆盖 `distDir`
+- `--site-name` 覆盖 `site.name`
+- `--config` 指定配置文件
+- 位置参数 `input`/`output` 等同于 `--input`/`--output`（dev 仅使用 `input`）
+
+## 示例
+
+```jsx
+import tailwindcss from '@tailwindcss/vite'
+
+export default ({ mode }) => ({
+	site: { name: 'My Docs' },
+	theme: {
+		root: '.',
+		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+			<>
+				{HTMLRenderer.rawHTML`<!doctype html>`}
+				<html lang="en">
+					<head>
+						<meta charset="UTF-8" />
+						<meta name="viewport" content="width=device-width" />
+						<ExtraHead />
+						<title>{ctx.page?.title || ctx.site?.name}</title>
+					</head>
+					<body>
+						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
+						<Page />
+					</body>
+				</html>
+			</>
+		),
+		components: {
+			Callout: ({ children }) => <div class="callout">{children}</div>
+		}
+	},
+	mdx: () => ({
+		development: mode !== 'production'
+	}),
+	vite: () => ({
+		server: { port: 5173 },
+		plugins: [tailwindcss()]
+	})
+})
+```

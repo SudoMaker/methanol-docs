@@ -1,0 +1,80 @@
+---
+title: コンポーネントの利用
+weight: 6
+starryNight: true
+---
+
+# コンポーネントの利用
+
+MDX は Markdown の中に JSX コンポーネントを埋め込めます。再利用したいコンポーネントは `components/` に置き、どのページからでも使えます。
+
+## コンポーネントを作る
+
+```jsx
+// components/Callout.jsx
+export default function Callout(props, ...children) {
+	return <div class="callout">{...children}</div>
+}
+```
+
+## MDX で使う
+
+```mdx
+<Callout>
+  ヒント: セクションは短く、要点を絞ると読みやすくなります。
+</Callout>
+```
+
+## クライアントコンポーネント
+
+コンポーネントがブラウザ API に依存する場合は、ファイル名に `.client` サフィックスを付けます。
+
+```
+components/Map.client.jsx
+```
+
+## カウンターの例
+
+簡単なインタラクティブな例です。
+
+```jsx
+// components/Counter.client.jsx
+import './Counter.css'
+import { signal } from 'refui'
+
+export default function Counter({ initial = 0 }) {
+	const count = signal(initial)
+	return (
+		<div class="counter">
+			<button on:click={() => count.value--}>-</button>
+			<span>{count}</span>
+			<button on:click={() => count.value++}>+</button>
+		</div>
+	)
+}
+```
+
+このコンポーネントは CSS の import を使用しており、サーバーサイドでの静的レンダリング時にはサポートされていないため、静的レンダリング用に別のバージョンを作成する必要があります。
+
+```jsx
+// components/Counter.static.jsx
+export default function Counter({ initial = 0 }) {
+	return (
+		<div>
+			[ You need to enable JavaScript to load this component. ]
+		</div>
+	)
+}
+```
+
+ページ内での使用方法:
+
+```mdx
+<Counter />
+```
+
+プレビュー:
+
+<Counter />
+
+より高度な使い方は [カスタムコンポーネント](/ja/advanced/components) を参照してください。

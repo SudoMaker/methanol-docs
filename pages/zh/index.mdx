@@ -1,0 +1,31 @@
+---
+title: 欢迎
+lang: 简体中文
+isRoot: true
+weight: 1
+---
+
+# 欢迎使用 Methanol！
+
+Methanol 是一个基于 [rEFui](https://github.com/SudoMaker/rEFui) 与 [MDX](https://mdxjs.com) 的静态站点生成器。开箱即用，但也可深度定制；启动快速、结构清晰，让你可以专注于创作。
+
+它几乎不需要额外配置：把文件放进 `pages/`（或 `docs/`），路由会自动生成，`index.mdx` 就是首页，导航也会自动构建。
+
+## 从这里开始
+
+- [快速上手](/zh/quick-start)：先启动开发服务器
+- [指南](/zh/guide/)：日常写作与发布流程
+- [参考](/zh/reference/)：CLI、配置与 Frontmatter 速查
+- [进阶](/zh/advanced/)：主题、组件与运行时细节
+
+## 你可以做什么
+
+- 向 `pages/`（或 `docs/`）目录放入 MD/MDX 文件，即可自动生成路由与导航
+- 在 `components/` 中编写可复用组件，可直接嵌入 MDX 文档中使用
+- 使用 Frontmatter 控制导航结构、排序与可见性
+- 构建输出到 `dist/`，本地预览确认后再发布
+- 可选启用 [Pagefind](https://pagefind.app) 搜索与 [Starry Night](https://github.com/wooorm/starry-night) 语法高亮
+
+## rEFui：HTML + islands
+
+Methanol 在服务端 HTML 生成与客户端交互两端都使用 rEFui。页面主体会以静态 HTML 输出，只有需要交互的客户端组件会作为小 “islands” 被局部 hydrate（不会对整页进行 hydrate）。

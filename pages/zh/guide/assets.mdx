@@ -1,0 +1,50 @@
+---
+title: 图片与资源
+weight: 5
+---
+
+# 图片与资源
+
+全局静态资源存放在 `public/` 目录中，而页面附近的专用资源文件则使用相对路径引用即可。
+
+## `public/` 目录
+
+`public/` 内的文件会从站点根路径（`/`）直接提供。
+
+```
+public/
+  logo.png
+  downloads/
+    brochure.pdf
+```
+
+在 MDX 中使用：
+
+```md
+![Logo](/logo.png)
+[下载手册](/downloads/brochure.pdf)
+```
+
+## 本地文件
+
+图片也可以放在页面文件旁边，并用相对路径引用：
+
+```
+pages/
+  guide/
+    writing.mdx
+    writing-diagram.png
+```
+
+```md
+![Diagram](./writing-diagram.png)
+```
+
+## 全局样式与脚本
+
+如果存在 `pages/style.css`，会自动注入到所有页面。如果存在 `pages/index.js` 或 `pages/index.ts`，会作为模块脚本注入到所有页面。
+
+```html
+<link rel="stylesheet" href="/style.css" />
+<script type="module" src="/index.js"></script>
+```

@@ -1,0 +1,83 @@
+---
+title: 代码高亮
+weight: 5
+starryNight: true
+---
+
+# 代码高亮
+
+Methanol 使用 [Starry Night](https://github.com/wooorm/starry-night) 提供代码高亮（通过 `rehype-starry-night`）。为了性能与构建速度，默认关闭。
+
+## 启用或禁用
+
+在 `methanol.config.*` 中设置 `starryNight`：
+
+```js
+// methanol.config.js
+export default () => ({
+	starryNight: true
+})
+```
+
+明确禁用：
+
+```js
+// methanol.config.js
+export default () => ({
+	starryNight: false
+})
+```
+
+CLI（单次构建）：
+
+```bash
+npx methanol build --code-highlighting # 本次启用
+npx methanol build --code-highlighting false # 本次禁用
+```
+
+## 页面级覆盖
+
+页面 Frontmatter 配置的优先级通常最高：
+
+```mdx
+---
+starryNight: true
+---
+```
+
+## 替换为其他高亮方案
+
+如果想使用用别的方案：
+
+1) 在配置文件中禁用 Starry Night（`starryNight: false`）
+2) 在 `mdx` 配置中加入你的插件
+
+```js
+export default () => ({
+	starryNight: false,
+	mdx: () => ({
+		rehypePlugins: [/* 你的高亮插件 */]
+	})
+})
+```
+
+## 样式
+
+Methanol 不会自动注入高亮样式；通常由主题决定加载哪些 CSS，或者你可以自己提供 CSS 文件定义 StarryNight 高亮样式。
+
+## 额外语言
+
+Starry Night 自带一组基础语法。如需更多语言，在 `starryNight.grammars` 中追加即可。
+
+```js
+import { common } from '@wooorm/starry-night'
+import sourceMDX from '@wooorm/starry-night/source.mdx'
+
+export default () => ({
+	starryNight: {
+		grammars: [...common, sourceMDX]
+	}
+})
+```
+
+**注意:** 要加载额外语法，需要在当前项目中安装 `@wooorm/starry-night`。

@@ -1,0 +1,28 @@
+---
+title: Head
+weight: 4
+starryNight: true
+---
+
+# `Head` / `head`
+
+Methanol always provides a `Head` component (alias: `head`) inside every `.mdx` page, so you can use it without importing anything.
+
+Anything you render inside `Head` is collected and injected into the document `<head>` (your theme must render `<ExtraHead />`; the default theme does).
+
+## Example
+
+```html
+<Head>
+	<meta name="description" content="My page description" />
+	<link rel="canonical" href="https://example.com/docs/page" />
+</Head>
+```
+
+## Automatic head assets
+
+Methanol also injects some assets into `<head>` automatically:
+
+- `pages/style.css` (if present)
+- `pages/index.js` / `pages/index.ts` (if present)
+- A page-local stylesheet/script next to the MDX file (e.g. `guide.mdx` → `guide.css`, `guide.js`, `guide.ts`, etc.)

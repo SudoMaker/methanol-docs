@@ -1,0 +1,258 @@
+---
+title: 設定
+weight: 2
+---
+
+# 設定
+
+Methanol は以下の設定ファイルを読み込みます。
+
+```
+methanol.config.{js,mjs,cjs,ts,jsx,tsx,mts,cts}
+```
+
+設定がない場合、カレントディレクトリを基準にデフォルト値が使われます。
+
+## 設定の形
+
+設定ファイルは関数を export します。関数はコンテキストを受け取り、設定オブジェクトを返します。
+
+```js
+export default ({ mode, root, HTMLRenderer }) => ({
+	// config values
+})
+```
+
+コンテキスト:
+
+- `mode`: `development` または `production`
+- `root`: プロジェクトルート
+- `HTMLRenderer`: refui の HTML ユーティリティ（`rawHTML`、`serialize` など）
+
+## 基本オプション
+
+### `root`
+
+プロジェクトのルート。デフォルトはカレントディレクトリです。
+
+### `site`
+
+テンプレートで使うサイト情報:
+
+- `site.name`: サイト名
+- `site.logo`: ロゴのパス（任意）
+- `site.favicon`: ファビコンのパス（任意）
+
+### `pagefind`
+
+Pagefind 検索の有効化・設定。デフォルト: `false`。
+
+```js
+pagefind: false
+// or
+pagefind: { enabled: true }
+// or
+pagefind: {
+	enabled: true,
+	excerptLength: 30,
+	build: {
+		outputSubdir: 'pagefind',
+		verbose: true
+	}
+}
+```
+
+注意点:
+
+- `enabled` と `build` 以外のキーは Pagefind JS の `options()` に渡されます。
+- `build` が唯一のビルド設定エントリです。
+
+### `starryNight`
+
+コードハイライト（rehype-starry-night）の制御。デフォルト: `false`。
+
+```js
+starryNight: false
+// or
+starryNight: true
+// or
+starryNight: {
+	// options forwarded to rehype-starry-night
+}
+```
+
+- `starryNight` がオブジェクトの場合、`enabled: false` がない限り有効になります。
+- ページの frontmatter `starryNight` が常に優先されます。
+- CLI の `--code-highlighting` で実行ごとに切り替えできます。
+
+### `pagesDir`
+
+MDX/MD ファイルの場所（ルート）。デフォルトは `pages`。`pages/` がない場合は `docs` にフォールバックします。
+
+### `componentsDir`
+
+JSX/TSX コンポーネントの場所。デフォルトは `components`。
+
+`pagesDir` や `componentsDir` を明示指定した場合（CLI も含む）、ディレクトリが存在しないとエラーになります。
+
+### `publicDir`
+
+静的アセットフォルダ（そのままコピー）。デフォルトは `public`。`false` にすると無効化します。
+
+### `distDir`
+
+本番ビルドの出力先。デフォルトは `dist`。
+
+### `buildDir`
+
+中間ビルドディレクトリ（`emitIntermediate` 用）。デフォルトは `build`。
+
+### `intermediateDir`
+
+中間 HTML を書き出すディレクトリ（build のみ）。
+
+### `emitIntermediate`
+
+`true` のとき、ビルド時に `build/` へ中間 HTML を出力します。
+
+### `theme`
+
+テーマ設定。使い方は [Advanced themes](/ja/advanced/themes/) を参照。
+
+主なフィールド:
+
+- `theme.root`: テーマのルートディレクトリ（必須）
+- `theme.template`: HTML テンプレート関数（`{ ctx, Page, ExtraHead, HTMLRenderer, components }` を受け取ります）
+- `theme.components`: デフォルトの MDX コンポーネント
+- `theme.componentsDir`: テーマコンポーネントのフォルダ
+- `theme.pagesDir`: テーマページのフォルダ
+- `theme.publicDir`: テーマの public アセット
+- `theme.sources`: Methanol の resolver 用の仮想マップ
+- `theme.mdx`: ユーザー `mdx` とマージされるデフォルト MDX オプション
+- `theme.vite`: ユーザー `vite` とマージされるデフォルト Vite 設定
+
+### `mdx`
+
+MDX のコンパイルをカスタマイズします。`{ mode, root }` を受け取り、MDX オプションを返します。
+
+### `vite`
+
+Vite 設定をマージします。`{ command, mode, root, isPreview }` を受け取ります。
+
+#### オフライン対応（PWA）
+
+オフラインアクセスを追加したい場合は、[`vite-plugin-pwa`](https://vite-pwa-org.netlify.app) を利用できます。
+
+例（このドキュメントサイトの設定）:
+
+```js
+import { VitePWA } from 'vite-plugin-pwa'
+
+export default () => ({
+	vite: {
+		plugins: [
+			VitePWA({
+				injectRegister: 'auto',
+				registerType: 'autoUpdate',
+				workbox: {
+					globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+				}
+			})
+		]
+	}
+})
+```
+
+### `preBuild` / `preBundle` / `postBundle` / `postBuild`
+
+ビルドパイプラインを拡張するためのフックです。
+
+- `preBuild` は dev の起動時と build 前に実行されます。
+- `preBundle` は build のときのみ実行され、ページのレンダリング後〜Vite のバンドル前に呼ばれます。
+- `postBundle` は build のときのみ実行され、Vite のバンドル後〜Pagefind のインデックス前に呼ばれます。
+- `postBuild` は build 後のみ実行されます（dev では実行されません）。
+- いずれも関数または関数配列を指定できます。
+- 実行順: user `preBuild` → theme `preBuild` → render → user `preBundle` → theme `preBundle` → bundle → theme `postBundle` → user `postBundle` →（任意）Pagefind → theme `postBuild` → user `postBuild`。
+
+フックのコンテキスト:
+
+- `mode`, `root`, `command`, `isDev`, `isBuild`, `isPreview`
+- `HTMLRenderer`
+- `site`（`ctx.site` と同じ形）
+- `data`（フック間で共有する可変オブジェクト）
+
+`preBundle` / `postBundle` / `postBuild` には以下も渡されます:
+
+- `pagesContext`
+- `pages`
+- `pagesTree`
+- `pagesByRoute`
+
+例:
+
+```js
+export default () => ({
+	preBuild: ({ data, site }) => {
+		data.startedAt = Date.now()
+		console.log('Building', site.name)
+	},
+	preBundle: ({ pages }) => {
+		console.log('Rendered pages:', pages.length)
+	},
+	postBuild: ({ data, pages }) => {
+		console.log('Duration (ms):', Date.now() - data.startedAt)
+		console.log('Pages:', pages.length)
+	}
+})
+```
+
+## CLI での上書き
+
+コマンドラインの値は設定より優先されます。
+
+- `--input` と `--components` は `pagesDir` と `componentsDir` を上書き
+- `--assets` は `publicDir` を上書き
+- `--output` は `distDir` を上書き
+- `--site-name` は `site.name` を上書き
+- `--config` は設定ファイルを指定
+- 位置引数の `input`/`output` は `--input`/`--output` と同じ意味（dev は `input` のみ）
+
+## 例
+
+```js
+import tailwindcss from '@tailwindcss/vite'
+
+export default ({ mode }) => ({
+	site: { name: 'My Docs' },
+	theme: {
+		root: '.',
+		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+			<>
+				{HTMLRenderer.rawHTML`<!doctype html>`}
+				<html lang="en">
+					<head>
+						<meta charset="UTF-8" />
+						<meta name="viewport" content="width=device-width" />
+						<ExtraHead />
+						<title>{ctx.page?.title || ctx.site?.name}</title>
+					</head>
+					<body>
+						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
+						<Page />
+					</body>
+				</html>
+			</>
+		),
+		components: {
+			Callout: ({ children }) => <div class="callout">{children}</div>
+		}
+	},
+	mdx: () => ({
+		development: mode !== 'production'
+	}),
+	vite: () => ({
+		server: { port: 5173 },
+		plugins: [tailwindcss()]
+	})
+})
+```

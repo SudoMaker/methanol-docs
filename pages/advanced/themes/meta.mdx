@@ -1,0 +1,37 @@
+---
+title: Default Theme Meta Tags
+weight: 2
+---
+
+# Default Theme Meta Tags
+
+The default theme renders meta tags only when values are provided.
+
+## Logo and Favicon Resolution
+
+Order of precedence:
+
+1) `frontmatter.logo` / `frontmatter.favicon` on the current page
+2) `frontmatter.logo` / `frontmatter.favicon` on the root index page
+3) `site.logo` / `site.favicon` from config
+4) Theme defaults
+
+If no value is found, the corresponding `<link rel="icon">` tag is not rendered.
+
+## Meta Description
+
+- `frontmatter.excerpt` (alias: `description`) renders as `<meta name="description" content={...} />`.
+
+## Open Graph
+
+- `frontmatter.ogTitle` → `og:title`
+- `frontmatter.ogDescription` → `og:description`
+- `frontmatter.ogImage` → `og:image`
+- `frontmatter.ogUrl` → `og:url`
+
+## Twitter Card
+
+- `frontmatter.twitterCard` → `twitter:card`
+- `frontmatter.twitterTitle` → `twitter:title`
+- `frontmatter.twitterDescription` → `twitter:description`
+- `frontmatter.twitterImage` → `twitter:image`

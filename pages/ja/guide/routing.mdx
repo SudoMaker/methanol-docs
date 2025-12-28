@@ -1,0 +1,29 @@
+---
+title: ルーティング
+weight: 3
+---
+
+# ルーティング
+
+Methanol は `pages/` からファイルベースでルーティングします。
+
+## MDX / Markdown ページ
+
+- `pages/about.mdx` → `/about`
+- `pages/guide/index.mdx` → `/guide/`（ディレクトリ index）
+
+## `.html` ページ
+
+`pages/` に通常の HTML を置くこともできます。ビルド時は Vite によって処理され、`dist/` に出力されます。
+
+- `pages/custom.html` → `dist/custom.html`（`/custom.html` でアクセス）
+
+## 404 ページ
+
+Not Found ページをカスタマイズするには `pages/404.mdx` を作成します（デフォルトではナビゲーションに表示されません）。
+
+## hidden と exclude
+
+- `hidden: true` はナビゲーションから隠すだけで、ルート自体は存在し直接アクセスできます。
+- `exclude: true` は dev/build から除外します（ディレクトリの `index.mdx` に付けると配下も除外）。
+- `_` または `.` で始まるファイル/ディレクトリは無視されます。

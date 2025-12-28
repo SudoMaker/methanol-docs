@@ -1,0 +1,33 @@
+---
+title: デフォルトテーマ
+weight: 1
+---
+
+# デフォルトテーマ
+
+デフォルトテーマ（Methanol リポジトリの `themes/default`）は、基本レイアウト、サイドバー、スタイルを提供します。
+
+## 機能
+
+- ページツリーから生成されるサイドバー
+- 見出しに応じた目次（任意）
+- `lang` を持つディレクトリ index がある場合の言語セレクタ
+- Pagefind 検索 UI の統合
+
+## 言語セレクタ
+
+ディレクトリの `index.mdx` に `frontmatter.lang` があると（ルートを含む）言語セレクタが表示されます。表示ラベルは `lang` で、現在の選択は `ctx.language` から決まります。
+
+## 検索（Pagefind）
+
+`pagefind: true` を設定し、Pagefind をインストールすると検索が有効になります。
+
+```bash
+npm i -D pagefind
+```
+
+`pagefind` が有効な場合、Methanol はビルド後に Pagefind CLI を実行し、`dist/pagefind` に出力します。
+
+## Starry Night のスタイル
+
+テーマは Starry Night のスタイルを CSS に含めています。

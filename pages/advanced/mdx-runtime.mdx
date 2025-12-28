@@ -1,0 +1,118 @@
+---
+title: MDX Runtime Helpers
+weight: 2
+starryNight: true
+---
+
+# MDX Runtime Helpers
+
+Methanol injects a small runtime context into every MDX file to make templates and dynamic content easier to build.
+
+## Context Values
+
+These helpers are always available:
+
+- `ctx`: page and site context
+- `frontmatter`: shorthand for `ctx.page?.frontmatter`
+- `rawHTML`: escape hatch for unescaped HTML
+
+```mdx
+# {frontmatter.title ?? ctx.page?.title}
+
+Current route: {ctx.routePath}
+```
+
+## Context Shape
+
+Common fields on `ctx`:
+
+- `ctx.page`: current page metadata (see details below)
+- `ctx.pages`: all pages (flat list; includes hidden and index pages)
+- `ctx.pagesTree`: navigation tree for the current root
+- `ctx.site`: site metadata (`name`, `root`, `pagesDir`, `distDir`, `pagefind`, etc.)
+- `ctx.language`: active language entry (from directory index pages with `lang`; includes `label` and `code`)
+- `ctx.getSiblings()`: returns `{ prev, next }` for the current page within the current navigation root
+
+### ctx.page
+
+`ctx.page` is the metadata object for the current page. Common fields include:
+
+- `routePath`: normalized route (e.g. `/guide/writing`)
+- `routeHref`: preferred href (adds trailing slash for index routes)
+- `filePath`: absolute path to the source file
+- `title`: resolved title (frontmatter title or derived from headings)
+- `frontmatter`: parsed YAML frontmatter
+- `toc`: extracted table of contents entries
+- `isIndex`: `true` when the file is `index.mdx`
+- `dir`: directory path relative to `pagesDir`
+- `segments`: route segments array
+- `hidden`: whether the page is hidden from navigation
+- `isRoot`: whether the page marks a navigation root
+- `date`: normalized ISO date when provided in frontmatter
+- `updatedAt`: last modified timestamp (when available)
+
+Example usage:
+
+```mdx
+{ctx.page?.title}
+{ctx.page?.frontmatter?.excerpt}
+```
+
+### ctx.pages
+
+`ctx.pages` is a flat list of page objects (same shape as `ctx.page`) for all pages in the current project and theme. It includes index pages and pages that are hidden in navigation, but excludes pages marked `exclude: true`.
+
+Use this when you need custom listings, sitemaps, or manual navigation:
+
+```jsx
+<ul>
+  {ctx.pages.map((page) => (
+    <li><a href={page.routeHref || page.routePath}>{page.title}</a></li>
+  ))}
+</ul>
+```
+
+### ctx.pagesTree
+
+`ctx.pagesTree` is a hierarchical tree of navigation nodes for the current root (respecting `isRoot` and `hidden` rules). Nodes are shaped like:
+
+- `type`: `"page"` or `"directory"`
+- `title` / `name`: label for display
+- `routePath` / `routeHref`: route for the node
+- `children`: child nodes for directories
+
+Use it to build a navigation UI that matches the sidebar:
+
+```jsx
+{ctx.pagesTree.map((node) => (
+  <div>{node.title || node.name}</div>
+))}
+```
+
+### ctx.getSiblings
+
+`ctx.getSiblings()` returns the previous and following pages in the current navigation sequence. It respects the current navigation root and hidden/excluded rules, so it mirrors the sidebar order.
+
+```jsx
+{(() => {
+  const siblings = ctx.getSiblings?.()
+  if (!siblings) return null
+  return (
+    <nav>
+      {siblings.prev ? <a href={siblings.prev.routeHref || siblings.prev.routePath}>Previous: {siblings.prev.title}</a> : null}
+      {siblings.next ? <a href={siblings.next.routeHref || siblings.next.routePath}>Forward: {siblings.next.title}</a> : null}
+    </nav>
+  )
+})()}
+```
+
+## rawHTML
+
+Use `rawHTML` to inject unescaped HTML. This is useful for inline scripts or markup that should not be escaped.
+
+```jsx
+{rawHTML('<span class="badge">Beta</span>')}
+{rawHTML`<div data-banner="true">Banner</div>`}
+```
+
+`rawHTML` also accepts signals and template interpolations.

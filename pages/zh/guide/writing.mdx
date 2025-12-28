@@ -1,0 +1,103 @@
+---
+title: 写作基础
+weight: 1
+starryNight: true
+---
+
+# 写作基础
+
+Methanol 支持 Markdown 与 [MDX](https://mdxjs.com)。基础 Markdown 语法即可覆盖大多数结构与正文需求；需要更丰富的版式或交互时，再引入 JSX 组件。
+
+## 基本页面
+
+```mdx
+---
+title: 我的页面
+excerpt: 用于 meta 的简短摘要
+---
+
+# 我的页面
+
+在这里撰写内容。
+```
+
+被 `---` 包围的内容称为 Frontmatter，用于指定页面配置与 metadata，具体定义请往下阅读。
+
+## 标题与目录
+
+`##`、`###`、`####` 将会用来生成目录。层级越清晰，侧边栏目录就越容易阅读。
+
+## 正文
+
+Markdown 里，正文通常由“段落”组成：
+
+- 段落之间用**空行**分隔。
+- 同一段落内的换行通常会被合并为空格（也就是不会强制换行）。
+- 如果你确实需要“强制换行”，可以在行尾加两个空格，或直接写 `<br />`（MDX 支持 JSX/HTML）。
+
+示例：
+
+```md
+第一段第一行
+第一段第二行（通常会和上一行合并）
+
+第二段
+这一行末尾有两个空格  
+所以会换行
+```
+
+## 引用
+
+```mdx
+> 这是一句引用内容
+>
+> 换行需要提供一个间隔，
+> 连续的多行引用会被合并成一行
+
+> 不连续的换行会被渲染为不同的引用块
+```
+
+将会渲染为 
+
+> 这是一句引用内容
+>
+> 换行需要提供一个间隔，
+> 连续的多行引用会被合并成一行
+
+> 不连续的换行会被渲染为不同的引用块
+
+## 代码块
+
+使用带语言标识的围栏代码块（fenced code block）：
+
+<pre>
+	<code class="language-md">
+		{`\`\`\`js
+export const title = 'Hello'
+\`\`\``}
+	</code>
+</pre>
+
+将会渲染为
+
+```js
+export const title = 'Hello'
+```
+
+## 学习 Markdown
+
+本页主要介绍 Methanol + MDX。更完整的 Markdown 语法可以参考外部资料：
+
+- [Markdown（维基百科）](https://zh.wikipedia.org/wiki/Markdown)
+- [CommonMark Help](https://commonmark.org/help/)（英文）
+
+## Frontmatter 小贴士
+
+常用字段：
+
+- `title`: 页面标题与导航名称
+- `excerpt`: 用于 meta 的简短描述
+- `date`: 发布日期（ISO 格式）
+- `weight`: 导航排序
+
+完整字段请阅读 [Frontmatter 参考](/zh/reference/frontmatter)。

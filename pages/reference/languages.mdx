@@ -1,0 +1,76 @@
+---
+title: Languages
+weight: 7
+---
+
+# Languages (Multi-language Directories)
+
+Methanol supports multi-language sites by treating each **directory index page** with a `lang` field as a language entry. This is a lightweight way to organize translations without a separate i18n system.
+
+## How It Works
+
+- A directory `index.mdx` with `lang` becomes a **language root**.
+- The label shown in the language selector is the `lang` value.
+- The active language is resolved by matching the current route to the closest language root.
+- The HTML `lang` attribute uses `langCode` when provided (including the root index), otherwise the directory name.
+
+Example structure:
+
+```
+pages/
+  index.mdx          # root language
+  zh/
+    index.mdx        # Chinese language root
+    guide.mdx
+  fr/
+    index.mdx        # French language root
+    guide.mdx
+```
+
+Example frontmatter:
+
+```mdx
+---
+title: 简体中文
+lang: 简体中文
+langCode: zh
+isRoot: true
+hidden: true
+---
+```
+
+## Language Selector
+
+The default theme shows a language selector when it finds any directory `index.mdx` pages with `lang` defined (including the root `/`). It uses:
+
+- `lang` for the display label
+- `ctx.language` for the current selection
+
+## Navigation Roots
+
+A language root often pairs with `isRoot: true` to scope the navigation tree to that directory.
+
+Note: `isRoot` pages are hidden by default. Set `hidden: false` if you want the language root to appear in the sidebar.
+
+This allows separate navigation trees for each language.
+
+## What `ctx.languages` Contains
+
+`ctx.languages` is an array of language entries collected from directory index pages with `lang`:
+
+```js
+{
+	routePath: '/zh',
+	href: '/zh/',
+	label: '简体中文',
+	code: 'zh'
+}
+```
+
+The root language appears at `/` when the root `index.mdx` includes `lang`.
+
+## Tips
+
+- `isRoot` pages are hidden by default; set `hidden: false` if you want a language root to appear in the sidebar.
+- Keep translations in matching paths (`/guide` and `/ja/guide`) for predictable structure.
+- Use `isRoot: true` on language index pages to keep default language entries from showing up in the route list while still scoping navigation.

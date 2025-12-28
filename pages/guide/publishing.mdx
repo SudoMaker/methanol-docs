@@ -1,0 +1,28 @@
+---
+title: Build and Publish
+weight: 8
+---
+
+# Build and Publish
+
+Methanol outputs a static site, so you can deploy the `dist/` directory to any static host.
+
+## Build
+
+```bash
+npx methanol build
+```
+
+This generates `dist/`.
+
+## Preview
+
+```bash
+npx methanol serve
+```
+
+Use this to verify the production output locally.
+
+## Deploy
+
+Upload the `dist/` folder to your host of choice (GitHub Pages, Netlify, Cloudflare Pages, S3, or any static server).

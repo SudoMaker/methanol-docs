@@ -1,0 +1,70 @@
+---
+title: 搜索
+weight: 6
+---
+
+# 搜索
+
+Methanol 集成了 [Pagefind](https://pagefind.app) 静态搜索。为了保证开发体验轻快，搜索默认关闭。
+
+搜索只在生产构建中可用。开发服务器不会生成/提供 Pagefind 的索引与 UI。
+
+## 安装
+
+在项目中本地安装：
+
+```bash
+npm i -D pagefind
+```
+
+也可以全局安装：
+
+```bash
+npm i -g pagefind
+```
+
+## 启用或禁用
+
+在 `methanol.config.*` 中设置 `pagefind`：
+
+```js
+// methanol.config.js
+export default () => ({
+	pagefind: true
+})
+```
+
+明确禁用：
+
+```js
+// methanol.config.js
+export default () => ({
+	pagefind: false
+})
+```
+
+## Object 配置
+
+```js
+export default () => ({
+	pagefind: {
+		enabled: true,
+		excerptLength: 30,
+		build: {
+			outputSubdir: 'pagefind',
+			verbose: true
+		}
+	}
+})
+```
+
+除 `enabled` 与 `build` 外的字段将在客户端运行时传递给 Pagefind UI。
+
+## 替换为其他搜索方案
+
+若想用其他搜索系统：
+
+1) 设为 `pagefind: false`
+2) 自行实现 UI 与索引流程
+
+默认主题只会在 `pagefind` 启用时渲染搜索 UI，禁用后你需要完全自行实现搜索 UI。

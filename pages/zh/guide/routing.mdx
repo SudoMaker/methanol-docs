@@ -1,0 +1,29 @@
+---
+title: 路由
+weight: 3
+---
+
+# 路由
+
+Methanol 基于 `pages/` 做文件路由。
+
+## MDX / Markdown 页面
+
+- `pages/about.mdx` → `/about`
+- `pages/guide/index.mdx` → `/guide/`（目录 index）
+
+## `.html` 页面
+
+你也可以把纯 HTML 文件放进 `pages/`。构建时会被 Vite 处理并输出到 `dist/`：
+
+- `pages/custom.html` → `dist/custom.html`（访问 `/custom.html`）
+
+## 404 页面
+
+创建 `pages/404.mdx` 来自定义 Not Found 页面（默认不会出现在导航中）。
+
+## hidden 与 exclude
+
+- `hidden: true` 只会从导航中隐藏，但路由仍然存在，可以直接访问。
+- `exclude: true` 会从 dev/build 中排除（用于目录 `index.mdx` 时会排除整个目录）。
+- 以 `_` 或 `.` 开头的文件/目录会被忽略。

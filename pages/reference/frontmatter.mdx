@@ -1,0 +1,62 @@
+---
+title: Frontmatter
+weight: 3
+starryNight: true
+---
+
+# Frontmatter
+
+Frontmatter is the YAML block at the top of a page. It controls page metadata, ordering, and navigation behavior.
+
+```mdx
+---
+title: Guides
+weight: 10
+hidden: false
+isRoot: true
+exclude: false
+date: 2025-01-01
+starryNight: true
+---
+```
+
+## Fields
+
+- `title`: page title used in navigation and `<title>`
+- `excerpt` / `description`: short page description used for meta tags (alias fields; either one works)
+- `weight`: ordering in navigation; lower numbers come first
+- `hidden`: hide from navigation (the 404 page and `isRoot` pages are hidden by default). Hidden pages still render when visited directly.
+- `isRoot`: marks an `index` page as a navigation root
+- `exclude`: exclude this page from build/dev; when set on a directory `index`, the whole directory is excluded
+- `date`: used for sorting when weights match
+- `lang`: language label used for the language selector; only read from directory `index.mdx` pages (including `/`)
+- `langCode`: language code used for the HTML `lang` attribute; only read from directory `index.mdx` pages (including `/`)
+- `starryNight`: per-page code highlighting override (`true`, `false`, or options object)
+
+## Notes
+
+- `isRoot` applies only to `index.mdx` files.
+- `isRoot` index pages are hidden by default; set `hidden: false` to show them in navigation.
+- Files or directories starting with `_` or `.` are always excluded from navigation.
+- `starryNight` in frontmatter overrides the global `starryNight` config and CLI flag.
+- Frontmatter is parsed using [gray-matter](https://github.com/jonschlinkert/gray-matter).
+
+## Demos
+
+- [Hidden section](/hidden/)
+- [Hidden page](/hidden-page)
+- [Custom HTML page](/custom.html)
+
+## Language Index Example
+
+Add `lang` only on the index page of a language folder:
+
+```mdx
+---
+title: 简体中文
+lang: 简体中文
+langCode: zh
+isRoot: true
+hidden: true
+---
+```

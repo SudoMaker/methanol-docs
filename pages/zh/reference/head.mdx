@@ -1,0 +1,28 @@
+---
+title: Head
+weight: 4
+starryNight: true
+---
+
+# `Head` / `head`
+
+Methanol 会在每个 `.mdx` 页面里默认提供 `Head` 组件（别名：`head`），因此不需要 import 就能直接使用。
+
+你在 `Head` 里渲染的内容会被收集并注入到 HTML 的 `<head>` 中（主题需要渲染 `<ExtraHead />`；默认主题已包含）。
+
+## 示例
+
+```html
+<Head>
+	<meta name="description" content="My page description" />
+	<link rel="canonical" href="https://example.com/docs/page" />
+</Head>
+```
+
+## 自动注入的 head 资源
+
+Methanol 也会自动把一些资源注入到 `<head>`：
+
+- `pages/style.css`（如果存在）
+- `pages/index.js` / `pages/index.ts`（如果存在）
+- 与 MDX 同名、同目录的页面级 CSS/JS/TS（例如 `guide.mdx` → `guide.css`, `guide.js`, `guide.ts` 等）

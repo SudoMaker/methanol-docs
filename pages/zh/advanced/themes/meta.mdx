@@ -1,0 +1,37 @@
+---
+title: 默认主题元标签
+weight: 2
+---
+
+# 默认主题元标签
+
+默认主题只有在提供值时才会渲染元标签。
+
+## Logo 与 Favicon 的解析顺序
+
+优先级：
+
+1) 当前页面的 `frontmatter.logo` / `frontmatter.favicon`
+2) 根目录 index 页面的 `frontmatter.logo` / `frontmatter.favicon`
+3) 配置中的 `site.logo` / `site.favicon`
+4) 主题默认值
+
+如果没有提供，对应的 `<link rel="icon">` 不会渲染。
+
+## 页面描述（Meta Description）
+
+- `frontmatter.excerpt`（别名：`description`）将渲染为 `<meta name="description" content={...} />`。
+
+## Open Graph（OG）
+
+- `frontmatter.ogTitle` → `og:title`
+- `frontmatter.ogDescription` → `og:description`
+- `frontmatter.ogImage` → `og:image`
+- `frontmatter.ogUrl` → `og:url`
+
+## Twitter Card
+
+- `frontmatter.twitterCard` → `twitter:card`
+- `frontmatter.twitterTitle` → `twitter:title`
+- `frontmatter.twitterDescription` → `twitter:description`
+- `frontmatter.twitterImage` → `twitter:image`

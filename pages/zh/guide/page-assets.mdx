@@ -1,0 +1,53 @@
+---
+title: 页面专用脚本与样式
+weight: 7
+---
+
+# 页面专用脚本与样式
+
+Methanol 可以自动加载与页面同目录、同名的脚本或样式文件。
+
+## 工作方式
+
+示例结构：
+
+```
+pages/
+  guide/
+    components.mdx
+    components.css
+    components.js
+```
+
+访问 `/guide/components` 时，会把 `components.css` 和 `components.js` 注入到页面的 `<head>`。
+
+## 支持的扩展名
+
+样式：
+
+- `.css`
+
+脚本：
+
+- `.js`
+- `.mjs`
+- `.cjs`
+- `.ts`
+- `.mts`
+- `.cts`
+
+## 示例
+
+```
+pages/
+  about.mdx
+  about.css
+  about.ts
+```
+
+`about.css` 与 `about.ts` 只会在 `/about` 页面加载。
+
+## 注意
+
+- 文件会以页面所在目录为基准解析。
+- 全局资源（`pages/style.css`、`pages/index.js/ts`）仍会作用于所有页面。

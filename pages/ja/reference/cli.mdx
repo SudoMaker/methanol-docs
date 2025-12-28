@@ -1,0 +1,59 @@
+---
+title: CLI
+weight: 1
+---
+
+# CLI
+
+Methanol には dev / build / preview を実行する小さな CLI が付属します。
+
+## コマンド
+
+`npx` で起動する場合:
+
+```bash
+npx methanol dev      # 開発サーバーを起動
+npx methanol build    # dist/ にビルド
+npx methanol serve    # 本番ビルドをプレビュー
+```
+
+CLI の起動を速くしたい場合はグローバルインストールします。
+
+```bash
+npm install methanol -g
+methanol dev
+```
+
+`input` と `output` は位置引数で渡せます（順序あり）。
+
+```bash
+npx methanol build ./pages ./dist
+```
+
+dev は `input` のみを使用します。
+
+```bash
+npx methanol dev ./pages
+```
+
+## よく使うフラグ
+
+- `--input`, `-i`: `pages/` を上書き
+- `--components`: `components/` を上書き
+- `--assets`: `public/` を上書き
+- `--output`, `-o`: `dist/` を上書き
+- `--config`, `-c`: 設定ファイルのパス
+- `--site-name`: サイト名を上書き
+- `--port`: dev/preview のポート（デフォルト: 5173）
+- `--host`: dev/preview のホストにバインド（`--host` 単独で全インターフェース）
+- `--intermediate-dir`: 中間 HTML の出力先（build のみ）
+- `--emit-intermediate`: `build/` に中間 HTML を出力（build のみ）
+- `--code-highlighting`: ハイライト有効化。`--code-highlighting false` で無効化
+
+ハイライトはデフォルトで無効です。必要な実行だけ有効化できます。
+
+## npx を使わない場合
+
+```bash
+node node_modules/methanol/bin/methanol.js dev
+```

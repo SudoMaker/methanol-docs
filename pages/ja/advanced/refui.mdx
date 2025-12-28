@@ -1,0 +1,64 @@
+---
+title: rEFui ランタイム
+weight: 4
+---
+
+# rEFui ランタイム
+
+Methanol は JSX ランタイムとして [rEFui](https://github.com/SudoMaker/rEFui) を使います。ドキュメントを書く人は必ずしも rEFui を学ぶ必要はありませんが、テーマやコンポーネントを作る人には役立ちます。
+
+Methanol は rEFui を両方で使います:
+
+- **Server/SSG:** `build`（および dev サーバー）で JSX を HTML にレンダリング
+- **Client:** クライアントコンポーネントだけを小さな “islands” として hydrate（ページ全体の hydrate はしません）
+
+## 役に立つ場面
+
+- カスタムテンプレート（`theme.template`）
+- `components/` のインタラクティブなコンポーネント
+- `rawHTML` やコンテキストヘルパーの利用
+
+## JSX ランタイム
+
+Methanol は自動 JSX ランタイムと `refui` を import source として MDX をコンパイルします。通常の JSX コンポーネントもそのまま書けます。
+
+```jsx
+export default function Callout(props, ...children) {
+	return <div class="callout">{...children}</div>
+}
+```
+
+## コンポーネントデモ（Web）
+
+Methanol の外で rEFui を試す場合は、DOM レンダラーで小さなリアクティブコンポーネントを作ると分かりやすいです。
+
+```jsx
+import { signal } from 'refui'
+import { createDOMRenderer } from 'refui/dom'
+import { defaults } from 'refui/browser'
+
+const DOMRenderer = createDOMRenderer(defaults)
+
+const App = () => {
+	const count = signal(0)
+	const increment = () => {
+		count.value += 1
+	}
+
+	return (R) => (
+		<>
+			<h1>こんにちは、rEFui</h1>
+			<button on:click={increment}>クリック！ カウント: {count}</button>
+			<p>2倍: {$(() => count.value * 2)}</p>
+		</>
+	)
+}
+
+DOMRenderer.render(document.body, App)
+```
+
+Methanol では、コンポーネントを export して MDX レンダラーにマウントさせるのが一般的です。
+
+## リファレンス
+
+詳しくは [rEFui リポジトリ](https://github.com/SudoMaker/rEFui) を参照してください。

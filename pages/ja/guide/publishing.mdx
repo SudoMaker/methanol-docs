@@ -1,0 +1,28 @@
+---
+title: ビルドと公開
+weight: 8
+---
+
+# ビルドと公開
+
+Methanol の出力は静的サイトなので、`dist/` をどんな静的ホストにも配置できます。
+
+## ビルド
+
+```bash
+npx methanol build
+```
+
+`dist/` が生成されます。
+
+## プレビュー
+
+```bash
+npx methanol serve
+```
+
+本番出力をローカルで確認できます。
+
+## デプロイ
+
+`dist/` を任意のホスト（GitHub Pages、Netlify、Cloudflare Pages、S3 など）へアップロードします。

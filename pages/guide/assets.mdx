@@ -1,0 +1,50 @@
+---
+title: Images and Assets
+weight: 5
+---
+
+# Images and Assets
+
+Use `public/` for static assets and local relative paths for page-specific files.
+
+## Public Folder
+
+Files in `public/` are served from the site root.
+
+```
+public/
+  logo.png
+  downloads/
+    brochure.pdf
+```
+
+Use them in MDX:
+
+```md
+![Logo](/logo.png)
+[Download the brochure](/downloads/brochure.pdf)
+```
+
+## Local Files
+
+You can also keep images beside a page and link with a relative path:
+
+```
+pages/
+  guide/
+    writing.mdx
+    writing-diagram.png
+```
+
+```md
+![Diagram](./writing-diagram.png)
+```
+
+## Global Styles and Scripts
+
+If you add `pages/style.css`, Methanol injects it into every page. If you add `pages/index.js` or `pages/index.ts`, Methanol injects that as a module script.
+
+```html
+<link rel="stylesheet" href="/style.css" />
+<script type="module" src="/index.js"></script>
+```

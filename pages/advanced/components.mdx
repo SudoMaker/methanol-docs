@@ -1,0 +1,62 @@
+---
+title: Custom Components
+weight: 1
+starryNight: true
+---
+
+# Custom Components
+
+Methanol loads components from `components/` and makes them available in every MDX file. Components are rendered with [rEFui](https://github.com/SudoMaker/rEFui), so you can rely on its JSX runtime and APIs when building custom UI.
+
+## Component Discovery
+
+- Files can be `.jsx`, `.tsx`, `.js`, or `.ts`.
+- The file name becomes the component name.
+- User components override theme components with the same name.
+
+Example:
+
+```
+components/
+  Callout.jsx
+  Hero.client.jsx
+  Toc.static.jsx
+```
+
+## Client-Only Components
+
+Use the `.client` suffix to mark components that should only run on the client. This is useful for components that rely on browser APIs.
+
+```
+components/ThemeSearch.client.jsx
+```
+
+## Static Components
+
+Use the `.static` suffix for components that should be evaluated at build time.
+
+If a client-only component does not have a server/static counterpart, Methanol will try to statically render the client component. If the client component uses browser-only APIs, you must provide a corresponding static component for server rendering.
+
+```
+components/Notice.static.jsx
+```
+
+## Importing and Using
+
+```jsx
+// components/Callout.jsx
+export default function Callout({ title }, ...children) {
+	return (
+		<div class="callout">
+			<strong>{title}</strong>
+			<div>{...children}</div>
+		</div>
+	)
+}
+```
+
+```jsx
+<Callout title="Tip">
+  Keep paragraphs short for scannable docs.
+</Callout>
+```

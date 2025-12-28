@@ -1,0 +1,32 @@
+---
+title: Page Ordering
+weight: 4
+starryNight: true
+---
+
+# Page Ordering
+
+Methanol builds navigation from your `pages/` directory. Within each directory, items are sorted using these rules:
+
+1) `/` (the root index page) always comes first.
+2) `index.mdx` comes before other pages in the same folder. Its frontmatter also controls the folder label and ordering.
+3) `weight` sorts ascending (smaller numbers first). Items without `weight` come after weighted items.
+4) `date` sorts descending (newer first) when weights match. Items without `date` come after dated items.
+5) Finally, items are sorted alphabetically by `title` (or file/folder name).
+
+## Practical tips
+
+- For folders, put ordering metadata on the folder `index.mdx`.
+- Use `weight` for stable ordering, and `date` for “latest first” lists.
+- Files or directories starting with `_` or `.` are excluded from navigation.
+
+## Example
+
+```mdx
+---
+title: Guides
+weight: 10
+---
+```
+
+See also: [Frontmatter reference](/reference/frontmatter)

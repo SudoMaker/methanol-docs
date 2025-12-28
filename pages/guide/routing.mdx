@@ -1,0 +1,29 @@
+---
+title: Routing
+weight: 3
+---
+
+# Routing
+
+Methanol uses file-based routing from `pages/`.
+
+## MDX and Markdown pages
+
+- `pages/about.mdx` → `/about`
+- `pages/guide/index.mdx` → `/guide/` (directory index)
+
+## `.html` pages
+
+You can also place plain HTML files in `pages/`. They are included in the build and processed by Vite:
+
+- `pages/custom.html` → `dist/custom.html` (visit `/custom.html`)
+
+## 404 page
+
+Create `pages/404.mdx` to customize the Not Found page (it is hidden from navigation by default).
+
+## Hidden vs excluded
+
+- `hidden: true` hides a page from navigation, but the route still exists and can be visited directly.
+- `exclude: true` removes the page from dev/build (and on a directory `index.mdx`, excludes the whole directory).
+- Files/directories starting with `_` or `.` are ignored.

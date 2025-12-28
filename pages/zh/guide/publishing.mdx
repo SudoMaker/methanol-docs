@@ -1,0 +1,28 @@
+---
+title: 构建与发布
+weight: 8
+---
+
+# 构建与发布
+
+Methanol 输出的是纯静态站点，因此 `dist/` 可以部署到任何静态托管平台。
+
+## 构建
+
+```bash
+npx methanol build
+```
+
+将会生成构建好的 `dist/` 目录。
+
+## 预览
+
+```bash
+npx methanol serve
+```
+
+用于在本地检查生产输出。
+
+## 部署
+
+将 `dist/` 上传到你选择的托管平台（GitHub Pages、Netlify、Cloudflare Pages、S3 等）。请注意，平台需要能够自动解析不含 `.html` 的 URL 到对应的 HTML 文件。

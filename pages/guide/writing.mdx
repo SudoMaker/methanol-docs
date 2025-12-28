@@ -1,0 +1,101 @@
+---
+title: Writing Basics
+weight: 1
+starryNight: true
+---
+
+# Writing Basics
+
+Methanol supports Markdown and [MDX](https://mdxjs.com). Use Markdown for structure, and add JSX components when you want richer layouts or interactivity.
+
+## Basic Page
+
+```mdx
+---
+title: My Page
+excerpt: Short summary used in meta tags
+---
+
+# My Page
+
+Write your content here.
+```
+
+The `---` block at the top is called *frontmatter*. See below for what it does.
+
+## Headings and TOC
+
+Headings (`##`, `###`, `####`) are used to build the table of contents. Keep a clear hierarchy for the sidebar TOC to stay readable.
+
+## Body Text
+
+In Markdown, your content is usually made of paragraphs:
+
+- Separate paragraphs with a **blank line**.
+- A newline inside the same paragraph is usually treated as a space.
+- To force a line break, add two trailing spaces or write `<br />` (MDX supports JSX/HTML).
+
+```md
+First paragraph line 1
+First paragraph line 2 (usually merges into the same paragraph)
+
+Second paragraph
+This line has two trailing spaces  
+so it breaks
+```
+
+## Blockquotes
+
+```mdx
+> This is a blockquote.
+>
+> Put `>` on an empty line to keep a blank line inside the same quote.
+> Multiple quoted lines become one quote block.
+
+> A blank line between `>` blocks creates a new quote block.
+```
+
+This renders as:
+
+> This is a blockquote.
+>
+> Put `>` on an empty line to keep a blank line inside the same quote.
+> Multiple quoted lines become one quote block.
+
+> A blank line between `>` blocks creates a new quote block.
+
+## Code Blocks
+
+Use fenced code blocks with language identifiers:
+
+<pre>
+	<code class="language-md">
+		{`\`\`\`js
+export const title = 'Hello'
+\`\`\``}
+	</code>
+</pre>
+
+This renders as:
+
+```js
+export const title = 'Hello'
+```
+
+## Learn Markdown
+
+This guide focuses on Methanol + MDX. For a fuller Markdown syntax reference, see:
+
+- [CommonMark Help](https://commonmark.org/help/)
+- [Markdown (Wikipedia)](https://en.wikipedia.org/wiki/Markdown)
+
+## Frontmatter Tips
+
+Common fields for authors:
+
+- `title`: page title and nav label
+- `excerpt`: short description for meta tags
+- `date`: publish date (ISO format)
+- `weight`: order in navigation
+
+Full list: [Frontmatter reference](/reference/frontmatter)

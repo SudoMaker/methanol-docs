@@ -1,0 +1,59 @@
+---
+title: CLI
+weight: 1
+---
+
+# CLI
+
+Methanol 自带一个轻量的命令行工具，用来启动开发服务器、构建静态站点并进行本地预览。
+
+## 命令
+
+快速体验（推荐）：用 `npx` 直接运行：
+
+```bash
+npx methanol dev      # 启动开发服务器
+npx methanol build    # 构建输出到 dist/
+npx methanol serve    # 预览生产构建产物
+```
+
+如果你会经常使用，建议全局安装（启动更快）：
+
+```bash
+npm install methanol -g
+methanol dev
+```
+
+`input` 与 `output` 可以作为位置参数传入（注意顺序）：
+
+```bash
+npx methanol build ./pages ./dist
+```
+
+在 dev 模式下只会使用 `input`：
+
+```bash
+npx methanol dev ./pages
+```
+
+## 常用参数
+
+- `--input`, `-i`: 覆盖 `pages/`
+- `--components`: 覆盖 `components/`
+- `--assets`: 覆盖 `public/`
+- `--output`, `-o`: 覆盖 `dist/`
+- `--config`, `-c`: 指定配置文件路径
+- `--site-name`: 覆盖站点名称
+- `--port`: dev/preview 端口（默认 5173）
+- `--host`: dev/preview 绑定主机（仅写 `--host` 表示绑定全部接口）
+- `--intermediate-dir`: 中间 HTML 输出目录（仅 build）
+- `--emit-intermediate`: 输出到 `build/`（仅 build）
+- `--code-highlighting`: 启用高亮；`--code-highlighting false` 可禁用
+
+代码高亮默认关闭，需要时打开即可。
+
+## 不使用 npx
+
+```bash
+node node_modules/methanol/bin/methanol.js dev
+```

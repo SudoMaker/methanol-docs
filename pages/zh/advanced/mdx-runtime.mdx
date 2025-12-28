@@ -1,0 +1,118 @@
+---
+title: MDX 运行时助手
+weight: 2
+starryNight: true
+---
+
+# MDX 运行时助手
+
+Methanol 会为每个 MDX 注入一个小型运行时上下文，方便访问页面信息、生成动态内容，以及配合模板渲染。
+
+## 上下文值
+
+以下内容始终可用：
+
+- `ctx`: 页面与站点上下文
+- `frontmatter`: `ctx.page?.frontmatter` 的简写
+- `rawHTML`: 插入未转义 HTML 的入口
+
+```mdx
+# {frontmatter.title ?? ctx.page?.title}
+
+当前路由：{ctx.routePath}
+```
+
+## 上下文结构
+
+`ctx` 的常用字段：
+
+- `ctx.page`: 当前页面元数据（详见下文）
+- `ctx.pages`: 全站页面列表（包含隐藏与 index）
+- `ctx.pagesTree`: 当前根目录的导航树
+- `ctx.site`: 站点信息（`name`, `root`, `pagesDir`, `distDir`, `pagefind` 等）
+- `ctx.language`: 当前语言条目（目录 index 带 `lang` 时，包含 `label` 与 `code`）
+- `ctx.getSiblings()`: 返回当前页面的 `{ prev, next }`
+
+### ctx.page
+
+`ctx.page` 是当前页面的元数据对象，常见字段：
+
+- `routePath`: 标准化路由（如 `/guide/writing`）
+- `routeHref`: 推荐的 href（index 路由会带 `/`）
+- `filePath`: 源文件绝对路径
+- `title`: 解析后的标题（frontmatter 或标题提取）
+- `frontmatter`: 解析后的 YAML frontmatter
+- `toc`: 提取出的目录
+- `isIndex`: `index.mdx` 时为 `true`
+- `dir`: 相对 `pagesDir` 的目录路径
+- `segments`: 路由分段数组
+- `hidden`: 是否在导航中隐藏
+- `isRoot`: 是否为导航根
+- `date`: frontmatter 的 ISO 日期
+- `updatedAt`: 最后更新时间（若可用）
+
+示例：
+
+```mdx
+{ctx.page?.title}
+{ctx.page?.frontmatter?.excerpt}
+```
+
+### ctx.pages
+
+`ctx.pages` 是全站页面列表（存放 `ctx.page`）。包含 index 与隐藏页面，但不包含 `exclude: true` 的页面。
+
+适合用来生成自定义列表、站点地图或手动导航：
+
+```jsx
+<ul>
+  {ctx.pages.map((page) => (
+    <li><a href={page.routeHref || page.routePath}>{page.title}</a></li>
+  ))}
+</ul>
+```
+
+### ctx.pagesTree
+
+`ctx.pagesTree` 是当前根目录的层级导航树（遵循 `isRoot` 与 `hidden` 规则）。节点结构：
+
+- `type`: `"page"` 或 `"directory"`
+- `title` / `name`: 显示名称
+- `routePath` / `routeHref`: 路由
+- `children`: 目录子节点
+
+用于构建与导航栏一致的导航 UI：
+
+```jsx
+{ctx.pagesTree.map((node) => (
+  <div>{node.title || node.name}</div>
+))}
+```
+
+### ctx.getSiblings
+
+`ctx.getSiblings()` 返回当前导航序列中的前后页面。它遵循导航根与隐藏/排除规则，因此顺序与导航栏一致。
+
+```jsx
+{(() => {
+  const siblings = ctx.getSiblings?.()
+  if (!siblings) return null
+  return (
+    <nav>
+      {siblings.prev ? <a href={siblings.prev.routeHref || siblings.prev.routePath}>上一页: {siblings.prev.title}</a> : null}
+      {siblings.next ? <a href={siblings.next.routeHref || siblings.next.routePath}>下一页: {siblings.next.title}</a> : null}
+    </nav>
+  )
+})()}
+```
+
+## rawHTML
+
+`rawHTML` 用于插入未转义 HTML，适合内联脚本或不希望被转义的标记。
+
+```jsx
+{rawHTML('<span class="badge">Beta</span>')}
+{rawHTML`<div data-banner="true">Banner</div>`}
+```
+
+`rawHTML` 也支持信号与模板插值。

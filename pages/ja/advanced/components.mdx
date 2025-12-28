@@ -1,0 +1,60 @@
+---
+title: カスタムコンポーネント
+weight: 1
+starryNight: true
+---
+
+# カスタムコンポーネント
+
+Methanol は `components/` のコンポーネントを読み込み、すべての MDX で使えるようにします。コンポーネントは [rEFui](https://github.com/SudoMaker/rEFui) でレンダリングされるため、JSX ランタイムや API をそのまま利用できます。
+
+## コンポーネントの発見
+
+- `.jsx` / `.tsx` / `.js` / `.ts` が使えます。
+- ファイル名がコンポーネント名になります。
+- 同名の場合、ユーザー側がテーマ側より優先されます。
+
+例:
+
+```
+components/
+  Callout.jsx
+  Hero.client.jsx
+  Toc.static.jsx
+```
+
+## クライアント専用コンポーネント
+
+ブラウザ API が必要な場合は `.client` を付けます。
+
+```
+components/ThemeSearch.client.jsx
+```
+
+## 静的コンポーネント
+
+ビルド時に評価したい場合は `.static` を付けます。クライアントコンポーネントに対応する静的コンポーネント（サーバー側）がない場合、Methanol はクライアントコンポーネントを使って静的レンダリングを試みます。ブラウザ専用 API を使っている場合は、サーバー用に対応する静的コンポーネントを用意してください。
+
+```
+components/Notice.static.jsx
+```
+
+## インポートと使用
+
+```jsx
+// components/Callout.jsx
+export default function Callout({ title }, ...children) {
+	return (
+		<div class="callout">
+			<strong>{title}</strong>
+			<div>{...children}</div>
+		</div>
+	)
+}
+```
+
+```jsx
+<Callout title="Tip">
+  段落は短めにして、流し読みしやすくしましょう。
+</Callout>
+```

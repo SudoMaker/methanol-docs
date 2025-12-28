@@ -1,0 +1,64 @@
+---
+title: rEFui 运行时
+weight: 4
+---
+
+# rEFui 运行时
+
+Methanol 使用 [rEFui](https://github.com/SudoMaker/rEFui) 作为 JSX 运行时。写文档不一定需要学习 rEFui，但这对主题和组件作者很有帮助。
+
+Methanol 在两端都使用 rEFui：
+
+- **Server/SSG：**在 `build`（以及 dev server）阶段把 JSX 渲染成 HTML。
+- **Client：**只对客户端组件做局部 hydrate，把它们当作小 “islands”，其余内容保持静态 HTML。
+
+## 适用场景
+
+- 自定义模板（`theme.template`）
+- `components/` 中的交互组件
+- 使用 `rawHTML` 与上下文辅助功能
+
+## JSX 运行时
+
+Methanol 使用自动 JSX 运行时，并将 `refui` 作为 import source 来编译 MDX。你可以照常写标准 JSX 组件。
+
+```jsx
+export default function Callout(props, ...children) {
+	return <div class="callout">{...children}</div>
+}
+```
+
+## 组件示例（Web）
+
+想在 Methanol 之外体验 rEFui，可以用 DOM 渲染器写一个简单的响应式组件：
+
+```jsx
+import { signal, $ } from 'refui'
+import { createDOMRenderer } from 'refui/dom'
+import { defaults } from 'refui/browser'
+
+const DOMRenderer = createDOMRenderer(defaults)
+
+const App = () => {
+	const count = signal(0)
+	const increment = () => {
+		count.value += 1
+	}
+
+	return (R) => (
+		<>
+			<h1>你好，rEFui</h1>
+			<button on:click={increment}>点我！当前计数：{count}</button>
+			<p>Double: {$(() => count.value * 2)}</p>
+		</>
+	)
+}
+
+DOMRenderer.render(document.body, App)
+```
+
+在 Methanol 中，通常导出组件，让 MDX 渲染器完成挂载。
+
+## 参考
+
+更多信息请查看 [rEFui 仓库](https://github.com/SudoMaker/rEFui)。

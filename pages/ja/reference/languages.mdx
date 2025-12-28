@@ -1,0 +1,76 @@
+---
+title: 言語
+weight: 7
+---
+
+# 言語（多言語ディレクトリ）
+
+Methanol は **ディレクトリの index ページ** に `lang` が付いている場合、それを言語エントリとして扱います。専用の i18n 仕組みを用意せずに軽量に多言語化できます。
+
+## 仕組み
+
+- `lang` を持つディレクトリの `index.mdx` が **言語ルート** になります。
+- 言語セレクタの表示ラベルは `lang` の値です。
+- 現在のルートに最も近い言語ルートがアクティブ言語になります。
+- HTML の `lang` 属性は `langCode` があればそれを使います（ルート index も対象）。なければディレクトリ名を使います。
+
+例:
+
+```
+pages/
+  index.mdx          # root language
+  zh/
+    index.mdx        # Chinese language root
+    guide.mdx
+  fr/
+    index.mdx        # French language root
+    guide.mdx
+```
+
+例の frontmatter:
+
+```mdx
+---
+title: 简体中文
+lang: 简体中文
+langCode: zh
+isRoot: true
+hidden: true
+---
+```
+
+## 言語セレクタ
+
+デフォルトテーマは、`lang` を持つディレクトリ `index.mdx` が見つかると（ルート `/` を含む）言語セレクタを表示します。
+
+- 表示ラベルは `lang`
+- 現在の選択は `ctx.language`
+
+## ナビゲーションルート
+
+言語ルートでは `isRoot: true` を併用することが多く、ナビゲーションをそのディレクトリに限定できます。
+
+※ `isRoot` のページはデフォルトで非表示です。サイドバーに出したい場合は `hidden: false` を指定します。
+
+これにより、言語ごとのナビゲーションツリーを分けられます。
+
+## `ctx.languages` の内容
+
+`ctx.languages` は `lang` を持つディレクトリ `index` から集めた配列です。
+
+```js
+{
+	routePath: '/zh',
+	href: '/zh/',
+	label: '简体中文',
+	code: 'zh'
+}
+```
+
+ルート `/` の `index.mdx` に `lang` がある場合、ルート言語として含まれます。
+
+## ヒント
+
+- `isRoot` ページはデフォルトで非表示です。表示したい場合は `hidden: false` を設定します。
+- `/guide` と `/ja/guide` のようにパスを揃えると構成が分かりやすくなります。
+- 言語の index に `isRoot: true` を付けると、デフォルト言語のエントリがルート一覧に出ず、ナビゲーションはスコープされます。

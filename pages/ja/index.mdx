@@ -1,0 +1,31 @@
+---
+title: ようこそ
+lang: 日本語
+isRoot: true
+weight: 1
+---
+
+# Methanol へようこそ！
+
+Methanol は [rEFui](https://github.com/SudoMaker/rEFui) と [MDX](https://mdxjs.com) を基盤にした、こだわりと拡張性を両立した静的サイトジェネレーターです。速くてすっきりしており、明快な文章や大胆なアイデアをそのまま形にできます。
+
+特別な設定は不要です。`pages/`（または `docs/`）にファイルを置くだけでルートが決まり、`index.mdx` がホームページになり、ナビゲーションも自動で構築されます。
+
+## ここから始める
+
+- [クイックスタート](/ja/quick-start) で開発サーバーを起動
+- [ガイド](/ja/guide/) で日々の執筆と公開
+- [リファレンス](/ja/reference/) で CLI・設定・フロントマター
+- [上級編](/ja/advanced/) でテーマやレンダリングの詳細
+
+## できること
+
+- `pages/`（または `docs/`）に MDX を置くだけで自動ルーティング
+- `components/` の再利用コンポーネントを Markdown から呼び出し
+- フロントマターでナビゲーション、順序、表示制御
+- `dist/` に静的出力してローカルでプレビュー
+- [Pagefind](https://pagefind.app) の検索や [Starry Night](https://github.com/wooorm/starry-night) のハイライトを必要に応じて追加
+
+## rEFui: HTML + islands
+
+Methanol は rEFui を HTML 生成（SSG）とクライアント側のインタラクションの両方に使います。ページ全体を「アプリ」として hydrate するのではなく、必要なクライアントコンポーネントだけを小さな “islands” として hydrate します。

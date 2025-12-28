@@ -1,0 +1,80 @@
+---
+title: 使用组件
+weight: 6
+starryNight: true
+---
+
+# 使用组件
+
+MDX 允许你在 Markdown 里直接使用 [rEFui](https://github.com/SudoMaker/rEFui) JSX 组件。把可复用组件放到 `components/`，然后在任意页面里直接使用即可。
+
+## 创建组件
+
+```jsx
+// components/Callout.jsx
+export default function Callout(props, ...children) {
+	return <div class="callout">{...children}</div>
+}
+```
+
+## 在 MDX 中使用
+
+```jsx
+<Callout>
+  小提示：尽量让每一节短小聚焦，便于阅读。
+</Callout>
+```
+
+## 客户端组件
+
+如果组件依赖浏览器 API，请加 `.client` 后缀：
+
+```
+components/Map.client.jsx
+```
+
+## 计数器示例
+
+一个简单的交互示例：
+
+```jsx
+// components/Counter.client.jsx
+import './Counter.css'
+import { signal } from 'refui'
+
+export default function Counter({ initial = 0 }) {
+	const count = signal(initial)
+	return (
+		<div class="counter">
+			<button on:click={() => count.value--}>-</button>
+			<span>{count}</span>
+			<button on:click={() => count.value++}>+</button>
+		</div>
+	)
+}
+```
+
+由于此组件使用了服务端静态渲染时不支持的 CSS import，因此需要单独创建一份服务端可以静态渲染的版本：
+
+```jsx
+// components/Counter.static.jsx
+export default function Counter({ initial = 0 }) {
+	return (
+		<div>
+			[ You need to enable JavaScript to load this component. ]
+		</div>
+	)
+}
+```
+
+在页面中调用：
+
+```jsx
+<Counter />
+```
+
+效果预览：
+
+<Counter />
+
+更高级的用法请查看 [自定义组件](/zh/advanced/components)。

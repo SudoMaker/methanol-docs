@@ -1,0 +1,28 @@
+---
+title: Head
+weight: 4
+starryNight: true
+---
+
+# `Head` / `head`
+
+Methanol はすべての `.mdx` ページで `Head` コンポーネント（別名: `head`）を自動で提供します。import は不要です。
+
+`Head` の中に書いた要素は収集され、HTML の `<head>` に挿入されます（テーマ側で `<ExtraHead />` を描画している必要があります。デフォルトテーマは対応しています）。
+
+## 例
+
+```html
+<Head>
+	<meta name="description" content="My page description" />
+	<link rel="canonical" href="https://example.com/docs/page" />
+</Head>
+```
+
+## 自動で挿入されるアセット
+
+Methanol は次のアセットも `<head>` に自動で挿入します:
+
+- `pages/style.css`（存在する場合）
+- `pages/index.js` / `pages/index.ts`（存在する場合）
+- MDX ファイルの隣にあるページ専用の CSS / JS / TS（例: `guide.mdx` → `guide.css`, `guide.js`, `guide.ts` など）

@@ -1,0 +1,81 @@
+---
+title: クイックスタート
+weight: 2
+starryNight: true
+---
+
+# クイックスタート
+
+Methanol は Markdown/MDX のフォルダを、ルーティングとナビゲーション、ビルドパイプラインを備えた静的サイトに変換します。
+
+特別な初期設定は不要です。`pages/index.mdx` を作り、ファイル/フォルダを増やすだけでルートとナビゲーションが自動で更新されます。
+
+## すぐ試す
+
+`npx` で手早く起動できます。
+
+```bash
+npx methanol dev
+```
+
+`http://localhost:5173` を開いてください。
+
+## 既存の Markdown フォルダを使う
+
+すでに Markdown/MDX がある場合は、そのディレクトリを指定します。
+
+```bash
+npx methanol dev ./my-docs
+```
+
+このフォルダがコンテンツのルートになり、`./my-docs/index.mdx` は `/` に対応します。
+
+## ローカルの起動を速くする
+
+CLI の起動を速くしたい場合はグローバルインストールがおすすめです。
+
+```bash
+npm install methanol -g
+methanol dev
+```
+
+## 本番ビルド
+
+```bash
+npx methanol build
+npx methanol serve
+```
+
+`serve` は `dist/` の本番出力をローカルでプレビューします。
+
+## プロジェクト構成
+
+```
+pages/        # MDX/MD ページ（または docs/）
+components/   # MDX で使う JSX/TSX コンポーネント
+public/       # 静的アセット
+build/        # 中間 HTML（任意）
+dist/         # 本番出力
+```
+
+## 最初のページ
+
+`pages/index.mdx` を作成します。
+
+```mdx
+---
+title: ホーム
+---
+
+# ようこそ
+
+これは私のサイトです。
+```
+
+ファイルパスがそのままルートになります。
+
+```
+pages/index.mdx       -> /
+pages/guide.mdx       -> /guide
+pages/blog/post.mdx   -> /blog/post
+```

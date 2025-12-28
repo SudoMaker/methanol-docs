@@ -1,0 +1,59 @@
+---
+title: CLI
+weight: 1
+---
+
+# CLI
+
+Methanol ships a small CLI wrapper with dev, build, and preview commands.
+
+## Commands
+
+Quick start with `npx`:
+
+```bash
+npx methanol dev      # start dev server
+npx methanol build    # build to dist/
+npx methanol serve    # serve the production build
+```
+
+For a faster CLI startup, install globally:
+
+```bash
+npm install methanol -g
+methanol dev
+```
+
+You can pass `input` and `output` as positional args (order matters):
+
+```bash
+npx methanol build ./pages ./dist
+```
+
+For dev, only `input` is used:
+
+```bash
+npx methanol dev ./pages
+```
+
+## Common Flags
+
+- `--input`, `-i`: override `pages/`
+- `--components`: override `components/`
+- `--assets`: override `public/`
+- `--output`, `-o`: override `dist/`
+- `--config`, `-c`: set a config file path
+- `--site-name`: override the site name
+- `--port`: set the dev/preview port (default: 5173)
+- `--host`: bind the dev/preview server to a host (`--host` alone binds to all interfaces)
+- `--intermediate-dir`: write intermediate HTML output to a directory (build only)
+- `--emit-intermediate`: write intermediate HTML output to `build/` (build only)
+- `--code-highlighting`: enable code highlighting; `--code-highlighting false` disables it
+
+Highlighting is off by default. Use the flag to enable it for a run.
+
+## Running Without npx
+
+```bash
+node node_modules/methanol/bin/methanol.js dev
+```

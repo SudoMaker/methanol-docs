@@ -1,0 +1,70 @@
+---
+title: Search
+weight: 6
+---
+
+# Search
+
+Methanol integrates [Pagefind](https://pagefind.app) for static search. Search is off by default.
+
+Search is only available in production builds. The dev server does not serve Pagefind indexes or UI.
+
+## Install
+
+Install Pagefind locally in your project:
+
+```bash
+npm i -D pagefind
+```
+
+Or install it globally:
+
+```bash
+npm i -g pagefind
+```
+
+## Enable or Disable
+
+Add `pagefind` in your `methanol.config.*` file:
+
+```js
+// methanol.config.js
+export default () => ({
+	pagefind: true
+})
+```
+
+Disable explicitly in the same config:
+
+```js
+// methanol.config.js
+export default () => ({
+	pagefind: false
+})
+```
+
+## Configure
+
+```js
+export default () => ({
+	pagefind: {
+		enabled: true,
+		excerptLength: 30,
+		build: {
+			outputSubdir: 'pagefind',
+			verbose: true
+		}
+	}
+})
+```
+
+Keys other than `enabled` and `build` are passed to the Pagefind UI options.
+
+## Replace With Your Own Tool
+
+To use a different search system:
+
+1) Disable Pagefind (`pagefind: false`).
+2) Add your own UI and indexing workflow (custom client component, external service, etc.).
+
+The default theme only renders the Pagefind UI when `pagefind` is enabled, so disabling it gives you a clean slate.

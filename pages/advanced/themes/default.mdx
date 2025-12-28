@@ -1,0 +1,33 @@
+---
+title: Default Theme
+weight: 1
+---
+
+# Default Theme
+
+The default theme (`themes/default` in the Methanol repo) provides the baseline layout, sidebar, and styling.
+
+## Features
+
+- Sidebar navigation from the pages tree
+- Optional table of contents for headings
+- Language selector when `lang` is set on directory index pages
+- Pagefind search UI integration
+
+## Language Selector
+
+The selector appears when Methanol finds `frontmatter.lang` on directory `index.mdx` pages (including the root index). The display label comes from `lang`, and the active selection is derived from `ctx.language`.
+
+## Search (Pagefind)
+
+Enable search by setting `pagefind: true` in config and installing Pagefind.
+
+```bash
+npm i -D pagefind
+```
+
+When `pagefind` is enabled, Methanol runs the Pagefind CLI after build and writes output to `dist/pagefind`.
+
+## Starry Night Styles
+
+The theme ships Starry Night styles in its CSS.
