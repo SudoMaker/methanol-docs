@@ -1,0 +1,41 @@
+---
+title: 离线访问 (PWA)
+weight: 10
+starryNight: true
+---
+
+# 离线访问 (PWA)
+
+如果你希望站点支持离线访问，可以使用 [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app)。
+
+## 安装
+
+```bash
+npm install vite-plugin-pwa -D
+```
+
+## 配置
+
+在 `methanol.config.js` 中添加插件：
+
+```js
+import { VitePWA } from 'vite-plugin-pwa'
+
+export default () => ({
+	vite: {
+		plugins: [
+			VitePWA({
+				injectRegister: 'auto',
+				registerType: 'autoUpdate',
+				workbox: {
+					globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+					navigateFallback: '/404.html',
+					ignoreURLParametersMatching: [/./]
+				}
+			})
+		]
+	}
+})
+```
+
+此配置会缓存标准网页资源，并针对未知路由回退到 404 页面。

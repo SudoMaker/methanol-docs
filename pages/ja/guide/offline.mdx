@@ -1,0 +1,41 @@
+---
+title: オフライン対応 (PWA)
+weight: 10
+starryNight: true
+---
+
+# オフライン対応 (PWA)
+
+オフラインアクセスを追加したい場合は、[`vite-plugin-pwa`](https://vite-pwa-org.netlify.app) を利用できます。
+
+## インストール
+
+```bash
+npm install vite-plugin-pwa -D
+```
+
+## 設定
+
+`methanol.config.js` にプラグインを追加します。
+
+```js
+import { VitePWA } from 'vite-plugin-pwa'
+
+export default () => ({
+	vite: {
+		plugins: [
+			VitePWA({
+				injectRegister: 'auto',
+				registerType: 'autoUpdate',
+				workbox: {
+					globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+					navigateFallback: '/404.html',
+					ignoreURLParametersMatching: [/./]
+				}
+			})
+		]
+	}
+})
+```
+
+この設定は標準的なウェブアセットをキャッシュし、不明なルートに対しては 404 ページにフォールバックします。

@@ -17,7 +17,9 @@ export default ({ mode }) => ({
 				injectRegister: 'auto',
 				registerType: 'autoUpdate',
 				workbox: {
-					globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+					globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+					navigateFallback: '/404.html',
+					ignoreURLParametersMatching: [/./]
 				}
 			})
 		]

@@ -139,30 +139,6 @@ MDX のコンパイルをカスタマイズします。`{ mode, root }` を受�
 
 Vite 設定をマージします。`{ command, mode, root, isPreview }` を受け取ります。
 
-#### オフライン対応（PWA）
-
-オフラインアクセスを追加したい場合は、[`vite-plugin-pwa`](https://vite-pwa-org.netlify.app) を利用できます。
-
-例（このドキュメントサイトの設定）:
-
-```js
-import { VitePWA } from 'vite-plugin-pwa'
-
-export default () => ({
-	vite: {
-		plugins: [
-			VitePWA({
-				injectRegister: 'auto',
-				registerType: 'autoUpdate',
-				workbox: {
-					globPatterns: ['**/*.{js,css,html,ico,png,svg}']
-				}
-			})
-		]
-	}
-})
-```
-
 ### `preBuild` / `preBundle` / `postBundle` / `postBuild`
 
 ビルドパイプラインを拡張するためのフックです。

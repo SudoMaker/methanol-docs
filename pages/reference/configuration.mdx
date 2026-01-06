@@ -139,30 +139,6 @@ Customize MDX compilation. This function receives `{ mode, root }` and should re
 
 Merge custom Vite config. This function receives `{ command, mode, root, isPreview }`.
 
-#### Offline access (PWA)
-
-To add offline access, you can use [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app).
-
-Example (from this docs site):
-
-```js
-import { VitePWA } from 'vite-plugin-pwa'
-
-export default () => ({
-	vite: {
-		plugins: [
-			VitePWA({
-				injectRegister: 'auto',
-				registerType: 'autoUpdate',
-				workbox: {
-					globPatterns: ['**/*.{js,css,html,ico,png,svg}']
-				}
-			})
-		]
-	}
-})
-```
-
 ### `preBuild` / `preBundle` / `postBundle` / `postBuild`
 
 Hooks for customizing the build pipeline.
