@@ -11,8 +11,9 @@
     "@wooorm/starry-night": "^3.8.0"
   },
   "devDependencies": {
+    "methanol": "^0.0.5",
     "pagefind": "^1.4.0",
-    "methanol": "^0.0.4",
-    "vite-plugin-pwa": "^1.2.0"
+    "vite-plugin-pwa": "^1.2.0",
+    "vite-plugin-sitemap": "^0.8.2"
   }
 }
