@@ -53,10 +53,12 @@ npx methanol serve
 ```
 pages/        # MDX/MD 页面（或者 docs/）
 components/   # MDX 中可用的 JSX/TSX 组件
-public/       # 静态资源（原样复制）
+public/       # 静态资源（覆盖主题的 public 资源）
 build/        # 中间 HTML（可选）
 dist/         # 生产输出
 ```
+
+`public/` 中的文件会在 `/` 下提供（例如 `public/logo.png` → `/logo.png`），并会覆盖主题提供的 public 资源。
 
 ## 创建第一个页面
 

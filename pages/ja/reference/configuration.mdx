@@ -40,8 +40,8 @@ export default ({ mode, root, HTMLRenderer }) => ({
 テンプレートで使うサイト情報:
 
 - `site.name`: サイト名
-- `site.logo`: ロゴのパス（任意）
-- `site.favicon`: ファビコンのパス（任意）
+- `site.logo`: ロゴのパス（任意）または `false`（デフォルトテーマで無効化）
+- `site.favicon`: ファビコンのパス（任意）または `false`（デフォルトテーマで無効化）
 
 ### `pagefind`
 
@@ -97,7 +97,13 @@ JSX/TSX コンポーネントの場所。デフォルトは `components`。
 
 ### `publicDir`
 
-静的アセットフォルダ（そのままコピー）。デフォルトは `public`。`false` にすると無効化します。
+静的アセットフォルダ（サイトルートで配信。例: `public/foo.png` → `/foo.png`）。デフォルトは `public`。
+
+Methanol はテーマの public アセット（`theme.publicDir`）も含めます。テーマ → ユーザーの順で 1 つのディレクトリに統合されるため、同一パスの場合はユーザー側が優先されます。
+
+統合が必要な場合、内部の統合ディレクトリは `node_modules/.methanol/assets`（`node_modules/` がない場合は `{pagesDir}/.methanol/assets`）に作られます。
+
+`publicDir: false` で public アセットを完全に無効化します（テーマ側も含む）。
 
 ### `distDir`
 
@@ -126,7 +132,7 @@ JSX/TSX コンポーネントの場所。デフォルトは `components`。
 - `theme.components`: デフォルトの MDX コンポーネント
 - `theme.componentsDir`: テーマコンポーネントのフォルダ
 - `theme.pagesDir`: テーマページのフォルダ
-- `theme.publicDir`: テーマの public アセット
+- `theme.publicDir`: テーマの public アセット（`publicDir` に統合）
 - `theme.sources`: Methanol の resolver 用の仮想マップ
 - `theme.mdx`: ユーザー `mdx` とマージされるデフォルト MDX オプション
 - `theme.vite`: ユーザー `vite` とマージされるデフォルト Vite 設定

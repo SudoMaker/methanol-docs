@@ -40,8 +40,8 @@ export default ({ mode, root, HTMLRenderer }) => ({
 模板使用的站点信息：
 
 - `site.name`: 站点标题
-- `site.logo`: 可选 logo 路径
-- `site.favicon`: 可选 favicon 路径
+- `site.logo`: logo 路径（字符串）或 `false`（在默认主题中禁用）
+- `site.favicon`: favicon 路径（字符串）或 `false`（在默认主题中禁用）
 
 ### `pagesDir`
 
@@ -55,7 +55,13 @@ JSX/TSX 组件目录。默认为 `components`。
 
 ### `publicDir`
 
-静态资源目录（原样复制）。默认为 `public`。设为 `false` 可禁用。
+静态资源目录（在站点根路径提供，例如 `public/foo.png` → `/foo.png`）。默认为 `public`。
+
+Methanol 也会包含主题的 public 资源（`theme.publicDir`）。当主题与用户资源同时存在时，会合并为一个目录（先主题、后用户），因此同路径冲突时用户资源优先。
+
+需要合并时，内部合并目录会创建在 `node_modules/.methanol/assets`（若不存在 `node_modules/`，则创建在 `{pagesDir}/.methanol/assets`）。
+
+设为 `publicDir: false` 可完全禁用 public 资源（包含主题资源）。
 
 ### `distDir`
 
@@ -84,7 +90,7 @@ JSX/TSX 组件目录。默认为 `components`。
 - `theme.components`: 默认 MDX 组件
 - `theme.componentsDir`: 主题组件目录
 - `theme.pagesDir`: 主题页面目录
-- `theme.publicDir`: 主题 public 资源
+- `theme.publicDir`: 主题 public 资源（合并到 `publicDir`）
 - `theme.sources`: 由 Methanol 解析的虚拟路径映射
 - `theme.mdx`: 与用户 `mdx` 合并的默认 MDX 配置
 - `theme.vite`: 与用户 `vite` 合并的默认 Vite 配置

@@ -40,8 +40,8 @@ Project root. Defaults to the current working directory.
 Site metadata used by templates:
 
 - `site.name`: site title
-- `site.logo`: optional logo path
-- `site.favicon`: optional favicon path
+- `site.logo`: logo path (string) or `false` to disable (default theme)
+- `site.favicon`: favicon path (string) or `false` to disable (default theme)
 
 ### `pagefind`
 
@@ -97,7 +97,13 @@ If you explicitly set `pagesDir` or `componentsDir` (including via CLI), Methano
 
 ### `publicDir`
 
-Static assets folder (copied as-is). Default: `public`. Set `false` to disable.
+Static assets folder served at the site root (e.g. `public/foo.png` → `/foo.png`). Default: `public`.
+
+Methanol also includes theme public assets (`theme.publicDir`). When both theme and user assets exist, Methanol merges them into a single directory (theme first, then user), so user assets override theme assets on path conflicts.
+
+When merging is needed, the internal merged directory is created under `node_modules/.methanol/assets` (or `{pagesDir}/.methanol/assets` if `node_modules/` does not exist).
+
+Set `publicDir: false` to disable public assets entirely (including theme assets).
 
 ### `distDir`
 
@@ -126,7 +132,7 @@ Key fields:
 - `theme.components`: default MDX components
 - `theme.componentsDir`: folder of theme components
 - `theme.pagesDir`: folder of theme pages
-- `theme.publicDir`: theme public assets
+- `theme.publicDir`: theme public assets (merged into `publicDir`)
 - `theme.sources`: virtual file map used by Methanol’s resolver
 - `theme.mdx`: default MDX options merged with user `mdx`
 - `theme.vite`: default Vite config merged with user `vite`

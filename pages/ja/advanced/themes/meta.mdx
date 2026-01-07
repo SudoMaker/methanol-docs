@@ -5,7 +5,7 @@ weight: 2
 
 # デフォルトテーマのメタタグ
 
-デフォルトテーマは値がある場合のみメタタグを出力します。
+デフォルトテーマは値がある場合のみメタタグを出力します（またはデフォルト値にフォールバックします）。
 
 ## ロゴとファビコンの解決順
 
@@ -14,9 +14,11 @@ weight: 2
 1) 現在ページの `frontmatter.logo` / `frontmatter.favicon`
 2) ルート index の `frontmatter.logo` / `frontmatter.favicon`
 3) 設定の `site.logo` / `site.favicon`
-4) テーマのデフォルト値
+4) テーマのデフォルト値（`/logo.png`, `/favicon.png`）
 
-値がなければ対応する `<link rel="icon">` は出力されません。
+ロゴ/ファビコンを明示的に無効化したい場合は、`logo: false` / `favicon: false` を指定してください（frontmatter または config）。`false` はその時点で解決を止め、後続のフォールバック（テーマのデフォルト含む）を使いません。
+
+解決結果が falsy の場合、対応する `<link rel="icon">`（またはロゴの `<img>`）は出力されません。
 
 ## メタ説明
 

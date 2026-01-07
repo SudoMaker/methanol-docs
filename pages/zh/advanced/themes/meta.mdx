@@ -5,7 +5,7 @@ weight: 2
 
 # 默认主题元标签
 
-默认主题只有在提供值时才会渲染元标签。
+默认主题只有在提供值时才会渲染元标签（或回退到默认值）。
 
 ## Logo 与 Favicon 的解析顺序
 
@@ -14,9 +14,11 @@ weight: 2
 1) 当前页面的 `frontmatter.logo` / `frontmatter.favicon`
 2) 根目录 index 页面的 `frontmatter.logo` / `frontmatter.favicon`
 3) 配置中的 `site.logo` / `site.favicon`
-4) 主题默认值
+4) 主题默认值（`/logo.png`, `/favicon.png`）
 
-如果没有提供，对应的 `<link rel="icon">` 不会渲染。
+如需显式禁用 logo/favicon，可设置 `logo: false` / `favicon: false`（frontmatter 或 config）。`false` 会停止解析并跳过所有回退（包含主题默认值）。
+
+若最终解析结果为 falsy，对应的 `<link rel="icon">`（或 logo 的 `<img>`）将不会渲染。
 
 ## 页面描述（Meta Description）
 

@@ -53,10 +53,12 @@ npx methanol serve
 ```
 pages/        # MDX/MD pages (or use docs/)
 components/   # JSX/TSX components used in MDX
-public/       # static assets copied as-is
+public/       # static assets (override theme assets)
 build/        # intermediate HTML (optional)
 dist/         # production output
 ```
+
+Files in `public/` are served at `/` (e.g. `public/logo.png` → `/logo.png`) and override theme-provided public assets.
 
 ## First Page
 

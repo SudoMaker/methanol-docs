@@ -53,10 +53,12 @@ npx methanol serve
 ```
 pages/        # MDX/MD ページ（または docs/）
 components/   # MDX で使う JSX/TSX コンポーネント
-public/       # 静的アセット
+public/       # 静的アセット（テーマの public アセットを上書き）
 build/        # 中間 HTML（任意）
 dist/         # 本番出力
 ```
+
+`public/` のファイルは `/` で配信され（例: `public/logo.png` → `/logo.png`）、テーマ側の public アセットより優先されます。
 
 ## 最初のページ
 
