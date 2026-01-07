@@ -5,18 +5,19 @@ lang: English
 weight: 1
 ---
 
+<div style="padding-top: 35%">
+
 # Welcome to Methanol!
+
+<ButtonGroup>
+	<LinkButton variant="primary" href="/quick-start">Get Started</LinkButton>
+	<LinkButton variant="secondary" href="https://github.com/SudoMaker/Methanol" target="_blank">GitHub</LinkButton>
+</ButtonGroup>
+
 
 Methanol is an opinionated, fully customizable static site generator powered by [rEFui](https://github.com/SudoMaker/rEFui) and [MDX](https://mdxjs.com). It’s fast, uncluttered, and built for clear writing, bold ideas, and whatever you want to make.
 
 It works out of the box: drop files into `pages/` (or `docs/`), get routes automatically, a homepage from `index.mdx`, and a navigation tree without wiring up a router.
-
-## Start Here
-
-- [Quick start](/quick-start) to get a local dev server running.
-- [Guide overview](/guide/) for day-to-day authoring and publishing.
-- [Reference](/reference/) for CLI, config, and frontmatter details.
-- [Advanced](/advanced/) for theming, custom components, and runtime details.
 
 ## What You Can Do
 
@@ -29,3 +30,5 @@ It works out of the box: drop files into `pages/` (or `docs/`), get routes autom
 ## rEFui: HTML + islands
 
 Methanol uses rEFui for both server-side HTML generation and client-side interactivity. Most pages ship as static HTML, and only client components are hydrated as small “islands” where needed (no full-page hydration).
+
+</div>
