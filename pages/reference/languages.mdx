@@ -57,12 +57,12 @@ This allows separate navigation trees for each language.
 
 ## What `ctx.languages` Contains
 
-`ctx.languages` is an array of language entries collected from directory index pages with `lang`:
+`ctx.languages` is an array of language entries collected from directory index pages with `lang`. Use `routeHref` for links (it includes `site.base`).
 
 ```js
 {
-	routePath: '/zh',
-	href: '/zh/',
+	routePath: '/zh/',
+	routeHref: '/zh/',
 	label: '简体中文',
 	code: 'zh'
 }

@@ -27,3 +27,17 @@ npx methanol serve
 ## デプロイ
 
 `dist/` を任意のホスト（GitHub Pages、Netlify、Cloudflare Pages、S3 など）へアップロードします。
+
+## サブパス配信
+
+サイトをサブパス配信する場合（例: `https://example.com/docs/`）、`methanol.config.*` で `site.base` を設定します:
+
+```js
+export default () => ({
+	site: {
+		base: '/docs/'
+	}
+})
+```
+
+dev（`methanol dev`）では `site.base` は無視され、`/` として扱われます。サブパス配信は `methanol build` + `methanol serve` で確認してください。

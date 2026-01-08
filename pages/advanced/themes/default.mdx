@@ -32,3 +32,20 @@ When `pagefind` is enabled, Methanol runs the Pagefind CLI after build and write
 ## Starry Night Styles
 
 The theme ships Starry Night styles in its CSS.
+
+## “Edit this page” Link (`site.repoBase`)
+
+The default theme can show an “Edit this page” link in the footer.
+
+Set `site.repoBase` to the base URL of your content folder in a git hosting UI:
+
+```js
+// methanol.config.js
+export default () => ({
+	site: {
+		repoBase: 'https://github.com/OWNER/REPO/edit/main/pages/'
+	}
+})
+```
+
+If a page has `sourceURL` in frontmatter, it overrides `site.repoBase` for that page.

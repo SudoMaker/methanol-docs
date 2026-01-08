@@ -6,7 +6,8 @@ import Sitemap from 'vite-plugin-sitemap'
 
 export default ({ mode }) => ({
 	site: {
-		name: 'Methanol Docs'
+		name: 'Methanol Docs',
+		repoBase: 'https://github.com/SudoMaker/methanol-docs/tree/main/pages/'
 	},
 	starryNight: {
 		grammars: [...common, sourceMdx]
@@ -24,7 +25,7 @@ export default ({ mode }) => ({
 				}
 			}),
 			Sitemap({
-				hostname: 'https://methanol.netlify.app'
+				hostname: 'https://methanol.sudomaker.com'
 			})
 		]
 	}

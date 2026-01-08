@@ -57,12 +57,12 @@ hidden: true
 
 ## `ctx.languages` の内容
 
-`ctx.languages` は `lang` を持つディレクトリ `index` から集めた配列です。
+`ctx.languages` は `lang` を持つディレクトリ `index` から集めた配列です。リンクには `routeHref`（`site.base` を含む）を使ってください。
 
 ```js
 {
-	routePath: '/zh',
-	href: '/zh/',
+	routePath: '/zh/',
+	routeHref: '/zh/',
 	label: '简体中文',
 	code: 'zh'
 }

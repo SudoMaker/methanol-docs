@@ -20,7 +20,7 @@ export default () => ({
 		sources: {
 			'/theme': './sources'
 		},
-		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+		template: ({ PageContent, ExtraHead, ctx, page, withBase, HTMLRenderer, components }) => (
 			<>
 				{HTMLRenderer.rawHTML`<!doctype html>`}
 				<html lang="en">
@@ -28,11 +28,12 @@ export default () => ({
 						<meta charset="UTF-8" />
 						<meta name="viewport" content="width=device-width" />
 						<ExtraHead />
-						<title>{ctx.page?.title || ctx.site?.name}</title>
+						<title>{page.title || ctx.site?.name}</title>
+						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>
 						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
-						<Page />
+						<PageContent />
 					</body>
 				</html>
 			</>
@@ -75,15 +76,22 @@ theme/
 
 `theme.template` 接收：
 
-- `Page`: 当前页面内容的 JSX 组件
+- `PageContent`: 当前页面内容的 JSX 组件
 - `ExtraHead`: 注入到 `<head>` 的额外内容（页面资源 + Methanol 运行时 + 页面 `<Head>`/`head` 输出）
-- `ctx`: 页面/站点上下文（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`）
+- `ctx`: 页面/站点上下文（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`）
+- `page`: `ctx.page` 的别名
+- `withBase`: 用于生成带 base 的 URL（与 `ctx.withBase` 相同）
 - `HTMLRenderer`: refui HTML 渲染器（用于提供 rawHTML 与 serialize，或者用于手动渲染 JSX 组件）
 - `components`: 合并后的组件对象（主题组件 + 用户组件）
 
 返回一个 JSX 树即可。
 
 **重要：**请把 `<ExtraHead />` 放在 `<head>` 里，否则页面的 `<Head>`/`head` 与自动注入的资源不会生效。
+
+当站点部署在子路径下（`site.base !== '/'`）时：
+
+- 对需要跟随 Vite `base` 的 URL（例如 Vite 管理的运行时资源）使用 `withBase('/...')`（或 `ctx.withBase('/...')`）。
+- 一般不需要对 `theme.sources` 的 URL 或 `public/` 下的静态文件使用 `withBase()`（Methanol 会在构建时进行解析）。但如果你在 JS 中动态生成 URL 并遇到 Vite dev 下解析不一致，`withBase()` 仍然是一个实用的规避手段。
 
 ## 主题组件
 

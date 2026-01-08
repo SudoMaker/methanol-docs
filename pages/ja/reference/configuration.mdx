@@ -43,6 +43,14 @@ export default ({ mode, root, HTMLRenderer }) => ({
 - `site.name`: サイト名
 - `site.logo`: ロゴのパス（任意）または `false`（デフォルトテーマで無効化）
 - `site.favicon`: ファビコンのパス（任意）または `false`（デフォルトテーマで無効化）
+- `site.base`: サイトがサブパス配信される場合のベース（例: `'/docs/'`）
+- `site.repoBase`: リポジトリ上のコンテンツフォルダを指すベース URL（デフォルトテーマの「Edit this page」リンク生成に使用）
+
+注意点:
+
+- `site.base` は先頭と末尾の `/` を含む形に正規化されます（例: `docs` → `'/docs/'`）。
+- `vite.base` を明示指定しない限り、`site.base` は Vite の `base` としても使われます。
+- dev（`methanol dev`）では `site.base` は無視され、`/` として扱われます。サブパス配信は `methanol build` + `methanol serve` で確認してください。
 
 ### `pagefind`
 
@@ -124,12 +132,12 @@ Methanol はテーマの public アセット（`theme.publicDir`）も含めま�
 
 ### `theme`
 
-テーマ設定。使い方は [Advanced themes](/ja/advanced/themes/) を参照。
+テーマ設定。使い方は [Advanced themes](../advanced/themes/) を参照。
 
 主なフィールド:
 
 - `theme.root`: テーマのルートディレクトリ（必須）
-- `theme.template`: HTML テンプレート関数（`{ ctx, Page, ExtraHead, HTMLRenderer, components }` を受け取ります）
+- `theme.template`: HTML テンプレート関数（`{ ctx, page, PageContent, ExtraHead, withBase, HTMLRenderer, components }` を受け取ります）
 - `theme.components`: デフォルトの MDX コンポーネント
 - `theme.componentsDir`: テーマコンポーネントのフォルダ
 - `theme.pagesDir`: テーマページのフォルダ
@@ -209,7 +217,7 @@ export default ({ mode }) => ({
 	site: { name: 'My Docs' },
 	theme: {
 		root: '.',
-		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+		template: ({ PageContent, ExtraHead, ctx, withBase, HTMLRenderer, components }) => (
 			<>
 				{HTMLRenderer.rawHTML`<!doctype html>`}
 				<html lang="en">
@@ -218,10 +226,11 @@ export default ({ mode }) => ({
 						<meta name="viewport" content="width=device-width" />
 						<ExtraHead />
 						<title>{ctx.page?.title || ctx.site?.name}</title>
+						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>
 						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
-						<Page />
+						<PageContent />
 					</body>
 				</html>
 			</>

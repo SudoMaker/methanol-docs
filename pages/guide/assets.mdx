@@ -12,6 +12,10 @@ Use `public/` for static assets and local relative paths for page-specific files
 
 Files in `public/` are served from the site root.
 
+Even when you deploy under a subpath (`site.base !== '/'`), you typically *don’t* need to wrap public assets with `ctx.withBase()`: Methanol resolves public assets at build time.
+
+If you’re generating URLs in JS (client-only components) and hit Vite dev inconsistencies, `ctx.withBase('/...')` can be a practical workaround.
+
 ```
 public/
   logo.png
@@ -44,6 +48,8 @@ pages/
 ## Global Styles and Scripts
 
 If you add `pages/style.css`, Methanol injects it into every page. If you add `pages/index.js` or `pages/index.ts`, Methanol injects that as a module script.
+
+These URLs are base-aware in production builds (equivalent to `ctx.withBase('/style.css')` and `ctx.withBase('/index.js')`).
 
 ```html
 <link rel="stylesheet" href="/style.css" />

@@ -13,12 +13,29 @@ Methanol はファイルベースルーティングを採用しています。�
 拡張子なしのルートでリンクします。
 
 ```md
-[執筆の基本](/ja/guide/writing)
+[執筆の基本](./writing)
 ```
 
-表示例: [執筆の基本](/ja/guide/writing)
+表示例: [執筆の基本](./writing)
 
 ページを移動・リネームしたらリンク先も更新してください。
+
+### サブパス配信（`site.base`）
+
+サイトをサブパス配信する場合（例: `https://example.com/docs/`）、`site.base: '/docs/'` を設定し、本文中で `/blog/post` のようなルート絶対の内部リンクは避けてください。
+
+相対リンクを推奨します:
+
+```md
+[次の記事](./next-post)
+[ブログへ戻る](../blog/)
+```
+
+MDX/JSX でルート絶対のリンクを作る必要がある場合は `ctx.withBase` で包みます:
+
+```mdx
+<a href={ctx.withBase('/blog/post')}>読む</a>
+```
 
 ## 外部リンク
 
@@ -38,4 +55,4 @@ Methanol はファイルベースルーティングを採用しています。�
 - `hidden`: サイドバーから非表示
 - `isRoot`: `index.mdx` に付けてナビゲーションのルートを指定
 
-詳しくは [Frontmatter リファレンス](/ja/reference/frontmatter) を参照してください。
+詳しくは [Frontmatter リファレンス](../reference/frontmatter) を参照してください。

@@ -13,12 +13,29 @@ Methanol uses file-based routing. Link to pages using their route paths.
 Use site routes (no file extension):
 
 ```md
-[Writing basics](/guide/writing)
+[Writing basics](./writing)
 ```
 
-Renders as: [Writing basics](/guide/writing)
+Renders as: [Writing basics](./writing)
 
 If you move or rename a page, update the route in your links.
+
+### Subpath Deployments (`site.base`)
+
+If your site is served under a subpath (for example `https://example.com/docs/`), set `site.base: '/docs/'` and avoid root-absolute internal links like `/blog/post` in your content.
+
+Prefer relative links:
+
+```md
+[Next post](./next-post)
+[Back to blog](../blog/)
+```
+
+If you need to generate a root-absolute link in MDX/JSX, wrap it with `ctx.withBase`:
+
+```mdx
+<a href={ctx.withBase('/blog/post')}>Read</a>
+```
 
 ## External Links
 
@@ -38,4 +55,4 @@ Use frontmatter fields to control order and visibility:
 - `hidden`: hide from the sidebar
 - `isRoot`: use on an `index.mdx` to define a navigation root
 
-Full details are in the [Frontmatter reference](/reference/frontmatter).
+Full details are in the [Frontmatter reference](../reference/frontmatter).

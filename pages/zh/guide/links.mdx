@@ -13,12 +13,29 @@ Methanol 使用基于文件的路由。站内链接直接写“路由路径”�
 使用站内路由（不带扩展名）：
 
 ```md
-[写作基础](/zh/guide/writing)
+[写作基础](./writing)
 ```
 
-渲染为：[写作基础](/zh/guide/writing)
+渲染为：[写作基础](./writing)
 
 页面移动或改名后，记得同步更新链接路径。
+
+### 子路径部署（`site.base`）
+
+如果站点部署在子路径下（例如 `https://example.com/docs/`），请设置 `site.base: '/docs/'`，并避免在内容里写 `/blog/post` 这类根路径的站内链接。
+
+推荐使用相对链接：
+
+```md
+[下一篇](./next-post)
+[返回博客](../blog/)
+```
+
+如果在 MDX/JSX 中需要生成根路径链接，请用 `ctx.withBase` 包一下：
+
+```mdx
+<a href={ctx.withBase('/blog/post')}>阅读</a>
+```
 
 ## 外部链接
 
@@ -38,4 +55,4 @@ Methanol 使用基于文件的路由。站内链接直接写“路由路径”�
 - `hidden`: 在侧边栏隐藏
 - `isRoot`: 用于 `index.mdx`，定义导航根
 
-更完整的规则见 [Frontmatter 参考](/zh/reference/frontmatter)。
+更完整的规则见 [Frontmatter 参考](../reference/frontmatter)。

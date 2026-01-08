@@ -12,6 +12,10 @@ weight: 5
 
 `public/` の内容はサイトのルートから配信されます。
 
+サイトをサブパス配信する場合（`site.base !== '/'`）でも、通常は public アセットに `ctx.withBase()` を付ける必要はありません（Methanol がビルド時に解決します）。
+
+ただし JS（client-only コンポーネント）で URL を生成していて Vite の dev で解決が不安定な場合、`ctx.withBase('/...')` が回避策として役立つことがあります。
+
 ```
 public/
   logo.png
@@ -44,6 +48,8 @@ pages/
 ## グローバルスタイルとスクリプト
 
 `pages/style.css` を置くと全ページに読み込まれます。`pages/index.js` または `pages/index.ts` を置くとモジュールスクリプトとして読み込まれます。
+
+本番ビルドでは base を考慮した URL で注入されます（`ctx.withBase('/style.css')` や `ctx.withBase('/index.js')` 相当）。
 
 ```html
 <link rel="stylesheet" href="/style.css" />

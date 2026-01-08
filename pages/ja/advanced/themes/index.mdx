@@ -20,7 +20,7 @@ export default () => ({
 		sources: {
 			'/theme': './sources'
 		},
-		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+		template: ({ PageContent, ExtraHead, ctx, page, withBase, HTMLRenderer, components }) => (
 			<>
 				{HTMLRenderer.rawHTML`<!doctype html>`}
 				<html lang="en">
@@ -28,11 +28,12 @@ export default () => ({
 						<meta charset="UTF-8" />
 						<meta name="viewport" content="width=device-width" />
 						<ExtraHead />
-						<title>{ctx.page?.title || ctx.site?.name}</title>
+						<title>{page.title || ctx.site?.name}</title>
+						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>
 						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
-						<Page />
+						<PageContent />
 					</body>
 				</html>
 			</>
@@ -73,15 +74,22 @@ theme/
 
 `theme.template` に渡されるもの:
 
-- `Page`: 現在ページ本文の JSX コンポーネント
+- `PageContent`: 現在ページ本文の JSX コンポーネント
 - `ExtraHead`: `<head>` に注入される追加内容（ページアセット + Methanol ランタイム + ページの `<Head>`/`head` 出力）
-- `ctx`: ページ/サイトのコンテキスト（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`）
+- `ctx`: ページ/サイトのコンテキスト（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`）
+- `page`: `ctx.page` の別名
+- `withBase`: base を考慮した URL を作るヘルパー（`ctx.withBase` と同じ）
 - `HTMLRenderer`: refui HTML レンダラー（`rawHTML`/`serialize` の利用、または JSX コンポーネントの手動レンダリングに使用）
 - `components`: マージ済みの components オブジェクト（テーマ + ユーザー）
 
 JSX ツリーを返してください。
 
 **重要:** `<head>` の中に `<ExtraHead />` を置いてください。これがないと、ページの `<Head>`/`head` と自動アセットが挿入されません。
+
+サイトをサブパス配信する場合（`site.base !== '/'`）:
+
+- Vite の `base` に追従させたい URL（Vite 管理のランタイムアセットなど）には `withBase('/...')`（または `ctx.withBase('/...')`）を使ってください。
+- `theme.sources` の URL や `public/` 配下の静的ファイルに `withBase()` を付ける必要は通常ありません（Methanol がビルド時に解決します）。ただし JS 生成 URL で Vite dev の解決が不安定な場合、回避策として `withBase()` が役立つことがあります。
 
 ## テーマコンポーネント
 

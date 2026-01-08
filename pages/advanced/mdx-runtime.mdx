@@ -31,15 +31,20 @@ Common fields on `ctx`:
 - `ctx.pages`: all pages (flat list; includes hidden and index pages)
 - `ctx.pagesTree`: navigation tree for the current root
 - `ctx.site`: site metadata (`name`, `root`, `pagesDir`, `distDir`, `pagefind`, etc.)
+- `ctx.withBase(path)`: prefixes `site.base`/Vite base for URLs that start with `/` (leaves relative URLs unchanged)
 - `ctx.language`: active language entry (from directory index pages with `lang`; includes `label` and `code`)
 - `ctx.getSiblings()`: returns `{ prev, next }` for the current page within the current navigation root
+
+Caveat: you usually don’t need `ctx.withBase()` for theme source URLs (`theme.sources`) or for static files under `public/` (Methanol resolves those at build time). If you hit Vite dev inconsistencies (especially when generating URLs in JS), `ctx.withBase('/...')` can be a practical workaround.
 
 ### ctx.page
 
 `ctx.page` is the metadata object for the current page. Common fields include:
 
 - `routePath`: normalized route (e.g. `/guide/writing`)
-- `routeHref`: preferred href (adds trailing slash for index routes)
+- `routeHref`: base-aware href for links (includes `site.base` / Vite base)
+
+Note: directory index routes include a trailing slash in `routePath` (e.g. `/guide/`).
 - `filePath`: absolute path to the source file
 - `title`: resolved title (frontmatter title or derived from headings)
 - `frontmatter`: parsed YAML frontmatter

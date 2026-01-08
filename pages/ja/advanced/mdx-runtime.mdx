@@ -31,15 +31,20 @@ Methanol は各 MDX に小さなランタイムコンテキストを注入し、
 - `ctx.pages`: 全ページの一覧（非表示や index も含む）
 - `ctx.pagesTree`: 現在のルートに対するナビゲーションツリー
 - `ctx.site`: サイト情報（`name`, `root`, `pagesDir`, `distDir`, `pagefind` など）
+- `ctx.withBase(path)`: `/` で始まる URL に `site.base`/Vite base を付与（相対 URL はそのまま）
 - `ctx.language`: アクティブな言語エントリ（`lang` を持つディレクトリ index がある場合。`label` と `code` を含む）
 - `ctx.getSiblings()`: 現在のページの `{ prev, next }` を返す
+
+注意: `theme.sources` の URL や `public/` 配下の静的ファイルは、通常 `ctx.withBase()` を付ける必要はありません（Methanol がビルド時に解決します）。ただし JS 生成 URL で Vite dev の解決が不安定な場合、`ctx.withBase('/...')` が回避策として役立つことがあります。
 
 ### ctx.page
 
 `ctx.page` は現在のページのメタデータです。主なフィールド:
 
 - `routePath`: 正規化されたルート（例: `/guide/writing`）
-- `routeHref`: 推奨 href（index の場合は末尾 `/` あり）
+- `routeHref`: リンク用の base 対応 href（`site.base` / Vite base を含む）
+
+補足: ディレクトリ index のルートは `routePath` 末尾に `/` が付きます（例: `/guide/`）。
 - `filePath`: ソースファイルの絶対パス
 - `title`: 解決済みのタイトル（frontmatter か見出し由来）
 - `frontmatter`: パース済みの YAML frontmatter

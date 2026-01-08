@@ -32,3 +32,20 @@ npm i -D pagefind
 ## Starry Night 样式
 
 主题 CSS 内置了 Starry Night 样式。
+
+## “Edit this page” 链接（`site.repoBase`）
+
+默认主题可以在页脚显示 “Edit this page” 链接。
+
+将 `site.repoBase` 设置为仓库托管平台中指向内容目录（如 `pages/`）的 base URL：
+
+```js
+// methanol.config.js
+export default () => ({
+	site: {
+		repoBase: 'https://github.com/OWNER/REPO/edit/main/pages/'
+	}
+})
+```
+
+如果页面 frontmatter 中设置了 `sourceURL`，该页面会优先使用 `sourceURL`，而不是 `site.repoBase`。

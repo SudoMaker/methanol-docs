@@ -27,3 +27,17 @@ Use this to verify the production output locally.
 ## Deploy
 
 Upload the `dist/` folder to your host of choice (GitHub Pages, Netlify, Cloudflare Pages, S3, or any static server).
+
+## Deploy Under a Subpath
+
+If your site is served under a subpath (e.g. `https://example.com/docs/`), set `site.base` in `methanol.config.*`:
+
+```js
+export default () => ({
+	site: {
+		base: '/docs/'
+	}
+})
+```
+
+In dev (`methanol dev`), `site.base` is ignored and treated as `/`. Verify subpath behavior with `methanol build` + `methanol serve`.

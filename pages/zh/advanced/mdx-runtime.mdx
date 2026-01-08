@@ -31,15 +31,20 @@ Methanol 会为每个 MDX 注入一个小型运行时上下文，方便访问页
 - `ctx.pages`: 全站页面列表（包含隐藏与 index）
 - `ctx.pagesTree`: 当前根目录的导航树
 - `ctx.site`: 站点信息（`name`, `root`, `pagesDir`, `distDir`, `pagefind` 等）
+- `ctx.withBase(path)`: 为以 `/` 开头的 URL 添加 `site.base`/Vite base（相对 URL 保持不变）
 - `ctx.language`: 当前语言条目（目录 index 带 `lang` 时，包含 `label` 与 `code`）
 - `ctx.getSiblings()`: 返回当前页面的 `{ prev, next }`
+
+注意：对 `theme.sources` 的 URL 或 `public/` 下的静态文件，通常不需要使用 `ctx.withBase()`（Methanol 会在构建时进行解析）。但如果你在 JS 中动态生成 URL，并遇到 Vite dev 下解析不一致，`ctx.withBase('/...')` 仍然是一个实用的规避手段。
 
 ### ctx.page
 
 `ctx.page` 是当前页面的元数据对象，常见字段：
 
 - `routePath`: 标准化路由（如 `/guide/writing`）
-- `routeHref`: 推荐的 href（index 路由会带 `/`）
+- `routeHref`: 用于链接的、带 base 的 href（包含 `site.base` / Vite base）
+
+补充：目录 index 路由的 `routePath` 会带尾随 `/`（例如 `/guide/`）。
 - `filePath`: 源文件绝对路径
 - `title`: 解析后的标题（frontmatter 或标题提取）
 - `frontmatter`: 解析后的 YAML frontmatter

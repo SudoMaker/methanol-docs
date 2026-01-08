@@ -12,6 +12,10 @@ weight: 5
 
 `public/` 内的文件会从站点根路径（`/`）直接提供。
 
+即使站点部署在子路径下（`site.base !== '/'`），通常也不需要为 public 静态资源加 `ctx.withBase()`（Methanol 会在构建时进行解析）。
+
+不过如果你在 JS（client-only 组件）中动态生成 URL，并遇到 Vite dev 下资源解析不一致，`ctx.withBase('/...')` 可以作为一个实用的规避手段。
+
 ```
 public/
   logo.png
@@ -44,6 +48,8 @@ pages/
 ## 全局样式与脚本
 
 如果存在 `pages/style.css`，会自动注入到所有页面。如果存在 `pages/index.js` 或 `pages/index.ts`，会作为模块脚本注入到所有页面。
+
+生产构建时这些 URL 会自动考虑 base（等价于 `ctx.withBase('/style.css')` / `ctx.withBase('/index.js')`）。
 
 ```html
 <link rel="stylesheet" href="/style.css" />

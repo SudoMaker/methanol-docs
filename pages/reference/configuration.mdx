@@ -43,6 +43,14 @@ Site metadata used by templates:
 - `site.name`: site title
 - `site.logo`: logo path (string) or `false` to disable (default theme)
 - `site.favicon`: favicon path (string) or `false` to disable (default theme)
+- `site.base`: deployment base (path prefix) when the site is served under a subpath (e.g. `'/docs/'`)
+- `site.repoBase`: base URL to your content folder in a repo (used by the default theme to build “Edit this page” links)
+
+Notes:
+
+- `site.base` is normalized to a leading and trailing slash (e.g. `docs` → `'/docs/'`).
+- `site.base` is used as the default Vite `base` unless you explicitly set `vite.base`.
+- In dev (`methanol dev`), `site.base` is ignored and treated as `/` due to Vite module resolution inconsistencies. Verify subpath deployments with `methanol build` + `methanol serve`.
 
 ### `pagefind`
 
@@ -124,12 +132,12 @@ Boolean. When true, Methanol writes intermediate HTML to `build/` during build.
 
 ### `theme`
 
-Theme configuration. See [Advanced themes](/advanced/themes/) for full usage.
+Theme configuration. See [Advanced themes](../advanced/themes/) for full usage.
 
 Key fields:
 
 - `theme.root`: theme root directory (required)
-- `theme.template`: HTML template function (receives `{ ctx, Page, ExtraHead, HTMLRenderer, components }`)
+- `theme.template`: HTML template function (receives `{ ctx, page, PageContent, ExtraHead, withBase, HTMLRenderer, components }`)
 - `theme.components`: default MDX components
 - `theme.componentsDir`: folder of theme components
 - `theme.pagesDir`: folder of theme pages
@@ -209,7 +217,7 @@ export default ({ mode }) => ({
 	site: { name: 'My Docs' },
 	theme: {
 		root: '.',
-		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+		template: ({ PageContent, ExtraHead, ctx, withBase, HTMLRenderer, components }) => (
 			<>
 				{HTMLRenderer.rawHTML`<!doctype html>`}
 				<html lang="en">
@@ -218,10 +226,11 @@ export default ({ mode }) => ({
 						<meta name="viewport" content="width=device-width" />
 						<ExtraHead />
 						<title>{ctx.page?.title || ctx.site?.name}</title>
+						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>
 						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
-						<Page />
+						<PageContent />
 					</body>
 				</html>
 			</>

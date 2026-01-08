@@ -43,6 +43,14 @@ export default ({ mode, root, HTMLRenderer }) => ({
 - `site.name`: 站点标题
 - `site.logo`: logo 路径（字符串）或 `false`（在默认主题中禁用）
 - `site.favicon`: favicon 路径（字符串）或 `false`（在默认主题中禁用）
+- `site.base`: 站点部署在子路径下时的 base（例如 `'/docs/'`）
+- `site.repoBase`: 指向仓库内容目录的 base URL（默认主题会用它生成 “Edit this page” 链接）
+
+注意：
+
+- `site.base` 会被规范化为首尾都带 `/`（例如 `docs` → `'/docs/'`）。
+- 除非你显式设置 `vite.base`，否则 `site.base` 也会作为 Vite 的 `base` 使用。
+- dev（`methanol dev`）模式下 `site.base` 会被忽略并当作 `/`。请用 `methanol build` + `methanol serve` 验证子路径部署效果。
 
 ### `pagesDir`
 
@@ -82,12 +90,12 @@ Methanol 也会包含主题的 public 资源（`theme.publicDir`）。当主题�
 
 ### `theme`
 
-主题配置。详细用法见 [主题（进阶）](/zh/advanced/themes/)。
+主题配置。详细用法见 [主题（进阶）](../advanced/themes/)。
 
 关键字段：
 
 - `theme.root`: 主题根目录（必填）
-- `theme.template`: HTML 模板函数（接收 `{ ctx, Page, ExtraHead, HTMLRenderer, components }`）
+- `theme.template`: HTML 模板函数（接收 `{ ctx, page, PageContent, ExtraHead, withBase, HTMLRenderer, components }`）
 - `theme.components`: 默认 MDX 组件
 - `theme.componentsDir`: 主题组件目录
 - `theme.pagesDir`: 主题页面目录
@@ -209,7 +217,7 @@ export default ({ mode }) => ({
 	site: { name: 'My Docs' },
 	theme: {
 		root: '.',
-		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+		template: ({ PageContent, ExtraHead, ctx, withBase, HTMLRenderer, components }) => (
 			<>
 				{HTMLRenderer.rawHTML`<!doctype html>`}
 				<html lang="en">
@@ -218,10 +226,11 @@ export default ({ mode }) => ({
 						<meta name="viewport" content="width=device-width" />
 						<ExtraHead />
 						<title>{ctx.page?.title || ctx.site?.name}</title>
+						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>
 						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
-						<Page />
+						<PageContent />
 					</body>
 				</html>
 			</>

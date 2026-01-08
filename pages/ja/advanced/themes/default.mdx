@@ -32,3 +32,20 @@ npm i -D pagefind
 ## Starry Night のスタイル
 
 テーマは Starry Night のスタイルを CSS に含めています。
+
+## 「Edit this page」リンク（`site.repoBase`）
+
+デフォルトテーマはフッターに「Edit this page」リンクを表示できます。
+
+`site.repoBase` に、リポジトリ上のコンテンツフォルダ（`pages/` など）を指すベース URL を設定してください:
+
+```js
+// methanol.config.js
+export default () => ({
+	site: {
+		repoBase: 'https://github.com/OWNER/REPO/edit/main/pages/'
+	}
+})
+```
+
+ページの frontmatter に `sourceURL` がある場合、そのページでは `site.repoBase` より `sourceURL` が優先されます。

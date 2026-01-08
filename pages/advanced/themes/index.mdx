@@ -20,7 +20,7 @@ export default () => ({
 		sources: {
 			'/theme': './sources'
 		},
-		template: ({ Page, ExtraHead, ctx, HTMLRenderer, components }) => (
+		template: ({ PageContent, ExtraHead, ctx, page, withBase, HTMLRenderer, components }) => (
 			<>
 				{HTMLRenderer.rawHTML`<!doctype html>`}
 				<html lang="en">
@@ -28,11 +28,12 @@ export default () => ({
 						<meta charset="UTF-8" />
 						<meta name="viewport" content="width=device-width" />
 						<ExtraHead />
-						<title>{ctx.page?.title || ctx.site?.name}</title>
+						<title>{page.title || ctx.site?.name}</title>
+						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>
-						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
-						<Page />
+						{components.Callout ? <components.Callout>Hi</components.Callout> : null}
+						<PageContent />
 					</body>
 				</html>
 			</>
@@ -75,15 +76,22 @@ Theme `public/` is merged into the project `publicDir` during dev/build. If a pa
 
 `theme.template` receives:
 
-- `Page`: JSX component for the current page content
+- `PageContent`: JSX component for the current page content
 - `ExtraHead`: extra `<head>` content (page assets + Methanol runtime + per-page `<Head>`/`head` output)
-- `ctx`: page/site context (`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`)
+- `ctx`: page/site context (`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`)
+- `page`: alias for `ctx.page`, providing page info
+- `withBase`: helper for base-aware URLs (same function as `ctx.withBase`)
 - `HTMLRenderer`: refui HTML renderer (for `rawHTML`/`serialize`, or for manually rendering JSX components)
 - `components`: merged components object (theme components + user components)
 
 Return a JSX tree.
 
 **Important:** put `<ExtraHead />` inside `<head>`. Without it, per-page `<Head>`/`head` and automatic page assets won’t be injected.
+
+When your site is deployed under a subpath (`site.base !== '/'`):
+
+- Use `withBase('/...')` (or `ctx.withBase('/...')`) for URLs that must follow Vite’s `base` (e.g. Vite-managed runtime assets).
+- Don’t apply `withBase()` to theme source URLs (`theme.sources`) or to plain static files under `public/`: Methanol resolves those at build time. If you run into Vite dev inconsistencies, using `withBase()` can still be a useful workaround in JS-generated URLs.
 
 ## Theme Components
 

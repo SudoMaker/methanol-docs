@@ -27,3 +27,17 @@ npx methanol serve
 ## 部署
 
 将 `dist/` 上传到你选择的托管平台（GitHub Pages、Netlify、Cloudflare Pages、S3 等）。请注意，平台需要能够自动解析不含 `.html` 的 URL 到对应的 HTML 文件。
+
+## 子路径部署
+
+如果站点部署在子路径下（例如 `https://example.com/docs/`），请在 `methanol.config.*` 中设置 `site.base`：
+
+```js
+export default () => ({
+	site: {
+		base: '/docs/'
+	}
+})
+```
+
+dev（`methanol dev`）模式下 `site.base` 会被忽略并当作 `/`。请用 `methanol build` + `methanol serve` 验证子路径部署效果。
