@@ -1,0 +1,76 @@
+---
+title: Render Navigation
+description: Render a sidebar or menu from ctx.pagesTree.
+weight: 3
+starryNight: true
+---
+
+# Render Navigation
+
+Methanol provides a navigation tree in `ctx.pagesTree`. It is already scoped to the current navigation root (`isRoot`) and respects hidden/excluded rules.
+
+Each node looks like:
+
+```js
+{
+	type: 'page' | 'directory',
+	title: '...',
+	name: '...',
+	routePath: '/guide/',
+	routeHref: '/docs/guide/', // base-aware
+	children: []
+}
+```
+
+## Minimal Sidebar
+
+```jsx
+const NavTree = ({ nodes, currentHref }) => (
+	<ul>
+		{(nodes || []).map((node) => {
+			const label = node.title || node.name || node.routePath
+			if (node.type === 'directory') {
+				return (
+					<li>
+						{node.routeHref ? <a href={node.routeHref}>{label}</a> : <span>{label}</span>}
+						{node.children?.length ? <NavTree nodes={node.children} currentHref={currentHref} /> : null}
+					</li>
+				)
+			}
+			const isActive = node.routeHref && node.routeHref === currentHref
+			return (
+				<li>
+					<a href={node.routeHref} aria-current={isActive ? 'page' : null}>
+						{label}
+					</a>
+				</li>
+			)
+		})}
+	</ul>
+)
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+				</head>
+				<body>
+					<aside>
+						<NavTree nodes={ctx.pagesTree} currentHref={ctx.page.routeHref} />
+					</aside>
+					<main>
+						<PageContent />
+					</main>
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+Tips:
+
+- Prefer `routeHref` for `<a href>` (it includes `site.base`).
+- Directory index routes use a trailing slash in `routePath` (e.g. `/guide/`).

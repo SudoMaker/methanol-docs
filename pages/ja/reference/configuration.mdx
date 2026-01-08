@@ -225,11 +225,11 @@ export default ({ mode }) => ({
 						<meta charset="UTF-8" />
 						<meta name="viewport" content="width=device-width" />
 						<ExtraHead />
-						<title>{ctx.page?.title || ctx.site?.name}</title>
+						<title>{ctx.page.title || ctx.site.name}</title>
 						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>
-						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
+						{components.Callout ? <components.Callout>Hi</components.Callout> : null}
 						<PageContent />
 					</body>
 				</html>

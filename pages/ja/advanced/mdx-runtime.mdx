@@ -14,11 +14,11 @@ Methanol は各 MDX に小さなランタイムコンテキストを注入し、
 以下は常に利用できます。
 
 - `ctx`: ページとサイトのコンテキスト
-- `frontmatter`: `ctx.page?.frontmatter` のショートハンド
+- `frontmatter`: `ctx.page.frontmatter` のショートハンド
 - `rawHTML`: エスケープしない HTML を差し込むための入口
 
 ```mdx
-# {frontmatter.title ?? ctx.page?.title}
+# {frontmatter.title ?? ctx.page.title}
 
 現在のルート: {ctx.routePath}
 ```
@@ -60,8 +60,8 @@ Methanol は各 MDX に小さなランタイムコンテキストを注入し、
 例:
 
 ```mdx
-{ctx.page?.title}
-{ctx.page?.frontmatter?.excerpt}
+{ctx.page.title}
+{ctx.page.frontmatter?.excerpt}
 ```
 
 ### ctx.pages
@@ -101,7 +101,7 @@ Methanol は各 MDX に小さなランタイムコンテキストを注入し、
 
 ```jsx
 {(() => {
-  const siblings = ctx.getSiblings?.()
+  const siblings = ctx.getSiblings.()
   if (!siblings) return null
   return (
     <nav>

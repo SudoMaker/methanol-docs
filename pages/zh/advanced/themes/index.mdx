@@ -8,6 +8,15 @@ weight: 3
 
 主题控制布局（HTML 模板）、默认 MDX 组件，以及可选的主题页面/资源。Methanol 仓库里的默认主题是很好的参考。
 
+## 主题实现指南
+
+- [主题实现指南](../theme-guide/)
+- [渲染导航](../theme-guide/navigation)
+- [渲染目录（ToC）](../theme-guide/toc)
+- [上一页/下一页](../theme-guide/prev-next)
+- [语言切换](../theme-guide/language-switch)
+- [专门用途页面](../theme-guide/special-pages)
+
 ## 主题结构
 
 ```jsx
@@ -28,11 +37,11 @@ export default () => ({
 						<meta charset="UTF-8" />
 						<meta name="viewport" content="width=device-width" />
 						<ExtraHead />
-						<title>{page.title || ctx.site?.name}</title>
+						<title>{page.title || ctx.site.name}</title>
 						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>
-						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
+						{components.Callout ? <components.Callout>Hi</components.Callout> : null}
 						<PageContent />
 					</body>
 				</html>

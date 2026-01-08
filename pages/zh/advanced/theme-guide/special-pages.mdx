@@ -1,0 +1,132 @@
+---
+title: 专门用途页面
+description: 提供主题页面，并在模板中为特定路由/ frontmatter 使用不同布局。
+weight: 7
+starryNight: true
+---
+
+# 专门用途页面
+
+主题可以通过 `theme.pagesDir` 提供自带页面。主题页面遵循与用户页面相同的路由规则；若路由冲突，则用户页面优先。
+
+它很适合用来承载“功能型页面”：
+
+- 主题自带的落地页（landing）
+- 独立的目录/菜单页
+- 友链页
+- 联系页
+- 主题自带的 `/404` 页面
+
+## 从主题中提供页面
+
+`theme/index.js`：
+
+```js
+export default () => ({
+	theme: {
+		root: '.',
+		pagesDir: './pages'
+	}
+})
+```
+
+`theme/pages/`：
+
+```
+pages/
+  index.mdx
+  menu.mdx
+  friends.mdx
+  contact.mdx
+  404.mdx
+```
+
+## 按路由分支
+
+如果你更偏好“硬规则”，也可以按路由来分支：
+
+```js
+const route = ctx.page.routePath
+if (route === '/menu') { /* ... */ }
+```
+
+补充：目录 index 路由的 `routePath` 会带尾随 `/`（例如 `/guide/`）。
+
+## 用 frontmatter 选择布局
+
+最直观的方式是给页面加一个 `layout` 标记，然后在模板里分别渲染。
+
+示例 `menu.mdx`：
+
+```mdx
+---
+title: Menu
+layout: menu
+hidden: true
+---
+
+# Menu
+
+This page uses a different layout.
+```
+
+模板里分支：
+
+```jsx
+const MenuLayout = ({ ctx, PageContent }) => (
+	<div class="menu-layout">
+		<h1>{ctx.page.title}</h1>
+		<PageContent />
+	</div>
+)
+
+const DocLayout = ({ ctx, PageContent }) => (
+	<div class="doc-layout">
+		<aside>{/* nav */}</aside>
+		<main>
+			<PageContent />
+		</main>
+	</div>
+)
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	const layout = ctx.page.frontmatter?.layout
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+					<title>{ctx.page.title || ctx.site.name}</title>
+				</head>
+				<body>
+					{layout === 'menu' ? (
+						<MenuLayout ctx={ctx} PageContent={PageContent} />
+					) : (
+						<DocLayout ctx={ctx} PageContent={PageContent} />
+					)}
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+## 表单等交互页面
+
+例如联系表单这种页面，通常可以保持页面本身照常渲染，同时在主题 `components/` 中提供 client-only 组件（例如 `ContactForm.client.jsx`），让页面内容使用即可。
+
+## 另一种思路：使用 `.html` 做功能页
+
+专门用途页面不一定要用 MDX。你也可以在 `pages/`（以及主题的 `pagesDir`）下创建纯 `.html` 页面：比如独立落地页、嵌入式表单、或一个小型前端应用。
+
+这些页面会被纳入构建流程并交给 Vite 处理，同时也仍然会经过 `theme.template`。通常你会在模板里把它们分流到“独立页面”布局：比如不渲染侧边栏/目录/页脚，或使用不同的 `<head>`。
+
+常见分流方式：
+
+- 按文件类型：`ctx.page.filePath.endsWith('.html')`
+- 按路由：`ctx.page.routePath === '/menu'`
+- 按 frontmatter：`ctx.page.frontmatter?.layout === 'landing'`
+
+## base 与资源的注意事项
+
+对 `theme.sources` 的 URL 和 `public/` 下的静态文件，通常不需要套用 `withBase()` —— Methanol 会在构建时进行解析。但如果你在 JS 中动态生成 URL，并遇到 Vite dev 下资源解析不一致，`withBase('/...')` 仍然是一个很实用的规避手段。

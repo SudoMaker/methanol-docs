@@ -8,6 +8,15 @@ weight: 3
 
 テーマはレイアウト（HTML テンプレート）、デフォルトの MDX コンポーネント、テーマページ/アセットを制御します。Methanol リポジトリのデフォルトテーマは良い参考になります。
 
+## テーマ実装ガイド
+
+- [テーマ実装ガイド](../theme-guide/)
+- [ナビゲーションを描画する](../theme-guide/navigation)
+- [目次（ToC）を描画する](../theme-guide/toc)
+- [前/次リンク](../theme-guide/prev-next)
+- [言語スイッチ](../theme-guide/language-switch)
+- [特別用途ページ](../theme-guide/special-pages)
+
 ## テーマの形
 
 ```jsx
@@ -28,11 +37,11 @@ export default () => ({
 						<meta charset="UTF-8" />
 						<meta name="viewport" content="width=device-width" />
 						<ExtraHead />
-						<title>{page.title || ctx.site?.name}</title>
+						<title>{page.title || ctx.site.name}</title>
 						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>
-						{components?.Callout ? <components.Callout>Hi</components.Callout> : null}
+						{components.Callout ? <components.Callout>Hi</components.Callout> : null}
 						<PageContent />
 					</body>
 				</html>

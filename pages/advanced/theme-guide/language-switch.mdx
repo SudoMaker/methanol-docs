@@ -1,0 +1,64 @@
+---
+title: Language Switch
+description: Render a language selector using ctx.languages and ctx.language.
+weight: 6
+starryNight: true
+---
+
+# Language Switch
+
+Methanol’s multi-language setup is directory-based: any directory `index.mdx` page with `lang` becomes a language entry.
+
+In templates you get:
+
+- `ctx.languages`: all language entries
+- `ctx.language`: the currently active language entry (or `null`)
+
+Each entry includes `routePath`, `routeHref`, `label`, and `code`.
+
+## Simple `<select>` Switcher
+
+```jsx
+const LanguageSwitch = ({ ctx }) => {
+	const languages = Array.isArray(ctx.languages) ? ctx.languages : []
+	if (!languages.length) return null
+	const currentHref = ctx.language?.routeHref || null
+	return (
+		<select
+			aria-label="Select language"
+			onchange="location.href=this.value"
+			value={currentHref || undefined}
+		>
+			{languages.map((lang) => (
+				<option value={lang.routeHref} selected={lang.routeHref === currentHref ? true : null}>
+					{lang.label}
+				</option>
+			))}
+		</select>
+	)
+}
+```
+
+## Link List Variant
+
+```jsx
+const LanguageLinks = ({ ctx }) => {
+	const languages = Array.isArray(ctx.languages) ? ctx.languages : []
+	if (!languages.length) return null
+	const currentHref = ctx.language?.routeHref
+	return (
+		<nav aria-label="Languages">
+			{languages.map((lang) => (
+				<a href={lang.routeHref} aria-current={lang.routeHref === currentHref ? 'page' : null}>
+					{lang.label}
+				</a>
+			))}
+		</nav>
+	)
+}
+```
+
+Notes:
+
+- Use `routeHref` for links (it includes `site.base`).
+- Pair language roots with `isRoot: true` so each language gets its own navigation tree.

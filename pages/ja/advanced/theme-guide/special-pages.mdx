@@ -1,0 +1,132 @@
+---
+title: 特別用途ページ
+description: テーマページの提供と、ルート/ frontmatter に応じたレイアウト分岐。
+weight: 7
+starryNight: true
+---
+
+# 特別用途ページ
+
+テーマは `theme.pagesDir` でページを同梱できます。テーマページも通常のページと同じルーティング規則で扱われ、同一ルートがある場合はユーザー側のページが常に優先です。
+
+用途の例:
+
+- テーマが提供するランディングページ
+- 専用のメニュー/インデックスページ
+- 友達リンク（リンク集）ページ
+- お問い合わせページ
+- テーマ提供の `/404` フォールバック
+
+## テーマからページを提供する
+
+`theme/index.js`:
+
+```js
+export default () => ({
+	theme: {
+		root: '.',
+		pagesDir: './pages'
+	}
+})
+```
+
+`theme/pages/`:
+
+```
+pages/
+  index.mdx
+  menu.mdx
+  friends.mdx
+  contact.mdx
+  404.mdx
+```
+
+## frontmatter でレイアウトを切り替える
+
+いちばんシンプルなのは、frontmatter に `layout` を付けてテンプレートで分岐する方法です。
+
+例 `menu.mdx`:
+
+```mdx
+---
+title: Menu
+layout: menu
+hidden: true
+---
+
+# Menu
+
+This page uses a different layout.
+```
+
+テンプレート側:
+
+```jsx
+const MenuLayout = ({ ctx, PageContent }) => (
+	<div class="menu-layout">
+		<h1>{ctx.page.title}</h1>
+		<PageContent />
+	</div>
+)
+
+const DocLayout = ({ ctx, PageContent }) => (
+	<div class="doc-layout">
+		<aside>{/* nav */}</aside>
+		<main>
+			<PageContent />
+		</main>
+	</div>
+)
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	const layout = ctx.page.frontmatter?.layout
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+					<title>{ctx.page.title || ctx.site.name}</title>
+				</head>
+				<body>
+					{layout === 'menu' ? (
+						<MenuLayout ctx={ctx} PageContent={PageContent} />
+					) : (
+						<DocLayout ctx={ctx} PageContent={PageContent} />
+					)}
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+## ルートで分岐する
+
+ルールを固定したい場合は、ルートで分岐しても構いません:
+
+```js
+const route = ctx.page.routePath
+if (route === '/menu') { /* ... */ }
+```
+
+補足: ディレクトリ index のルートは `routePath` が末尾 `/` 付きになります（例: `/guide/`）。
+
+## フォームなどのインタラクティブなページ
+
+お問い合わせフォームなどは、ページ自体は普通にレンダリングしつつ、テーマ側 `components/` で client-only コンポーネント（例: `ContactForm.client.jsx`）を用意して本文から使うのが扱いやすいです。
+
+## 代替案: `.html` の特別用途ページ
+
+特別用途ページは MDX に限りません。`pages/`（およびテーマの `pagesDir`）に素の `.html` ページを置くこともできます（例: 専用ランディング、埋め込みフォーム、ミニアプリなど）。
+
+これらはビルドに含まれ、Vite によって処理され、`theme.template` も通ります。そのうえで、テンプレート側で「単体ページ」向けのレイアウトに分岐する（サイドバー/ToC/フッターを外す、`<head>` を変える等）のが定石です。
+
+よくある分岐パターン:
+
+- 拡張子で分岐: `ctx.page.filePath.endsWith('.html')`
+- ルートで分岐: `ctx.page.routePath === '/menu'`
+- frontmatter で分岐: `ctx.page.frontmatter?.layout === 'landing'`
+
+## base とアセットの注意
+
+`theme.sources` の URL や `public/` 配下の静的ファイルは、通常 `withBase()` を付ける必要はありません（Methanol がビルド時に解決します）。ただし JS で URL を生成していて Vite dev の解決が不安定な場合、回避策として `withBase('/...')` が役立つことがあります。

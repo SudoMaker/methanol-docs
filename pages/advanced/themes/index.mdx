@@ -8,6 +8,15 @@ weight: 3
 
 Themes control layout (HTML template), default MDX components, and optional theme pages/assets. The default theme in the Methanol repo is a good reference.
 
+## Theme Implementation Guide
+
+- [Theme guide](../theme-guide/)
+- [Render navigation](../theme-guide/navigation)
+- [Render a ToC](../theme-guide/toc)
+- [Prev/next links](../theme-guide/prev-next)
+- [Language switch](../theme-guide/language-switch)
+- [Special-purpose pages](../theme-guide/special-pages)
+
 ## Theme Shape
 
 ```jsx
@@ -28,7 +37,7 @@ export default () => ({
 						<meta charset="UTF-8" />
 						<meta name="viewport" content="width=device-width" />
 						<ExtraHead />
-						<title>{page.title || ctx.site?.name}</title>
+						<title>{page.title || ctx.site.name}</title>
 						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>

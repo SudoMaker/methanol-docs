@@ -14,11 +14,11 @@ Methanol 会为每个 MDX 注入一个小型运行时上下文，方便访问页
 以下内容始终可用：
 
 - `ctx`: 页面与站点上下文
-- `frontmatter`: `ctx.page?.frontmatter` 的简写
+- `frontmatter`: `ctx.page.frontmatter` 的简写
 - `rawHTML`: 插入未转义 HTML 的入口
 
 ```mdx
-# {frontmatter.title ?? ctx.page?.title}
+# {frontmatter.title ?? ctx.page.title}
 
 当前路由：{ctx.routePath}
 ```
@@ -60,8 +60,8 @@ Methanol 会为每个 MDX 注入一个小型运行时上下文，方便访问页
 示例：
 
 ```mdx
-{ctx.page?.title}
-{ctx.page?.frontmatter?.excerpt}
+{ctx.page.title}
+{ctx.page.frontmatter?.excerpt}
 ```
 
 ### ctx.pages
@@ -101,7 +101,7 @@ Methanol 会为每个 MDX 注入一个小型运行时上下文，方便访问页
 
 ```jsx
 {(() => {
-  const siblings = ctx.getSiblings?.()
+  const siblings = ctx.getSiblings.()
   if (!siblings) return null
   return (
     <nav>

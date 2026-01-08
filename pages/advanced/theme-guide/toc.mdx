@@ -1,0 +1,67 @@
+---
+title: Render a ToC
+description: Use page.toc to render an “On this page” table of contents.
+weight: 4
+starryNight: true
+---
+
+# Render a ToC
+
+When Methanol compiles a page, it extracts a table of contents into `ctx.page.toc`.
+
+Each entry looks like:
+
+```js
+{
+	depth: 2,
+	id: 'my-heading',
+	value: 'My heading',
+	children: []
+}
+```
+
+## Simple ToC Renderer
+
+```jsx
+const Toc = ({ toc }) => {
+	if (!toc?.length) return null
+	return (
+		<nav aria-label="On this page">
+			<div>On this page</div>
+			<ul>
+				{toc.map((item) => (
+					<li>
+						<a href={`#${item.id}`}>{item.value}</a>
+						{item.children?.length ? <Toc toc={item.children} /> : null}
+					</li>
+				))}
+			</ul>
+		</nav>
+	)
+}
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+				</head>
+				<body>
+					<main>
+						<PageContent />
+					</main>
+					<aside>
+						<Toc toc={ctx.page.toc} />
+					</aside>
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+## Notes
+
+- Many themes filter headings by depth (for example only H2–H4).
+- If you need “active section” highlighting while scrolling, implement it as a client component (e.g. `ThemeToCContainer.client.jsx` in the default theme).

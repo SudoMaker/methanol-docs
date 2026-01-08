@@ -1,0 +1,103 @@
+---
+title: テーマ実装ガイド
+description: テーマの作り方（ルート、テーマオブジェクト、テンプレート実装）。
+weight: 4
+starryNight: true
+---
+
+# テーマ実装ガイド
+
+このガイドでは、カスタムテーマ（レイアウト + コンポーネント + 任意のテーマページ/アセット）を実装する手順をまとめます。
+
+## テーマのフォルダ構成
+
+おすすめの構成:
+
+```
+theme/
+  index.js          # テーマオブジェクトを export
+  page.jsx          # テンプレートコンポーネント
+  components/       # デフォルトの MDX コンポーネント（任意）
+  pages/            # テーマが提供するページ（任意）
+  public/           # テーマの public アセット（任意）
+  sources/          # theme.sources で参照するアセット（任意）
+```
+
+## テーマを設定する
+
+`methanol.config.js`:
+
+```js
+import PageTemplate from './theme/page.jsx'
+
+export default () => ({
+	theme: {
+		root: './theme',
+		template: PageTemplate
+	}
+})
+```
+
+## テーマオブジェクト
+
+`theme/index.js`:
+
+```js
+import PageTemplate from './page.jsx'
+
+export default () => ({
+	theme: {
+		root: '.',
+		template: PageTemplate,
+		componentsDir: './components',
+		pagesDir: './pages',
+		publicDir: './public',
+		sources: {
+			'/theme': './sources'
+		}
+	}
+})
+```
+
+## テンプレートの契約（Template Contract）
+
+`theme.template` に渡されるもの:
+
+- `ctx`: 現在ページ/サイトのコンテキスト
+- `page`: `ctx.page` の別名
+- `PageContent`: 現在ページ本文のコンポーネント
+- `ExtraHead`: `<head>` に注入される追加内容（Methanol ランタイム、ページアセット、ページの `<Head>` 出力など）
+- `withBase`: base 対応 URL ヘルパー（`ctx.withBase` と同じ）
+- `components`: マージ済みコンポーネント（テーマ既定 + ユーザー上書き）
+- `HTMLRenderer`: refui のレンダラー関連
+
+最小テンプレート:
+
+```jsx
+import { HTMLRenderer } from 'methanol'
+
+export default ({ PageContent, ExtraHead, ctx }) => (
+	<>
+		{HTMLRenderer.rawHTML`<!doctype html>`}
+		<html lang="en">
+			<head>
+				<meta charset="UTF-8" />
+				<meta name="viewport" content="width=device-width" />
+				<ExtraHead />
+				<title>{ctx.page.title || ctx.site.name}</title>
+			</head>
+			<body>
+				<PageContent />
+			</body>
+		</html>
+	</>
+)
+```
+
+実際のテーマでは、ナビゲーション、目次、ページメタなどを追加することが多いです。次のページで各要素を解説します:
+
+- [ナビゲーションを描画する](./navigation)
+- [目次（ToC）を描画する](./toc)
+- [前/次リンク](./prev-next)
+- [言語スイッチ](./language-switch)
+- [特別用途ページ](./special-pages)

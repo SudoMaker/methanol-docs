@@ -1,0 +1,57 @@
+---
+title: 上一页/下一页
+description: 使用 ctx.getSiblings() 渲染前后页导航。
+weight: 5
+starryNight: true
+---
+
+# 上一页/下一页
+
+Methanol 提供了一个用于“上一页/下一页”导航的 helper：
+
+```js
+const { prev, next } = ctx.getSiblings.() || {}
+```
+
+它会遵循当前导航根，并且与侧边栏顺序保持一致。
+
+## 示例
+
+```jsx
+const PrevNext = ({ ctx }) => {
+	const siblings = ctx.getSiblings.()
+	const prev = siblings?.prev
+	const next = siblings?.next
+	if (!prev && !next) return null
+	return (
+		<nav aria-label="Page navigation">
+			{prev ? <a href={prev.routeHref}>← {prev.title}</a> : <span />}
+			{next ? <a href={next.routeHref}>{next.title} →</a> : <span />}
+		</nav>
+	)
+}
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+				</head>
+				<body>
+					<main>
+						<PageContent />
+						<PrevNext ctx={ctx} />
+					</main>
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+备注：
+
+- 链接请用 `routeHref`（包含 `site.base`）。
+- 如果你不希望某些页面出现在前后页序列里，可以通过 `hidden: true` 等方式把它们从导航里“淡出”。
+

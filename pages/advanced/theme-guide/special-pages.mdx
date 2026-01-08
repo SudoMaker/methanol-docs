@@ -1,0 +1,132 @@
+---
+title: Special-purpose Pages
+description: Add theme pages and render different layouts for specific routes or frontmatter.
+weight: 7
+starryNight: true
+---
+
+# Special-purpose Pages
+
+A theme can ship pages via `theme.pagesDir`. Theme pages follow the same routing rules as user pages, and user pages always win on route conflicts.
+
+This is useful for:
+
+- A theme-provided landing page
+- A dedicated menu/index page
+- A “friends” page
+- A contact page
+- A theme-provided `/404` fallback
+
+## Provide Pages from the Theme
+
+`theme/index.js`:
+
+```js
+export default () => ({
+	theme: {
+		root: '.',
+		pagesDir: './pages'
+	}
+})
+```
+
+`theme/pages/`:
+
+```
+pages/
+  index.mdx
+  menu.mdx
+  friends.mdx
+  contact.mdx
+  404.mdx
+```
+
+## Use Frontmatter to Choose a Layout
+
+The simplest approach is to add a `layout` tag in frontmatter and branch in the template.
+
+Example `menu.mdx`:
+
+```mdx
+---
+title: Menu
+layout: menu
+hidden: true
+---
+
+# Menu
+
+This page uses a different layout.
+```
+
+In your template:
+
+```jsx
+const MenuLayout = ({ ctx, PageContent }) => (
+	<div class="menu-layout">
+		<h1>{ctx.page.title}</h1>
+		<PageContent />
+	</div>
+)
+
+const DocLayout = ({ ctx, PageContent }) => (
+	<div class="doc-layout">
+		<aside>{/* nav */}</aside>
+		<main>
+			<PageContent />
+		</main>
+	</div>
+)
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	const layout = ctx.page.frontmatter?.layout
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+					<title>{ctx.page.title || ctx.site.name}</title>
+				</head>
+				<body>
+					{layout === 'menu' ? (
+						<MenuLayout ctx={ctx} PageContent={PageContent} />
+					) : (
+						<DocLayout ctx={ctx} PageContent={PageContent} />
+					)}
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+## Route-based Switching
+
+If you prefer “hard” routing rules, branch by route:
+
+```js
+const route = ctx.page.routePath
+if (route === '/menu') { /* ... */ }
+```
+
+Note: directory index routes include a trailing slash in `routePath` (e.g. `/guide/`).
+
+## Contact Forms and Other Interactive Pages
+
+For pages like contact forms, render the page normally but supply client-only components (e.g. `ContactForm.client.jsx`) from your theme’s `components/` and use them inside the page content.
+
+## Alternative: Special-purpose `.html` Pages
+
+Special-purpose pages don’t have to be MDX. You can also create plain `.html` pages under `pages/` (and under a theme’s `pagesDir`) for flows that fit better as standalone HTML (e.g. a dedicated landing page, an embedded form, or a micro-app).
+
+These pages are included in the build and processed by Vite, and they still go through `theme.template`. The difference is that you’ll usually want to branch them into a “standalone” layout (no sidebar/ToC/footer, different `<head>`, etc.).
+
+Common patterns:
+
+- Branch by file type: `ctx.page.filePath.endsWith('.html')`
+- Branch by route: `ctx.page.routePath === '/menu'`
+- Branch by frontmatter: `ctx.page.frontmatter?.layout === 'landing'`
+
+## Base and Asset Caveat
+
+For theme source URLs (`theme.sources`) and static files under `public/`, you typically don’t need to apply `withBase()` — Methanol resolves those at build time. If you generate URLs in JS and hit Vite dev inconsistencies, `withBase('/...')` can be a practical workaround.

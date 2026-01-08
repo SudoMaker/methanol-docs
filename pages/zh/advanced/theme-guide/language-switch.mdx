@@ -1,0 +1,65 @@
+---
+title: 语言切换
+description: 使用 ctx.languages / ctx.language 渲染语言切换器。
+weight: 6
+starryNight: true
+---
+
+# 语言切换
+
+Methanol 的多语言是“按目录”组织的：只要某个目录的 `index.mdx` 设置了 `lang`，它就会被识别为一个语言入口。
+
+在模板里你会拿到：
+
+- `ctx.languages`：语言入口列表
+- `ctx.language`：当前激活的语言入口（没有则为 `null`）
+
+每个入口包含 `routePath`, `routeHref`, `label`, `code`。
+
+## 一个简单的 `<select>` 切换器
+
+```jsx
+const LanguageSwitch = ({ ctx }) => {
+	const languages = Array.isArray(ctx.languages) ? ctx.languages : []
+	if (!languages.length) return null
+	const currentHref = ctx.language?.routeHref || null
+	return (
+		<select
+			aria-label="Select language"
+			onchange="location.href=this.value"
+			value={currentHref || undefined}
+		>
+			{languages.map((lang) => (
+				<option value={lang.routeHref} selected={lang.routeHref === currentHref ? true : null}>
+					{lang.label}
+				</option>
+			))}
+		</select>
+	)
+}
+```
+
+## 链接列表版
+
+```jsx
+const LanguageLinks = ({ ctx }) => {
+	const languages = Array.isArray(ctx.languages) ? ctx.languages : []
+	if (!languages.length) return null
+	const currentHref = ctx.language?.routeHref
+	return (
+		<nav aria-label="Languages">
+			{languages.map((lang) => (
+				<a href={lang.routeHref} aria-current={lang.routeHref === currentHref ? 'page' : null}>
+					{lang.label}
+				</a>
+			))}
+		</nav>
+	)
+}
+```
+
+备注：
+
+- 链接建议使用 `routeHref`（它会包含 `site.base`）。
+- 语言根目录通常会配合 `isRoot: true` 使用，这样每种语言都能得到自己的导航树。
+

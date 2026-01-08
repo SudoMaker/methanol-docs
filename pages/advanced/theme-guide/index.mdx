@@ -1,0 +1,105 @@
+---
+title: Theme Guide
+description: Create a theme root, export a theme object, and implement a template.
+weight: 4
+starryNight: true
+---
+
+# Theme Guide
+
+This guide shows how to build a custom theme (layout + components + optional pages/assets).
+
+## Theme Folder Layout
+
+Recommended structure:
+
+```
+theme/
+  index.js          # exports the theme object
+  page.jsx          # template component
+  components/       # default MDX components (optional)
+  pages/            # theme-provided pages (optional)
+  public/           # theme public assets (optional)
+  sources/          # assets used via theme.sources (optional)
+```
+
+## Theme Config
+
+In `methanol.config.js`:
+
+```js
+import PageTemplate from './theme/page.jsx'
+
+export default () => ({
+	theme: {
+		root: './theme',
+		template: PageTemplate
+	}
+})
+```
+
+Typically you import your template component and pass it as `theme.template`.
+
+## Theme Object
+
+`theme/index.js`:
+
+```js
+import PageTemplate from './page.jsx'
+
+export default () => ({
+	theme: {
+		root: '.',
+		template: PageTemplate,
+		componentsDir: './components',
+		pagesDir: './pages',
+		publicDir: './public',
+		sources: {
+			'/theme': './sources'
+		}
+	}
+})
+```
+
+## Template Contract
+
+`theme.template` receives:
+
+- `ctx`: current page/site context
+- `page`: alias for `ctx.page`
+- `PageContent`: current page body component
+- `ExtraHead`: additional `<head>` content (Methanol runtime, page assets, per-page `<Head>` output)
+- `withBase`: helper for base-aware URLs (same function as `ctx.withBase`)
+- `components`: merged components (theme defaults + user overrides)
+- `HTMLRenderer`: refui renderer utilities
+
+Minimum template:
+
+```jsx
+import { HTMLRenderer } from 'methanol'
+
+export default ({ PageContent, ExtraHead, ctx }) => (
+	<>
+		{HTMLRenderer.rawHTML`<!doctype html>`}
+		<html lang="en">
+			<head>
+				<meta charset="UTF-8" />
+				<meta name="viewport" content="width=device-width" />
+				<ExtraHead />
+				<title>{ctx.page.title || ctx.site.name}</title>
+			</head>
+			<body>
+				<PageContent />
+			</body>
+		</html>
+	</>
+)
+```
+
+In practice you’ll likely render navigation, ToC, and page meta. The next pages cover those pieces:
+
+- [Render navigation](./navigation)
+- [Render a ToC](./toc)
+- [Prev/next links](./prev-next)
+- [Language switch](./language-switch)
+- [Special-purpose pages](./special-pages)

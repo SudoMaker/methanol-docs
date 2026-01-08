@@ -1,0 +1,68 @@
+---
+title: 渲染目录（ToC）
+description: 基于 page.toc 渲染“本页目录”。
+weight: 4
+starryNight: true
+---
+
+# 渲染目录（ToC）
+
+Methanol 在编译页面时会从标题中提取目录，写入 `ctx.page.toc`。
+
+每个条目大致长这样：
+
+```js
+{
+	depth: 2,
+	id: 'my-heading',
+	value: 'My heading',
+	children: []
+}
+```
+
+## 一个简单的 ToC 渲染器
+
+```jsx
+const Toc = ({ toc }) => {
+	if (!toc?.length) return null
+	return (
+		<nav aria-label="On this page">
+			<div>On this page</div>
+			<ul>
+				{toc.map((item) => (
+					<li>
+						<a href={`#${item.id}`}>{item.value}</a>
+						{item.children?.length ? <Toc toc={item.children} /> : null}
+					</li>
+				))}
+			</ul>
+		</nav>
+	)
+}
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+				</head>
+				<body>
+					<main>
+						<PageContent />
+					</main>
+					<aside>
+						<Toc toc={ctx.page.toc} />
+					</aside>
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+## 备注
+
+- 很多主题会限制标题层级（比如只显示 H2–H4）。
+- 如果想做滚动联动的“当前小节高亮”，建议用 client 组件实现（默认主题的 `ThemeToCContainer.client.jsx` 很值得参考）。
+

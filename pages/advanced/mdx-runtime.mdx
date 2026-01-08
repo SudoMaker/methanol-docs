@@ -14,11 +14,11 @@ Methanol injects a small runtime context into every MDX file to make templates a
 These helpers are always available:
 
 - `ctx`: page and site context
-- `frontmatter`: shorthand for `ctx.page?.frontmatter`
+- `frontmatter`: shorthand for `ctx.page.frontmatter`
 - `rawHTML`: escape hatch for unescaped HTML
 
 ```mdx
-# {frontmatter.title ?? ctx.page?.title}
+# {frontmatter.title ?? ctx.page.title}
 
 Current route: {ctx.routePath}
 ```
@@ -60,8 +60,8 @@ Note: directory index routes include a trailing slash in `routePath` (e.g. `/gui
 Example usage:
 
 ```mdx
-{ctx.page?.title}
-{ctx.page?.frontmatter?.excerpt}
+{ctx.page.title}
+{ctx.page.frontmatter?.excerpt}
 ```
 
 ### ctx.pages
@@ -101,7 +101,7 @@ Use it to build a navigation UI that matches the sidebar:
 
 ```jsx
 {(() => {
-  const siblings = ctx.getSiblings?.()
+  const siblings = ctx.getSiblings()
   if (!siblings) return null
   return (
     <nav>

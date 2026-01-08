@@ -1,0 +1,77 @@
+---
+title: 渲染导航
+description: 基于 ctx.pagesTree 渲染侧边栏或菜单。
+weight: 3
+starryNight: true
+---
+
+# 渲染导航
+
+Methanol 会在 `ctx.pagesTree` 里提供导航树。它已经按当前导航根（`isRoot`）做了范围裁剪，并且遵守 hidden/exclude 等规则。
+
+每个节点大致长这样：
+
+```js
+{
+	type: 'page' | 'directory',
+	title: '...',
+	name: '...',
+	routePath: '/guide/',
+	routeHref: '/docs/guide/', // 已包含 base
+	children: []
+}
+```
+
+## 最简侧边栏
+
+```jsx
+const NavTree = ({ nodes, currentHref }) => (
+	<ul>
+		{(nodes || []).map((node) => {
+			const label = node.title || node.name || node.routePath
+			if (node.type === 'directory') {
+				return (
+					<li>
+						{node.routeHref ? <a href={node.routeHref}>{label}</a> : <span>{label}</span>}
+						{node.children?.length ? <NavTree nodes={node.children} currentHref={currentHref} /> : null}
+					</li>
+				)
+			}
+			const isActive = node.routeHref && node.routeHref === currentHref
+			return (
+				<li>
+					<a href={node.routeHref} aria-current={isActive ? 'page' : null}>
+						{label}
+					</a>
+				</li>
+			)
+		})}
+	</ul>
+)
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+				</head>
+				<body>
+					<aside>
+						<NavTree nodes={ctx.pagesTree} currentHref={ctx.page.routeHref} />
+					</aside>
+					<main>
+						<PageContent />
+					</main>
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+小贴士：
+
+- 链接优先用 `routeHref`（它会包含 `site.base`）。
+- 目录 index 路由的 `routePath` 会带尾随 `/`（例如 `/guide/`）。
+

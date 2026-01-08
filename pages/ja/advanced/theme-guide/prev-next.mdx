@@ -1,0 +1,57 @@
+---
+title: 前/次リンク
+description: ctx.getSiblings() で前後のページリンクを描画する。
+weight: 5
+starryNight: true
+---
+
+# 前/次リンク
+
+Methanol は「前へ/次へ」のためのヘルパーを提供します:
+
+```js
+const { prev, next } = ctx.getSiblings.() || {}
+```
+
+この並びは、現在のナビゲーションルートとサイドバーの順序に揃います。
+
+## 例
+
+```jsx
+const PrevNext = ({ ctx }) => {
+	const siblings = ctx.getSiblings.()
+	const prev = siblings?.prev
+	const next = siblings?.next
+	if (!prev && !next) return null
+	return (
+		<nav aria-label="Page navigation">
+			{prev ? <a href={prev.routeHref}>← {prev.title}</a> : <span />}
+			{next ? <a href={next.routeHref}>{next.title} →</a> : <span />}
+		</nav>
+	)
+}
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+				</head>
+				<body>
+					<main>
+						<PageContent />
+						<PrevNext ctx={ctx} />
+					</main>
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+補足:
+
+- リンクは `routeHref` を使ってください（`site.base` を含みます）。
+- ナビゲーションから外したいページは `hidden: true` などで調整できます。
+

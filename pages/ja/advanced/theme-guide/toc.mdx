@@ -1,0 +1,68 @@
+---
+title: 目次（ToC）を描画する
+description: page.toc から「このページの目次」を描画する。
+weight: 4
+starryNight: true
+---
+
+# 目次（ToC）を描画する
+
+Methanol はページをコンパイルする際、見出しから目次を抽出して `ctx.page.toc` に入れます。
+
+各エントリの例:
+
+```js
+{
+	depth: 2,
+	id: 'my-heading',
+	value: 'My heading',
+	children: []
+}
+```
+
+## シンプルな ToC レンダラー
+
+```jsx
+const Toc = ({ toc }) => {
+	if (!toc?.length) return null
+	return (
+		<nav aria-label="On this page">
+			<div>On this page</div>
+			<ul>
+				{toc.map((item) => (
+					<li>
+						<a href={`#${item.id}`}>{item.value}</a>
+						{item.children?.length ? <Toc toc={item.children} /> : null}
+					</li>
+				))}
+			</ul>
+		</nav>
+	)
+}
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+				</head>
+				<body>
+					<main>
+						<PageContent />
+					</main>
+					<aside>
+						<Toc toc={ctx.page.toc} />
+					</aside>
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+## 補足
+
+- 見出しレベル（例: H2〜H4）のみを採用するテーマが多いです。
+- スクロールに追従する「現在位置ハイライト」を入れたい場合は、クライアントコンポーネントで実装します（デフォルトテーマの `ThemeToCContainer.client.jsx` が参考になります）。
+

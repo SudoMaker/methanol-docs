@@ -1,0 +1,56 @@
+---
+title: Prev/Next Links
+description: Use ctx.getSiblings() to render previous/next page navigation.
+weight: 5
+starryNight: true
+---
+
+# Prev/Next Links
+
+Methanol exposes a helper for “previous/next page” navigation:
+
+```js
+const { prev, next } = ctx.getSiblings() || {}
+```
+
+These pages match the current navigation root and sidebar order.
+
+## Example
+
+```jsx
+const PrevNext = ({ ctx }) => {
+	const siblings = ctx.getSiblings()
+	const prev = siblings?.prev
+	const next = siblings?.next
+	if (!prev && !next) return null
+	return (
+		<nav aria-label="Page navigation">
+			{prev ? <a href={prev.routeHref}>← {prev.title}</a> : <span />}
+			{next ? <a href={next.routeHref}>{next.title} →</a> : <span />}
+		</nav>
+	)
+}
+
+export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
+	return (
+		<>
+			<html>
+				<head>
+					<ExtraHead />
+				</head>
+				<body>
+					<main>
+						<PageContent />
+						<PrevNext ctx={ctx} />
+					</main>
+				</body>
+			</html>
+		</>
+	)
+}
+```
+
+Notes:
+
+- Use `routeHref` for links (it includes `site.base`).
+- You can hide pages from this sequence by excluding them from navigation (e.g. `hidden: true`).
