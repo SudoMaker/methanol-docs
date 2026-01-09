@@ -1,21 +1,21 @@
 ---
 title: MDX ランタイムヘルパー
-description: ランタイムヘルパーと hydration の挙動。
+description: MDX 実行時のヘルパー機能とハイドレーション（Hydration）の挙動。
 weight: 2
 starryNight: true
 ---
 
 # MDX ランタイムヘルパー
 
-Methanol は各 MDX に小さなランタイムコンテキストを注入し、テンプレートや動的な表示を作りやすくします。
+Methanol は、各 MDX ページに軽量なランタイムコンテキストを注入します。これにより、ページ情報の参照や動的なコンテンツ生成、テンプレートとの連携が容易になります。
 
 ## コンテキスト値
 
-以下は常に利用できます。
+MDX 内では、以下の変数が常に利用可能です。
 
-- `ctx`: ページとサイトのコンテキスト
-- `frontmatter`: `ctx.page.frontmatter` のショートハンド
-- `rawHTML`: エスケープしない HTML を差し込むための入口
+- `ctx`: ページおよびサイト全体のコンテキスト
+- `frontmatter`: `ctx.page.frontmatter` のエイリアス
+- `rawHTML`: エスケープ処理を介さずに生の HTML を挿入するためのインターフェース
 
 ```mdx
 # {frontmatter.title ?? ctx.page.title}
@@ -23,52 +23,52 @@ Methanol は各 MDX に小さなランタイムコンテキストを注入し、
 現在のルート: {ctx.routePath}
 ```
 
-## コンテキストの形
+## コンテキストのデータ構造
 
-`ctx` の主なフィールド:
+`ctx` オブジェクトの主要なフィールドは以下の通りです。
 
-- `ctx.page`: 現在のページメタデータ（詳細は下記）
-- `ctx.pages`: 全ページの一覧（非表示や index も含む）
-- `ctx.pagesTree`: 現在のルートに対するナビゲーションツリー
-- `ctx.site`: サイト情報（`name`, `root`, `pagesDir`, `distDir`, `pagefind` など）
-- `ctx.withBase(path)`: `/` で始まる URL に `site.base`/Vite base を付与（相対 URL はそのまま）
-- `ctx.language`: アクティブな言語エントリ（`lang` を持つディレクトリ index がある場合。`label` と `code` を含む）
-- `ctx.getSiblings()`: 現在のページの `{ prev, next }` を返す
+- `ctx.page`: 現在表示中のページのメタデータ（詳細は後述）
+- `ctx.pages`: サイト内の全ページリスト（非表示ページやインデックスページを含む）
+- `ctx.pagesTree`: 現在のナビゲーションルートに基づいた階層ツリー構造
+- `ctx.site`: サイト全体の基本情報（`name`, `root`, `pagesDir`, `distDir`, `pagefind` など）
+- `ctx.withBase(path)`: ルート（`/`）から始まるパスに、`site.base` または Vite の Base Path を自動付与します（相対パスは変更されません）
+- `ctx.language`: 現在有効な言語設定（ディレクトリの `index.mdx` に `lang` が設定されている場合。`label` と `code` を含みます）
+- `ctx.getSiblings()`: 現在のページの前後（`prev`, `next`）のページ情報を取得します
 
-注意: `theme.sources` の URL や `public/` 配下の静的ファイルは、通常 `ctx.withBase()` を付ける必要はありません（Methanol がビルド時に解決します）。ただし JS 生成 URL で Vite dev の解決が不安定な場合、`ctx.withBase('/...')` が回避策として役立つことがあります。
+注意: `theme.sources` で定義された URL や `public/` ディレクトリ内の静的ファイルは、通常ビルド時に自動解決されるため、`ctx.withBase()` を明示的に使用する必要はありません。ただし、JavaScript で動的に URL を生成する場合など、開発環境でのパス解決に問題が生じる際の回避策として有効です。
 
-### ctx.page
+### ctx.page オブジェクト
 
-`ctx.page` は現在のページのメタデータです。主なフィールド:
+`ctx.page` は、現在のページの情報を保持するメタデータオブジェクトです。
 
-- `routePath`: 正規化されたルート（例: `/guide/writing`）
-- `routeHref`: リンク用の base 対応 href（`site.base` / Vite base を含む）
+- `routePath`: 正規化されたルートパス（例: `/guide/writing`）
+- `routeHref`: リンクに使用する、Base Path を考慮した Href（`site.base` を含みます）
 
-補足: ディレクトリ index のルートは `routePath` 末尾に `/` が付きます（例: `/guide/`）。
+補足: ディレクトリのインデックスページの場合、`routePath` の末尾には `/` が付与されます（例: `/guide/`）。
 - `filePath`: ソースファイルの絶対パス
-- `title`: 解決済みのタイトル（frontmatter か見出し由来）
-- `frontmatter`: パース済みの YAML frontmatter
-- `toc`: 抽出された目次
-- `isIndex`: `index.mdx` のとき `true`
-- `dir`: `pagesDir` からの相対ディレクトリ
-- `segments`: ルートのセグメント配列
-- `hidden`: ナビゲーションで非表示かどうか
-- `isRoot`: ナビゲーションルートを示すかどうか
-- `date`: frontmatter の日付がある場合の ISO 文字列
-- `updatedAt`: 最終更新タイムスタンプ（取得できる場合）
+- `title`: 解決済みのページタイトル（フロントマターまたは見出しから抽出）
+- `frontmatter`: 解析済みの YAML フロントマター
+- `toc`: ページ内から抽出された目次データ
+- `isIndex`: `index.mdx` ファイルの場合に `true`
+- `dir`: `pagesDir` からの相対ディレクトリパス
+- `segments`: ルートを分割したセグメント配列
+- `hidden`: ナビゲーションメニューから非表示に設定されているか
+- `isRoot`: ナビゲーションのルートノードとして設定されているか
+- `date`: フロントマターで日付が指定されている場合の ISO 文字列
+- `updatedAt`: ファイルの最終更新タイムスタンプ（取得可能な場合）
 
-例:
+使用例:
 
 ```mdx
 {ctx.page.title}
 {ctx.page.frontmatter?.excerpt}
 ```
 
-### ctx.pages
+### ctx.pages リスト
 
-`ctx.pages` は全ページの一覧（`ctx.page` と同じ形）です。index と非表示ページも含みますが、`exclude: true` のページは含みません。
+`ctx.pages` は、サイト内の全ページのメタデータオブジェクトを格納した配列です。インデックスページや非表示ページも含まれますが、`exclude: true` が設定されたページは除外されます。
 
-独自の一覧やサイトマップ、手動ナビゲーションに使えます。
+カスタムのページリスト、サイトマップ、または独自のナビゲーション UI の構築に適しています。
 
 ```jsx
 <ul>
@@ -78,16 +78,16 @@ Methanol は各 MDX に小さなランタイムコンテキストを注入し、
 </ul>
 ```
 
-### ctx.pagesTree
+### ctx.pagesTree 階層ツリー
 
-`ctx.pagesTree` は現在のルートに対する階層ツリーです（`isRoot` と `hidden` のルールを反映）。ノードの形:
+`ctx.pagesTree` は、現在のルートに基づいた階層的なナビゲーションツリーを提供します（`isRoot` および `hidden` のルールが適用済み）。
 
 - `type`: `"page"` または `"directory"`
 - `title` / `name`: 表示用ラベル
-- `routePath` / `routeHref`: ルート
-- `children`: ディレクトリの子ノード
+- `routePath` / `routeHref`: ルートパス
+- `children`: ディレクトリに属する子ノード
 
-サイドバーと同じ構造の UI を作るのに使えます。
+サイドバーなど、標準ナビゲーションと同期した UI を構築する際に利用します。
 
 ```jsx
 {ctx.pagesTree.map((node) => (
@@ -95,9 +95,9 @@ Methanol は各 MDX に小さなランタイムコンテキストを注入し、
 ))}
 ```
 
-### ctx.getSiblings
+### ctx.getSiblings 関数
 
-`ctx.getSiblings()` は現在のナビゲーション順における前後ページを返します。現在のルートと非表示/除外ルールを尊重し、サイドバーと同じ順序になります。
+`ctx.getSiblings()` は、現在のナビゲーション順序における「前のページ」と「次のページ」を取得します。これはナビゲーションルートの設定や非表示/除外ルールを反映しており、サイドバーでの表示順序と一致します。
 
 ```jsx
 {(() => {
@@ -112,13 +112,13 @@ Methanol は各 MDX に小さなランタイムコンテキストを注入し、
 })()}
 ```
 
-## rawHTML
+## rawHTML インターフェース
 
-`rawHTML` はエスケープしない HTML を挿入します。インラインスクリプトや、エスケープされたくないマークアップに使えます。
+`rawHTML` を使用すると、エスケープ処理を回避して生の HTML を直接挿入できます。インラインスクリプトや、特定の HTML 構造をそのまま出力したい場合に便利です。
 
 ```jsx
 {rawHTML('<span class="badge">Beta</span>')}
 {rawHTML`<div data-banner="true">Banner</div>`}
 ```
 
-`rawHTML` はシグナルやテンプレート補間も受け取れます。
+`rawHTML` はシグナル（Signals）やテンプレートリテラルによる補間にも対応しています。

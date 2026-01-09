@@ -1,14 +1,14 @@
 ---
 title: 页面专用脚本与样式
-description: 为单个页面添加脚本与样式。
+description: 页面级专属脚本与样式配置。
 weight: 7
 ---
 
 # 页面专用脚本与样式
 
-Methanol 可以自动加载与页面同目录、同名的脚本或样式文件。
+Methanol 支持自动加载与页面同名且同目录的脚本及样式文件。
 
-## 工作方式
+## 机制详解
 
 示例结构：
 
@@ -20,9 +20,9 @@ pages/
     components.js
 ```
 
-访问 `/guide/components` 时，会把 `components.css` 和 `components.js` 注入到页面的 `<head>`。
+访问 `/guide/components` 时，系统将自动把 `components.css` 与 `components.js` 注入至页面 `<head>` 中。
 
-## 支持的扩展名
+## 支持的文件扩展名
 
 样式：
 
@@ -46,9 +46,9 @@ pages/
   about.ts
 ```
 
-`about.css` 与 `about.ts` 只会在 `/about` 页面加载。
+`about.css` 与 `about.ts` 将仅在 `/about` 页面加载。
 
-## 注意
+## 注意事项
 
-- 文件会以页面所在目录为基准解析。
-- 全局资源（`pages/style.css`、`pages/index.js/ts`）仍会作用于所有页面。
+- 文件路径解析以页面所在目录为基准。
+- 全局资源（`pages/style.css`、`pages/index.js/ts`）依然对所有页面生效。

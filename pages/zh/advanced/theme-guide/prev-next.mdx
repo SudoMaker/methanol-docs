@@ -1,21 +1,21 @@
 ---
 title: 上一页/下一页
-description: 使用 ctx.getSiblings() 渲染前后页导航。
+description: 利用 `ctx.getSiblings()` 实现相邻页面导航。
 weight: 5
 starryNight: true
 ---
 
 # 上一页/下一页
 
-Methanol 提供了一个用于“上一页/下一页”导航的 helper：
+Methanol 提供了用于获取“上一页/下一页”的辅助函数：
 
 ```js
 const { prev, next } = ctx.getSiblings.() || {}
 ```
 
-它会遵循当前导航根，并且与侧边栏顺序保持一致。
+该函数遵循当前导航根设定，确保顺序与侧边栏导航保持严格一致。
 
-## 示例
+## 实现示例
 
 ```jsx
 const PrevNext = ({ ctx }) => {
@@ -50,8 +50,8 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-备注：
+## 注意事项
 
 - 链接请用 `routeHref`（包含 `site.base`）。
-- 如果你不希望某些页面出现在前后页序列里，可以通过 `hidden: true` 等方式把它们从导航里“淡出”。
+- 若需将特定页面排除在前后页序列之外，可通过设置 `hidden: true` 将其从导航中隐去。
 

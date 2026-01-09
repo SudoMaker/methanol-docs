@@ -1,43 +1,43 @@
 ---
 title: 默认主题
-description: 默认主题的特性与用法。
+description: 默认主题特性与使用指南。
 weight: 1
 ---
 
 # 默认主题
 
-默认主题（Methanol 仓库中的 `themes/default`）提供基础布局、侧边栏和样式。
+默认主题（位于 Methanol 仓库 `themes/default`）提供基础布局框架、侧边栏导航及标准样式。
 
-## 功能
+## 核心特性
 
-- 基于页面树的侧边栏导航
-- 可选的标题目录
-- 目录 index 带 `lang` 时显示语言选择器
-- 集成 Pagefind 搜索 UI
+- 基于页面树结构的动态侧边栏导航
+- 可配置的标题目录（TOC）
+- 支持多语言切换（基于目录 `lang` 属性）
+- 内置 Pagefind 搜索界面集成
 
-## 语言选择器
+## 语言切换功能
 
-当目录 `index.mdx` 中存在 `frontmatter.lang`（含根目录）时，会显示语言选择器。显示标签来自 `lang`，当前选择由 `ctx.language` 决定。
+当各级目录的 `index.mdx` 中配置了 `frontmatter.lang`（包含根目录）时，系统将自动激活语言选择器。显示标签源自 `lang` 属性，当前选中项则由 `ctx.language` 自动判定。
 
-## 搜索（Pagefind）
+## 搜索集成（Pagefind）
 
-在配置中设置 `pagefind: true` 并安装 Pagefind 后即可启用搜索。
+在配置中启用 `pagefind: true` 并安装 Pagefind 依赖后，即可开启全站搜索功能。
 
 ```bash
 npm i -D pagefind
 ```
 
-当 `pagefind` 启用时，Methanol 会在构建后运行 Pagefind CLI，并将结果写入 `dist/pagefind`。
+启用 `pagefind` 后，Methanol 将在构建流程末尾自动执行 Pagefind CLI，并将索引结果输出至 `dist/pagefind`。
 
-## Starry Night 样式
+## 代码高亮样式（Starry Night）
 
-主题 CSS 内置了 Starry Night 样式。
+默认主题 CSS 已内置 Starry Night 语法高亮样式。
 
 ## “Edit this page” 链接（`site.repoBase`）
 
-默认主题可以在页脚显示 “Edit this page” 链接。
+默认主题支持在页脚显示“编辑此页”链接。
 
-将 `site.repoBase` 设置为仓库托管平台中指向内容目录（如 `pages/`）的 base URL：
+请将 `site.repoBase` 设置为仓库托管平台中指向内容源目录（如 `pages/`）的基础 URL：
 
 ```js
 // methanol.config.js
@@ -48,4 +48,4 @@ export default () => ({
 })
 ```
 
-如果页面 frontmatter 中设置了 `sourceURL`，该页面会优先使用 `sourceURL`，而不是 `site.repoBase`。
+若页面 Frontmatter 中指定了 `sourceURL`，系统将优先使用该 URL，覆盖 `site.repoBase` 的默认设置。

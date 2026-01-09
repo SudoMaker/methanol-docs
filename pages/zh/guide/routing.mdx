@@ -1,34 +1,34 @@
 ---
 title: 路由
-description: 基于文件的路由规则。
+description: 基于文件系统的路由规则详解。
 weight: 3
 ---
 
 # 路由
 
-Methanol 基于 `pages/` 做文件路由。
+Methanol 依托 `pages/` 目录构建文件路由体系。
 
 ## MDX / Markdown 页面
 
 - `pages/about.mdx` → `/about`
-- `pages/guide/index.mdx` → `/guide/`（目录 index）
+- `pages/guide/index.mdx` → `/guide/`（目录索引）
 
 ## `.html` 页面
 
-你也可以把纯 HTML 文件放进 `pages/`。构建时会被 Vite 处理并输出到 `dist/`：
+亦可将纯 HTML 文件置入 `pages/`。构建过程中，Vite 将对其进行处理并输出至 `dist/`：
 
 - `pages/custom.html` → `dist/custom.html`（访问 `/custom.html`）
 
-演示： 
+示例：
 
 - [自定义 HTML 页面](../../custom.html)
 
 ## 404 页面
 
-创建 `pages/404.mdx` 来自定义 Not Found 页面（默认不会出现在导航中）。
+通过创建 `pages/404.mdx` 可自定义 404 Not Found 页面（默认不在导航中显示）。
 
 ## hidden 与 exclude
 
-- `hidden: true` 只会从导航中隐藏，但路由仍然存在，可以直接访问。
-- `exclude: true` 会从 dev/build 中排除（用于目录 `index.mdx` 时会排除整个目录）。
-- 以 `_` 或 `.` 开头的文件/目录会被忽略。
+- `hidden: true` 仅在导航中隐藏，路由依然有效且可直接访问。
+- `exclude: true` 将在 dev/build 阶段被彻底排除（若在目录 `index.mdx` 中设置，则排除整个目录）。
+- 以 `_` 或 `.` 开头的文件或目录将被自动忽略。

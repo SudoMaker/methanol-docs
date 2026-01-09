@@ -1,27 +1,27 @@
 ---
 title: rEFui 运行时
-description: 在模板中使用 rEFui 与 HTML 渲染器。
+description: rEFui 渲染机制及模板应用详解。
 weight: 5
 ---
 
 # rEFui 运行时
 
-Methanol 使用 [rEFui](https://github.com/SudoMaker/rEFui) 作为 JSX 运行时。写文档不一定需要学习 rEFui，但这对主题和组件作者很有帮助。
+Methanol 采用 [rEFui](https://github.com/SudoMaker/rEFui) 作为核心 JSX 运行时。尽管日常文档编写无需掌握 rEFui，但对于主题与组件开发者而言，深入了解其机制将大有裨益。
 
-Methanol 在两端都使用 rEFui：
+Methanol 在服务端与客户端均基于 rEFui 构建：
 
-- **Server/SSG:** 在 `build`（以及 dev server）阶段把 JSX 渲染成 HTML。
-- **Client:** 只对客户端组件做局部 hydrate，把它们当作小 “islands”，其余内容保持静态 HTML。
+- **Server/SSG:** 在 `build`（及 dev server）阶段将 JSX 编译为静态 HTML。
+- **Client:** 仅对客户端组件执行局部注水（Hydration），将其视为独立“Islands”，而页面其余部分维持纯静态 HTML 状态。
 
-## 适用场景
+## 核心应用场景
 
-- 自定义模板（`theme.template`）
-- `components/` 中的交互组件
-- 使用 `rawHTML` 与上下文辅助功能
+- 模板深度定制（`theme.template`）
+- `components/` 中的富交互组件开发
+- 利用 `rawHTML` 及上下文辅助工具
 
 ## JSX 运行时
 
-Methanol 使用自动 JSX 运行时，并将 `refui` 作为 import source 来编译 MDX。你可以照常写标准 JSX 组件。
+Methanol 采用自动 JSX 运行时，并指定 `refui` 为导入源以编译 MDX。开发者可依循标准规范编写 JSX 组件。
 
 ```jsx
 export default function Callout(props, ...children) {
@@ -29,9 +29,9 @@ export default function Callout(props, ...children) {
 }
 ```
 
-## 组件示例（Web）
+## 原生 Web 组件示例
 
-想在 Methanol 之外体验 rEFui，可以用 DOM 渲染器写一个简单的响应式组件：
+若需在 Methanol 环境之外体验 rEFui，可利用 DOM 渲染器构建简易响应式组件：
 
 ```jsx
 import { signal, $ } from 'refui'
@@ -58,7 +58,7 @@ const App = () => {
 DOMRenderer.render(document.body, App)
 ```
 
-在 Methanol 中，通常导出组件，让 MDX 渲染器完成挂载。
+在 Methanol 体系中，通常只需导出组件，MDX 渲染器将自动完成挂载流程。
 
 ## 参考
 

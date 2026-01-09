@@ -1,32 +1,32 @@
 ---
 title: 搜索
-description: Pagefind 搜索的启用与使用。
+description: Pagefind 静态全文检索的启用与高级配置。
 weight: 6
 ---
 
 # 搜索
 
-Methanol 集成了 [Pagefind](https://pagefind.app) 静态搜索。为了保证开发体验轻快，搜索默认关闭。
+Methanol 集成了 [Pagefind](https://pagefind.app) 静态全文检索方案。为确保开发环境的轻快体验，搜索功能默认处于关闭状态。
 
-搜索只在生产构建中可用。开发服务器不会生成/提供 Pagefind 的索引与 UI。
+搜索功能仅在生产构建中生效。开发服务器模式下不会生成 Pagefind 索引，亦不提供相关搜索 UI。
 
 ## 安装
 
-在项目中本地安装：
+推荐在项目中执行本地安装：
 
 ```bash
 npm i -D pagefind
 ```
 
-也可以全局安装：
+亦可进行全局安装：
 
 ```bash
 npm i -g pagefind
 ```
 
-## 启用或禁用
+## 启用与禁用
 
-在 `methanol.config.*` 中设置 `pagefind`：
+在 `methanol.config.*` 中配置 `pagefind` 选项：
 
 ```js
 // methanol.config.js
@@ -35,7 +35,7 @@ export default () => ({
 })
 ```
 
-明确禁用：
+显式禁用：
 
 ```js
 // methanol.config.js
@@ -44,7 +44,7 @@ export default () => ({
 })
 ```
 
-## Object 配置
+## 详细配置对象
 
 ```js
 export default () => ({
@@ -59,13 +59,13 @@ export default () => ({
 })
 ```
 
-除 `enabled` 与 `build` 外的字段将在客户端运行时传递给 Pagefind UI。
+除 `enabled` 与 `build` 属性外的字段，将在客户端运行时传递给 Pagefind UI。
 
-## 替换为其他搜索方案
+## 集成第三方搜索方案
 
-若想用其他搜索系统：
+若需切换至其他搜索系统：
 
-1) 设为 `pagefind: false`
-2) 自行实现 UI 与索引流程
+1) 将 `pagefind` 设为 `false`。
+2) 自行实现搜索 UI 与索引构建流程。
 
-默认主题只会在 `pagefind` 启用时渲染搜索 UI，禁用后你需要完全自行实现搜索 UI。
+默认主题仅在 `pagefind` 启用时渲染搜索组件；一旦禁用，开发者需完全自主实现搜索界面。

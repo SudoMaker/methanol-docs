@@ -1,23 +1,23 @@
 ---
 title: 专门用途页面
-description: 提供主题页面，并在模板中为特定路由/ frontmatter 使用不同布局。
+description: 集成主题预设页面及基于路由/Frontmatter 的差异化布局策略。
 weight: 7
 starryNight: true
 ---
 
 # 专门用途页面
 
-主题可以通过 `theme.pagesDir` 提供自带页面。主题页面遵循与用户页面相同的路由规则；若路由冲突，则用户页面优先。
+主题可通过 `theme.pagesDir` 提供预设页面。主题页面遵循与用户页面一致的路由规则；若发生冲突，用户页面拥有更高优先级。
 
-它很适合用来承载“功能型页面”：
+适用于承载各类“功能型页面”：
 
-- 主题自带的落地页（landing）
+- 主题自带的落地页（Landing）
 - 独立的目录/菜单页
 - 友链页
 - 联系页
 - 主题自带的 `/404` 页面
 
-## 从主题中提供页面
+## 配置主题页面
 
 `theme/index.js`：
 
@@ -41,20 +41,20 @@ pages/
   404.mdx
 ```
 
-## 按路由分支
+## 基于路由的分支逻辑
 
-如果你更偏好“硬规则”，也可以按路由来分支：
+若偏好“硬编码规则”，亦可基于路由进行逻辑分支：
 
 ```js
 const route = ctx.page.routePath
 if (route === '/menu') { /* ... */ }
 ```
 
-补充：目录 index 路由的 `routePath` 会带尾随 `/`（例如 `/guide/`）。
+补充：目录索引页面的 `routePath` 均带有尾随 `/`（例如 `/guide/`）。
 
-## 用 frontmatter 选择布局
+## 基于 Frontmatter 选择布局
 
-最直观的方式是给页面加一个 `layout` 标记，然后在模板里分别渲染。
+最直观的方式是为页面添加 `layout` 标记，并在模板中进行差异化渲染。
 
 示例 `menu.mdx`：
 
@@ -111,22 +111,22 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-## 表单等交互页面
+## 表单及交互类页面
 
-例如联系表单这种页面，通常可以保持页面本身照常渲染，同时在主题 `components/` 中提供 client-only 组件（例如 `ContactForm.client.jsx`），让页面内容使用即可。
+对于联系表单等交互页面，通常可保持页面正常渲染，同时在主题 `components/` 中提供 Client-only 组件（例如 `ContactForm.client.jsx`），供页面内容直接调用。
 
-## 另一种思路：使用 `.html` 做功能页
+## 进阶思路：利用 `.html` 构建功能页
 
-专门用途页面不一定要用 MDX。你也可以在 `pages/`（以及主题的 `pagesDir`）下创建纯 `.html` 页面：比如独立落地页、嵌入式表单、或一个小型前端应用。
+专门用途页面无需局限于 MDX。亦可在 `pages/`（及主题 `pagesDir`）下创建纯 `.html` 页面，用于构建独立落地页、嵌入式表单或轻量级前端应用。
 
-这些页面会被纳入构建流程并交给 Vite 处理，同时也仍然会经过 `theme.template`。通常你会在模板里把它们分流到“独立页面”布局：比如不渲染侧边栏/目录/页脚，或使用不同的 `<head>`。
+此类页面将被纳入构建流程并交由 Vite 处理，同时依然经过 `theme.template` 渲染。通常需在模板中将其分流至“独立页面”布局：例如隐藏侧边栏/目录/页脚，或加载定制化的 `<head>`。
 
-常见分流方式：
+常用分流策略：
 
 - 按文件类型：`ctx.page.filePath.endsWith('.html')`
 - 按路由：`ctx.page.routePath === '/menu'`
 - 按 frontmatter：`ctx.page.frontmatter?.layout === 'landing'`
 
-## base 与资源的注意事项
+## Base Path 与资源引用注意事项
 
-对 `theme.sources` 的 URL 和 `public/` 下的静态文件，通常不需要套用 `withBase()` —— Methanol 会在构建时进行解析。但如果你在 JS 中动态生成 URL，并遇到 Vite dev 下资源解析不一致，`withBase('/...')` 仍然是一个很实用的规避手段。
+通常无需对 `theme.sources` URL 及 `public/` 静态文件应用 `withBase()` —— Methanol 构建系统会自动解析。但在 JS 中动态生成 URL 时若遇 Vite dev 路径解析不一致，`withBase('/...')` 仍是有效的解决方案。

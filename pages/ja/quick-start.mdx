@@ -1,67 +1,67 @@
 ---
 title: クイックスタート
-description: プロジェクト構成、コマンド、最初のページ作成。
+description: プロジェクト構造、基本コマンド、最初のページの作成手順。
 weight: 2
 starryNight: true
 ---
 
 # クイックスタート
 
-Methanol は Markdown/MDX のフォルダを、ルーティングとナビゲーション、ビルドパイプラインを備えた静的サイトに変換します。
+Methanol は、Markdown や MDX ファイルが含まれるフォルダを、ルーティング、ナビゲーション、ビルドパイプラインを備えた静的サイトへと即座に変換します。
 
-特別な初期設定は不要です。`pages/index.mdx` を作り、ファイル/フォルダを増やすだけでルートとナビゲーションが自動で更新されます。
+複雑なセットアップは不要です。`pages/index.mdx` を作成し、ファイルやフォルダを追加していくだけで、ルートとナビゲーションが自動的に生成・更新されます。
 
-## すぐ試す
+## 動作確認
 
-`npx` で手早く起動できます。
+`npx` を使用して、すぐに Methanol を試すことができます。
 
 ```bash
 npx methanol dev
 ```
 
-`http://localhost:5173` を開いてください。
+ブラウザで `http://localhost:5173` を開いてください。
 
-## 既存の Markdown フォルダを使う
+## 既存の Markdown フォルダを利用する
 
-すでに Markdown/MDX がある場合は、そのディレクトリを指定します。
+すでに Markdown または MDX ファイルが保存されているフォルダがある場合は、そのディレクトリを指定して起動できます。
 
 ```bash
 npx methanol dev ./my-docs
 ```
 
-このフォルダがコンテンツのルートになり、`./my-docs/index.mdx` は `/` に対応します。
+指定したフォルダがコンテンツのルートとなり、例えば `./my-docs/index.mdx` は `/` にマッピングされます。
 
-## ローカルの起動を速くする
+## 開発ワークフローの高速化
 
-CLI の起動を速くしたい場合はグローバルインストールがおすすめです。
+頻繁に使用する場合は、グローバルインストールを行うことで CLI の起動時間を短縮できます。
 
 ```bash
 npm install methanol -g
 methanol dev
 ```
 
-## 本番ビルド
+## 本番環境用ビルド
 
 ```bash
 npx methanol build
 npx methanol serve
 ```
 
-`serve` は `dist/` の本番出力をローカルでプレビューします。
+`serve` コマンドを使用すると、`dist/` に出力されたビルド成果物をローカルでプレビューできます。
 
-## プロジェクト構成
+## プロジェクト構造
 
 ```
-pages/        # MDX/MD ページ（または docs/）
-components/   # MDX で使う JSX/TSX コンポーネント
-public/       # 静的アセット（テーマの public アセットを上書き）
-build/        # 中間 HTML（任意）
-dist/         # 本番出力
+pages/        # MDX/MD ページ（または docs/ も利用可能）
+components/   # MDX 内で使用する JSX/TSX コンポーネント
+public/       # 静的アセット（テーマのアセットを上書き可能）
+build/        # 中間 HTML（オプション）
+dist/         # ビルド成果物の出力先
 ```
 
-`public/` のファイルは `/` で配信され（例: `public/logo.png` → `/logo.png`）、テーマ側の public アセットより優先されます。
+`public/` 内のファイルはサイトのルート `/` で配信され（例: `public/logo.png` → `/logo.png`）、テーマが提供するアセットよりも優先されます。
 
-## 最初のページ
+## 最初のページの作成
 
 `pages/index.mdx` を作成します。
 
@@ -72,10 +72,10 @@ title: ホーム
 
 # ようこそ
 
-これは私のサイトです。
+これは Methanol で構築されたサイトです。
 ```
 
-ファイルパスがそのままルートになります。
+ファイルパスがそのままサイトのルートになります。
 
 ```
 pages/index.mdx       -> /

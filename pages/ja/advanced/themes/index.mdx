@@ -1,23 +1,23 @@
 ---
 title: テーマ
-description: テーマオブジェクトの形、デフォルトディレクトリ、テンプレート契約。
+description: テーマオブジェクトの構造、ディレクトリ構成、およびテンプレートのインターフェース仕様。
 weight: 3
 ---
 
 # テーマ
 
-テーマはレイアウト（HTML テンプレート）、デフォルトの MDX コンポーネント、テーマページ/アセットを制御します。Methanol リポジトリのデフォルトテーマは良い参考になります。
+テーマは、HTML レイアウト（テンプレート）、デフォルトの MDX コンポーネント、およびテーマ専用のページやアセットを包括的に制御します。実装の詳細については、Methanol リポジトリに同梱されているデフォルトテーマが最適なリファレンスとなります。
 
 ## テーマ実装ガイド
 
-- [テーマ実装ガイド](../theme-guide/)
-- [ナビゲーションを描画する](../theme-guide/navigation)
-- [目次（ToC）を描画する](../theme-guide/toc)
-- [前/次リンク](../theme-guide/prev-next)
-- [言語スイッチ](../theme-guide/language-switch)
-- [特別用途ページ](../theme-guide/special-pages)
+- [テーマ実装のステップ](../theme-guide/)
+- [ナビゲーションのレンダリング](../theme-guide/navigation)
+- [ページ内目次（ToC）のレンダリング](../theme-guide/toc)
+- [前後ページへのリンク実装](../theme-guide/prev-next)
+- [言語スイッチャーの実装](../theme-guide/language-switch)
+- [特殊用途ページの作成](../theme-guide/special-pages)
 
-## テーマの形
+## テーマオブジェクトの構造
 
 ```jsx
 export default () => ({
@@ -54,71 +54,67 @@ export default () => ({
 })
 ```
 
-### 必須
+### 必須設定
 
-- `theme.root` は必須で、テーマの基準ディレクトリを定義します。
+- `theme.root`: テーマの基準ディレクトリを定義する必須プロパティです。
 
-### デフォルトと検証
+### デフォルト値とバリデーション
 
-- `componentsDir` / `pagesDir` / `publicDir` は次のいずれかにできます:
-	- 省略（テーマルート配下の `./components` / `./pages` / `./public` をデフォルトとして使い、存在しなければスキップ）
-	- `false`（その機能を無効化）
-	- 明示指定（存在しないとエラー）
+- `componentsDir` / `pagesDir` / `publicDir` は、以下のいずれかの形式で指定します。
+	- **省略:** テーマルート直下の `./components` / `./pages` / `./public` をデフォルトとして使用します（存在しない場合は自動的にスキップされます）。
+	- **`false`:** 対象の機能を明示的に無効化します。
+	- **パス文字列:** ディレクトリを明示的に指定します（指定したパスが存在しない場合はビルドエラーとなります）。
 
-## テーマの構成例
+## 推奨されるテーマ構成
 
 ```
 theme/
-  index.js          # テーマ定義
-  page.jsx          # テンプレート
-  components/       # デフォルトの MDX コンポーネント
-  pages/            # テーマページ（任意）
-  public/           # 公開アセット（任意）
-  sources/          # theme.sources でマップするアセット
+  index.js          # テーマ定義のエントリポイント
+  page.jsx          # レイアウトテンプレート
+  components/       # テーマ標準の MDX コンポーネント
+  pages/            # テーマ同梱の特殊ページ（任意）
+  public/           # テーマ専用の静的アセット（任意）
+  sources/          # theme.sources でマッピングするリソース
 ```
 
-テーマの `public/` は dev/build 時にプロジェクトの `publicDir` に統合されます。同一パスの場合はプロジェクト側が優先されます。
+テーマ内の `public/` は、ビルド時にプロジェクト側の `publicDir` と統合されます。同一パスにファイルが存在する場合は、プロジェクト側のファイルが優先的に適用されます。
 
-## テンプレート契約
+## テンプレートのインターフェース仕様
 
-`theme.template` に渡されるもの:
+`theme.template` 関数には、以下のプロパティを含むオブジェクトが渡されます。
 
-- `PageContent`: 現在ページ本文の JSX コンポーネント
-- `ExtraHead`: `<head>` に注入される追加内容（ページアセット + Methanol ランタイム + ページの `<Head>`/`head` 出力）
-- `ctx`: ページ/サイトのコンテキスト（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`）
-- `page`: `ctx.page` の別名
-- `withBase`: base を考慮した URL を作るヘルパー（`ctx.withBase` と同じ）
-- `HTMLRenderer`: refui HTML レンダラー（`rawHTML`/`serialize` の利用、または JSX コンポーネントの手動レンダリングに使用）
-- `components`: マージ済みの components オブジェクト（テーマ + ユーザー）
+- `PageContent`: 現在のページの本文をレンダリングする JSX コンポーネント。
+- `ExtraHead`: `<head>` セクションに注入すべき動的な内容（アセット、ランタイム、ページ固有のメタタグなど）。
+- `ctx`: サイトおよびページのコンテキストオブジェクト（`ctx.page`, `ctx.pagesTree` など）。
+- `page`: `ctx.page` へのエイリアス。
+- `withBase`: Base Path を考慮した URL を生成するヘルパー関数（`ctx.withBase` と同等）。
+- `HTMLRenderer`: rEFui HTML レンダラー（`rawHTML` の利用や、JSX の手動レンダリングに使用）。
+- `components`: テーマとユーザー定義がマージされたコンポーネントセット。
 
-JSX ツリーを返してください。
+戻り値として、ページ全体を構成する JSX ツリーを返してください。
 
-**重要:** `<head>` の中に `<ExtraHead />` を置いてください。これがないと、ページの `<Head>`/`head` と自動アセットが挿入されません。
+**重要:** `<head>` タグ内に必ず `<ExtraHead />` を含めてください。これが欠落すると、自動アセットの注入やページ固有の `<Head>` 設定が正しく機能しません。
 
-サイトをサブパス配信する場合（`site.base !== '/'`）:
+サブパス（`site.base !== '/'`）で配信する場合の注意点:
 
-- Vite の `base` に追従させたい URL（Vite 管理のランタイムアセットなど）には `withBase('/...')`（または `ctx.withBase('/...')`）を使ってください。
-- `theme.sources` の URL や `public/` 配下の静的ファイルに `withBase()` を付ける必要は通常ありません（Methanol がビルド時に解決します）。ただし JS 生成 URL で Vite dev の解決が不安定な場合、回避策として `withBase()` が役立つことがあります。
+- Vite が管理するランタイムリソースなど、Base Path に追従させる必要がある URL には `withBase('/...')` を使用してください。
+- `theme.sources` や `public/` 内の静的ファイルについては、Methanol がビルド時に自動で解決するため、通常は `withBase()` を適用する必要はありません。ただし、JavaScript で動的にパスを生成する場合などの回避策として利用可能です。
 
 ## テーマコンポーネント
 
-`theme.components` はデフォルトの MDX コンポーネントを提供します。`components/` のユーザーコンポーネントが同名の場合は上書きします。
-
-テンプレートにも `components` が渡されます（ナビ/検索などレイアウト用コンポーネントに便利です）。
+`theme.components` で定義されたコンポーネントは、MDX 内で標準的に利用可能となります。ユーザープロジェクトの `components/` 内に同名のコンポーネントが存在する場合は、ユーザー側が優先されます。
 
 ## テーマページ
 
-テーマページはユーザーと同じルーティング規則です。ユーザールートが常に優先されます。
+テーマ側で定義されたページは、ユーザーページと同様のルーティングルールに従います。ルーティングが重複した場合は、常にユーザー側のページが優先されます。テーマの `/404` ページは、ユーザープロジェクト内に 404 ページが存在しない場合にのみ適用されます。
 
-テーマ側の `/404` は、ユーザーが 404 ページを用意していない場合のみ使われます。
+## 静的アセットの統合
 
-## テーマの public アセット
+テーマに `publicDir` が設定されている場合、ビルドプロセスの開始時にユーザーの `public` ディレクトリへと統合されます。同名のファイルが存在する場合はコピーがスキップされ、プロジェクト側のファイルが維持されます。
 
-テーマに `publicDir` がある場合、dev/build の開始時にユーザーの public ディレクトリへコピーされます。ユーザーが `publicDir` を指定していても、テーマのファイルはそこにコピーされ、同名のファイルはスキップされます。ユーザー側に public ディレクトリがない場合は、テーマの public がフォールバックとして使われます。
+## 仮想パスのマッピング (theme.sources)
 
-## テーマソース
-
-`theme.sources` は仮想 URL とファイルをマップします。これは Vite の alias ではなく、Methanol の resolver が処理します。
+`theme.sources` を使用して、仮想 URL を特定の物理ファイルにマッピングできます。これは Vite のエイリアス機能ではなく、Methanol 独自の解決エンジンによって処理されます。
 
 ```js
 export default () => ({
@@ -131,11 +127,11 @@ export default () => ({
 })
 ```
 
-## テーマフック
+## テーマ固有のビルドフック
 
-テーマ側もビルドフックを提供できます（ユーザー設定と同じ形です）:
+テーマ側でも、ビルドプロセスに介入するためのフックを定義できます（ユーザー設定と同様の形式）。
 
-- `preBuild`（dev 起動時 + build 前）
-- `preBundle`（ページのレンダリング後、Vite のバンドル前）
-- `postBundle`（Vite のバンドル後、Pagefind の前）
-- `postBuild`（build 後）
+- `preBuild`: 開発サーバー起動時およびビルド開始前。
+- `preBundle`: ページレンダリング完了後、Vite によるバンドル実行前。
+- `postBundle`: Vite によるバンドル完了後、Pagefind の実行前。
+- `postBuild`: ビルドプロセス全体の完了後。

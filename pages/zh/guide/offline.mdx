@@ -1,13 +1,13 @@
 ---
 title: 离线访问 (PWA)
-description: PWA 与离线访问配置。
+description: PWA 集成与离线访问配置指南。
 weight: 10
 starryNight: true
 ---
 
 # 离线访问 (PWA)
 
-如果你希望站点支持离线访问，可以使用 [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app)。
+若希望赋予站点离线访问能力，可集成 [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app)。
 
 ## 安装
 
@@ -39,4 +39,4 @@ export default () => ({
 })
 ```
 
-此配置会缓存标准网页资源，并针对未知路由回退到 404 页面。
+该配置将自动缓存标准网页资源，并在遭遇未知路由时回退至 404 页面。

@@ -1,29 +1,29 @@
 ---
 title: 主题实现指南
-description: 从主题根目录到主题对象与模板实现，一步步搭建你的主题。
+description: 从目录结构到主题对象与模板实现，分步构建自定义主题。
 weight: 4
 starryNight: true
 ---
 
 # 主题实现指南
 
-这份指南会带你实现一个自定义主题（布局 + 组件 + 可选的主题页面/资源），并把常见的“框架骨架”补齐：导航、目录、前后页、语言切换，以及专门用途页面的处理方式。
+本指南将引导开发者构建自定义主题（涵盖布局、组件、可选主题页面及资源），并完善导航、目录、前后页、语言切换及特殊页面处理等核心框架功能。
 
-## 主题目录结构
+## 推荐目录结构
 
-推荐结构：
+建议结构：
 
 ```
 theme/
   index.js          # 导出主题对象
-  page.jsx          # 模板组件（layout）
+  page.jsx          # 模板组件（Layout）
   components/       # 默认 MDX 组件（可选）
   pages/            # 主题自带页面（可选）
-  public/           # 主题 public 静态资源（可选）
+  public/           # 主题 Public 静态资源（可选）
   sources/          # theme.sources 映射的资源（可选）
 ```
 
-## 在配置中启用主题
+## 配置启用主题
 
 `methanol.config.js`：
 
@@ -38,7 +38,7 @@ export default () => ({
 })
 ```
 
-## 主题对象
+## 主题对象定义
 
 `theme/index.js`：
 
@@ -59,19 +59,19 @@ export default () => ({
 })
 ```
 
-## 模板约定（Template Contract）
+## 模板接口规范（Template Contract）
 
-`theme.template` 会收到：
+`theme.template` 将接收以下参数：
 
 - `ctx`：当前页面/站点上下文
 - `page`：`ctx.page` 的别名
-- `PageContent`：当前页面正文组件
-- `ExtraHead`：注入到 `<head>` 的额外内容（Methanol 运行时、页面资源、页面 `<Head>` 输出等）
-- `withBase`：base 相关的 URL 辅助函数（与 `ctx.withBase` 相同）
-- `components`：合并后的组件（主题默认 + 用户覆盖）
-- `HTMLRenderer`：refui 的渲染工具
+- `PageContent`：页面正文渲染组件
+- `ExtraHead`：需注入 `<head>` 的额外内容（Methanol 运行时、页面资源、页面 `<Head>` 输出等）
+- `withBase`：URL Base 处理函数（与 `ctx.withBase` 相同）
+- `components`：合并后的组件集合（主题默认 + 用户覆盖）
+- `HTMLRenderer`：refui 渲染工具集
 
-最小模板：
+最小模板示例：
 
 ```jsx
 import { HTMLRenderer } from 'methanol'
@@ -94,10 +94,10 @@ export default ({ PageContent, ExtraHead, ctx }) => (
 )
 ```
 
-实际主题里通常还会加上导航、目录、页面信息等。下面这些页面分别讲每一块：
+在实际主题开发中，通常需集成导航、目录及页面信息等模块。各功能实现详解如下：
 
-- [渲染导航](./navigation)
-- [渲染目录（ToC）](./toc)
-- [上一页/下一页](./prev-next)
-- [语言切换](./language-switch)
-- [专门用途页面](./special-pages)
+- [导航渲染](./navigation)
+- [目录（TOC）渲染](./toc)
+- [相邻页面导航](./prev-next)
+- [多语言切换](./language-switch)
+- [特殊用途页面](./special-pages)

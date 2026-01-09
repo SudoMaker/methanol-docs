@@ -1,15 +1,15 @@
 ---
 title: 代码高亮
-description: 代码高亮的启用与配置。
+description: 代码高亮启用与高级配置。
 weight: 5
 starryNight: true
 ---
 
 # 代码高亮
 
-Methanol 使用 [Starry Night](https://github.com/wooorm/starry-night) 提供代码高亮（通过 `rehype-starry-night`）。为了性能与构建速度，默认关闭。
+Methanol 基于 [Starry Night](https://github.com/wooorm/starry-night) 实现代码高亮（集成 `rehype-starry-night`）。出于性能与构建速度考量，默认处于关闭状态。
 
-## 启用或禁用
+## 全局启停
 
 在 `methanol.config.*` 中设置 `starryNight`：
 
@@ -20,7 +20,7 @@ export default () => ({
 })
 ```
 
-明确禁用：
+显式禁用：
 
 ```js
 // methanol.config.js
@@ -29,16 +29,16 @@ export default () => ({
 })
 ```
 
-CLI（单次构建）：
+CLI 临时开关（单次构建生效）：
 
 ```bash
 npx methanol build --code-highlighting # 本次启用
 npx methanol build --code-highlighting false # 本次禁用
 ```
 
-## 页面级覆盖
+## 页面级配置覆盖
 
-页面 Frontmatter 配置的优先级通常最高：
+页面 Frontmatter 配置拥有最高优先级：
 
 ```mdx
 ---
@@ -46,9 +46,9 @@ starryNight: true
 ---
 ```
 
-## 替换为其他高亮方案
+## 集成第三方高亮方案
 
-如果想使用用别的方案：
+若需切换至其他高亮方案：
 
 1) 在配置文件中禁用 Starry Night（`starryNight: false`）
 2) 在 `mdx` 配置中加入你的插件
@@ -62,13 +62,13 @@ export default () => ({
 })
 ```
 
-## 样式
+## 样式定制
 
-Methanol 不会自动注入高亮样式；通常由主题决定加载哪些 CSS，或者你可以自己提供 CSS 文件定义 StarryNight 高亮样式。
+Methanol 不会自动注入高亮样式。通常由主题负责加载 CSS，开发者亦可自行引入 CSS 文件定义 Starry Night 样式。
 
-## 额外语言
+## 扩展语言支持
 
-Starry Night 自带一组基础语法。如需更多语言，在 `starryNight.grammars` 中追加即可。
+Starry Night 内置基础语法集。如需支持更多语言，可在 `starryNight.grammars` 中进行扩展。
 
 ```js
 import { common } from '@wooorm/starry-night'
@@ -81,4 +81,4 @@ export default () => ({
 })
 ```
 
-**注意:** 要加载额外语法，需要在当前项目中安装 `@wooorm/starry-night`。
+**注意：** 加载扩展语法前，需在当前项目中安装 `@wooorm/starry-night` 依赖。

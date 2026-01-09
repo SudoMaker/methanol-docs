@@ -1,20 +1,20 @@
 ---
 title: 画像とアセット
-description: 画像と静的アセットの扱い。
+description: 画像および静的アセットの管理と参照方法。
 weight: 5
 ---
 
 # 画像とアセット
 
-静的アセットは `public/` に置き、ページ固有のファイルは相対パスで参照します。
+プロジェクト全体の静的アセットは `public/` ディレクトリに配置し、各ページに特有のファイルは相対パスを使用して参照します。
 
-## Public フォルダ
+## Public ディレクトリ
 
-`public/` の内容はサイトのルートから配信されます。
+`public/` 内のファイルは、サイトのルートパスから直接配信されます。
 
-サイトをサブパス配信する場合（`site.base !== '/'`）でも、通常は public アセットに `ctx.withBase()` を付ける必要はありません（Methanol がビルド時に解決します）。
+サイトをサブパス（`site.base !== '/'`）で配信する場合でも、通常、public 内のアセットに対して `ctx.withBase()` を使用する必要はありません（Methanol がビルド時にパスを自動的に解決します）。
 
-ただし JS（client-only コンポーネント）で URL を生成していて Vite の dev で解決が不安定な場合、`ctx.withBase('/...')` が回避策として役立つことがあります。
+ただし、JavaScript（クライアント専用コンポーネント）内で動的に URL を生成する場合、Vite の開発サーバーにおいてパス解決が不安定になることがあります。その際、`ctx.withBase('/...')` を使用することが回避策として有効です。
 
 ```
 public/
@@ -23,16 +23,16 @@ public/
     brochure.pdf
 ```
 
-MDX から使う例:
+MDX 内での使用例:
 
 ```md
 ![Logo](/logo.png)
-[Download the brochure](/downloads/brochure.pdf)
+[パンフレットをダウンロード](/downloads/brochure.pdf)
 ```
 
 ## ローカルファイル
 
-ページの横に置いた画像を相対パスで参照できます。
+ページファイルの隣に配置した画像などは、相対パスで直接参照することが可能です。
 
 ```
 pages/
@@ -45,11 +45,11 @@ pages/
 ![Diagram](./writing-diagram.png)
 ```
 
-## グローバルスタイルとスクリプト
+## 全局スタイルおよびスクリプト
 
-`pages/style.css` を置くと全ページに読み込まれます。`pages/index.js` または `pages/index.ts` を置くとモジュールスクリプトとして読み込まれます。
+`pages/style.css` を配置すると、全ページに自動的に適用されます。また、`pages/index.js` または `pages/index.ts` は、全ページでモジュールスクリプトとして読み込まれます。
 
-本番ビルドでは base を考慮した URL で注入されます（`ctx.withBase('/style.css')` や `ctx.withBase('/index.js')` 相当）。
+本番ビルドでは、Base Path を考慮した適切な URL で注入されます（`ctx.withBase('/style.css')` や `ctx.withBase('/index.js')` に相当）。
 
 ```html
 <link rel="stylesheet" href="/style.css" />

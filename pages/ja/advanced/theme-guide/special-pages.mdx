@@ -1,25 +1,24 @@
 ---
-title: 特別用途ページ
-description: テーマページの提供と、ルート/ frontmatter に応じたレイアウト分岐。
+title: 特殊用途のページ
+description: テーマ同梱ページの提供、およびルートやフロントマターに基づくレイアウトの条件分岐。
 weight: 7
 starryNight: true
 ---
 
-# 特別用途ページ
+# 特殊用途のページ
 
-テーマは `theme.pagesDir` でページを同梱できます。テーマページも通常のページと同じルーティング規則で扱われ、同一ルートがある場合はユーザー側のページが常に優先です。
+テーマは、`theme.pagesDir` を通じて独自のページを同梱できます。これらのテーマページはユーザーページと同様のルーティングルールで処理されますが、ルートが重複した場合は常にユーザー側のページが優先されます。
 
-用途の例:
+主な活用例:
 
-- テーマが提供するランディングページ
-- 専用のメニュー/インデックスページ
-- 友達リンク（リンク集）ページ
-- お問い合わせページ
-- テーマ提供の `/404` フォールバック
+- テーマ固有のランディングページ
+- 専用のメニュー画面やインデックスページ
+- リンク集やコンタクトページ
+- テーマ標準の `/404` フォールバックページ
 
-## テーマからページを提供する
+## テーマからページを提供する方法
 
-`theme/index.js`:
+`theme/index.js` でディレクトリを指定します。
 
 ```js
 export default () => ({
@@ -30,7 +29,7 @@ export default () => ({
 })
 ```
 
-`theme/pages/`:
+`theme/pages/` 内の構成例:
 
 ```
 pages/
@@ -41,11 +40,11 @@ pages/
   404.mdx
 ```
 
-## frontmatter でレイアウトを切り替える
+## フロントマターによるレイアウトの切り替え
 
-いちばんシンプルなのは、frontmatter に `layout` を付けてテンプレートで分岐する方法です。
+最も柔軟な方法は、フロントマターに `layout` プロパティを定義し、テンプレート内で条件分岐を行う手法です。
 
-例 `menu.mdx`:
+例: `menu.mdx`
 
 ```mdx
 ---
@@ -56,10 +55,10 @@ hidden: true
 
 # Menu
 
-This page uses a different layout.
+このページは専用のレイアウトでレンダリングされます。
 ```
 
-テンプレート側:
+テンプレートでの実装例:
 
 ```jsx
 const MenuLayout = ({ ctx, PageContent }) => (
@@ -71,7 +70,7 @@ const MenuLayout = ({ ctx, PageContent }) => (
 
 const DocLayout = ({ ctx, PageContent }) => (
 	<div class="doc-layout">
-		<aside>{/* nav */}</aside>
+		<aside>{/* ナビゲーション */}</aside>
 		<main>
 			<PageContent />
 		</main>
@@ -100,33 +99,33 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-## ルートで分岐する
+## ルートパスによる条件分岐
 
-ルールを固定したい場合は、ルートで分岐しても構いません:
+特定のパスに対してルールを固定したい場合は、ルートパスによる判定も有効です。
 
 ```js
 const route = ctx.page.routePath
 if (route === '/menu') { /* ... */ }
 ```
 
-補足: ディレクトリ index のルートは `routePath` が末尾 `/` 付きになります（例: `/guide/`）。
+補足: ディレクトリのインデックスページの場合、`routePath` の末尾には `/` が付与されます（例: `/guide/`）。
 
-## フォームなどのインタラクティブなページ
+## インタラクティブなページの実装（フォームなど）
 
-お問い合わせフォームなどは、ページ自体は普通にレンダリングしつつ、テーマ側 `components/` で client-only コンポーネント（例: `ContactForm.client.jsx`）を用意して本文から使うのが扱いやすいです。
+お問い合わせフォームなどの複雑なインタラクションが必要なページでは、ページ自体のレンダリングは通常通り行い、テーマ側の `components/` に `.client` サフィックス付きのコンポーネントを用意して本文内で呼び出す構成が推奨されます。
 
-## 代替案: `.html` の特別用途ページ
+## 代替案: `.html` ファイルによる実装
 
-特別用途ページは MDX に限りません。`pages/`（およびテーマの `pagesDir`）に素の `.html` ページを置くこともできます（例: 専用ランディング、埋め込みフォーム、ミニアプリなど）。
+特殊用途のページは必ずしも MDX である必要はありません。テーマの `pagesDir` に直接 `.html` ファイルを配置することも可能です。
 
-これらはビルドに含まれ、Vite によって処理され、`theme.template` も通ります。そのうえで、テンプレート側で「単体ページ」向けのレイアウトに分岐する（サイドバー/ToC/フッターを外す、`<head>` を変える等）のが定石です。
+これらのファイルもビルドプロセスに含まれ、Vite による最適化と `theme.template` によるラップが適用されます。テンプレート側でファイル拡張子や特定のフロントマターを判定し、サイドバーやフッターを除去した独立したレイアウトを適用するのが一般的な手法です。
 
-よくある分岐パターン:
+一般的な判定パターン:
 
-- 拡張子で分岐: `ctx.page.filePath.endsWith('.html')`
-- ルートで分岐: `ctx.page.routePath === '/menu'`
-- frontmatter で分岐: `ctx.page.frontmatter?.layout === 'landing'`
+- 拡張子判定: `ctx.page.filePath.endsWith('.html')`
+- パス判定: `ctx.page.routePath === '/menu'`
+- レイアウト指定: `ctx.page.frontmatter?.layout === 'landing'`
 
-## base とアセットの注意
+## パス解決に関する注意点
 
-`theme.sources` の URL や `public/` 配下の静的ファイルは、通常 `withBase()` を付ける必要はありません（Methanol がビルド時に解決します）。ただし JS で URL を生成していて Vite dev の解決が不安定な場合、回避策として `withBase('/...')` が役立つことがあります。
+`theme.sources` で定義された URL や `public/` 配下の静的ファイルは、ビルド時に自動的に解決されるため、通常は `withBase()` を使用する必要はありません。ただし、JavaScript 内でパスを動的に生成する場合の安全策として `withBase('/...')` を利用できます。 drum

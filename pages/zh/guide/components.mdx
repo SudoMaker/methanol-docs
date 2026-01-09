@@ -1,15 +1,15 @@
 ---
 title: 使用组件
-description: 在 MDX 中使用与覆盖组件。
+description: MDX 组件的使用与覆盖机制。
 weight: 6
 starryNight: true
 ---
 
 # 使用组件
 
-MDX 允许你在 Markdown 里直接使用 [rEFui](https://github.com/SudoMaker/rEFui) JSX 组件。把可复用组件放到 `components/`，然后在任意页面里直接使用即可。
+MDX 支持在 Markdown 文档中直接嵌入 [rEFui](https://github.com/SudoMaker/rEFui) JSX 组件。将可复用组件置于 `components/` 目录，即可在任意页面中直接调用。
 
-## 创建组件
+## 组件定义
 
 ```jsx
 // components/Callout.jsx
@@ -18,25 +18,25 @@ export default function Callout(props, ...children) {
 }
 ```
 
-## 在 MDX 中使用
+## 在 MDX 中调用
 
 ```jsx
 <Callout>
-  小提示：尽量让每一节短小聚焦，便于阅读。
+  提示：尽量保持章节短小精悍，以提升阅读体验。
 </Callout>
 ```
 
-## 客户端组件
+## 客户端交互组件
 
-如果组件依赖浏览器 API，请加 `.client` 后缀：
+若组件依赖浏览器 API，请使用 `.client` 后缀命名：
 
 ```
 components/Map.client.jsx
 ```
 
-## 计数器示例
+## 交互示例：计数器
 
-一个简单的交互示例：
+以下为一个简单的交互组件示例：
 
 ```jsx
 // components/Counter.client.jsx
@@ -55,7 +55,7 @@ export default function Counter({ initial = 0 }) {
 }
 ```
 
-由于此组件使用了服务端静态渲染时不支持的 CSS import，因此需要单独创建一份服务端可以静态渲染的版本：
+鉴于该组件引用了服务端静态渲染不支持的 CSS 模块，需额外提供一份用于服务端静态渲染的替补版本：
 
 ```jsx
 // components/Counter.static.jsx
@@ -74,7 +74,7 @@ export default function Counter({ initial = 0 }) {
 <Counter />
 ```
 
-效果预览：
+实际效果：
 
 <Counter />
 

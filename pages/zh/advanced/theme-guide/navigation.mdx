@@ -1,15 +1,15 @@
 ---
 title: 渲染导航
-description: 基于 ctx.pagesTree 渲染侧边栏或菜单。
+description: 基于 `ctx.pagesTree` 渲染侧边栏或菜单导航。
 weight: 3
 starryNight: true
 ---
 
 # 渲染导航
 
-Methanol 会在 `ctx.pagesTree` 里提供导航树。它已经按当前导航根（`isRoot`）做了范围裁剪，并且遵守 hidden/exclude 等规则。
+Methanol 通过 `ctx.pagesTree` 提供经过裁剪的导航树，该树结构遵循当前导航根（`isRoot`）设定，并严格执行 `hidden`/`exclude` 规则。
 
-每个节点大致长这样：
+节点数据结构如下：
 
 ```js
 {
@@ -22,7 +22,7 @@ Methanol 会在 `ctx.pagesTree` 里提供导航树。它已经按当前导航根
 }
 ```
 
-## 最简侧边栏
+## 基础侧边栏实现
 
 ```jsx
 const NavTree = ({ nodes, currentHref }) => (
@@ -70,8 +70,8 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-小贴士：
+## 开发提示
 
-- 链接优先用 `routeHref`（它会包含 `site.base`）。
-- 目录 index 路由的 `routePath` 会带尾随 `/`（例如 `/guide/`）。
+- 建议优先使用 `routeHref`（自动适配 `site.base`）。
+- 目录索引页面的 `routePath` 均带有尾随 `/`（例如 `/guide/`）。
 

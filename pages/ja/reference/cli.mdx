@@ -1,61 +1,61 @@
 ---
 title: CLI
-description: CLI コマンドとフラグ。
+description: CLI コマンドの詳細解説および引数・フラグ。
 weight: 1
 ---
 
 # CLI
 
-Methanol には dev / build / preview を実行する小さな CLI が付属します。
+Methanol には、開発サーバーの起動、静的サイトのビルド、およびローカルでのプレビューを行うための軽量な CLI ツールが付属しています。
 
-## コマンド
+## 基本コマンド
 
-`npx` で起動する場合:
+`npx` を使用して実行する方法（推奨）:
 
 ```bash
 npx methanol dev      # 開発サーバーを起動
-npx methanol build    # dist/ にビルド
-npx methanol serve    # 本番ビルドをプレビュー
+npx methanol build    # dist/ ディレクトリにビルド成果物を出力
+npx methanol serve    # ビルド済みの成果物をローカルでプレビュー
 ```
 
-CLI の起動を速くしたい場合はグローバルインストールします。
+CLI の起動速度を向上させたい場合は、グローバルインストールを検討してください。
 
 ```bash
 npm install methanol -g
 methanol dev
 ```
 
-`input` と `output` は位置引数で渡せます（順序あり）。
+`input`（入力）および `output`（出力）ディレクトリは、位置引数として指定可能です（順序にご注意ください）。
 
 ```bash
 npx methanol build ./pages ./dist
 ```
 
-dev は `input` のみを使用します。
+`dev` コマンドは `input` 引数のみを受け付けます。
 
 ```bash
 npx methanol dev ./pages
 ```
 
-## よく使うフラグ
+## 主要なフラグ一覧
 
-- `--input`, `-i`: `pages/` を上書き
-- `--components`: `components/` を上書き
-- `--assets`: `public/` を上書き
-- `--output`, `-o`: `dist/` を上書き
-- `--config`, `-c`: 設定ファイルのパス
-- `--site-name`: サイト名を上書き
-- `--base`: この実行だけ `site.base` を上書き（dev では無視されます）
-- `--port`: dev/preview のポート（デフォルト: 5173）
-- `--host`: dev/preview のホストにバインド（`--host` 単独で全インターフェース）
-- `--intermediate-dir`: 中間 HTML の出力先（build のみ）
-- `--emit-intermediate`: `build/` に中間 HTML を出力（build のみ）
-- `--code-highlighting`: ハイライトの有効/無効（`--code-highlighting` で有効、`--code-highlighting false` で無効）
-- `-v`, `--verbose`: 詳細ログを出力（build 時に Vite / Pagefind のログを表示）
+- `--input`, `-i`: `pages/` ディレクトリの設定を上書きします。
+- `--components`: `components/` ディレクトリの設定を上書きします。
+- `--assets`: `public/` ディレクトリの設定を上書きします。
+- `--output`, `-o`: `dist/` ディレクトリの設定を上書きします。
+- `--config`, `-c`: 設定ファイルのパスを明示的に指定します。
+- `--site-name`: 設定ファイルのサイト名を上書きします。
+- `--base`: 今回の実行に限り `site.base` を上書きします（`dev` モードでは無視されます）。
+- `--port`: 開発およびプレビューサーバーのポート番号（デフォルト: 5173）。
+- `--host`: サーバーを指定したホストにバインドします（`--host` 単体指定ですべてのインターフェースにバインドします）。
+- `--intermediate-dir`: 中間 HTML の出力先ディレクトリ（`build` 時のみ有効）。
+- `--emit-intermediate`: `build/` ディレクトリへの中間 HTML 出力を有効化します（`build` 時のみ有効）。
+- `--code-highlighting`: 構文ハイライトの有効/無効を切り替えます（`--code-highlighting` で有効、`--code-highlighting false` で無効）。
+- `-v`, `--verbose`: 詳細なログを出力します（ビルド時の Vite や Pagefind のログが含まれます）。
 
-ハイライトはデフォルトで無効です。必要な実行だけ有効化できます。
+構文ハイライトはデフォルトで無効に設定されており、必要に応じて実行時に有効化できます。
 
-## npx を使わない場合
+## npx を使用しない場合
 
 ```bash
 node node_modules/methanol/bin/methanol.js dev

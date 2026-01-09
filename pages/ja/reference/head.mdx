@@ -1,29 +1,29 @@
 ---
 title: Head
-description: 組み込み Head コンポーネントで head に要素を注入。
+description: 組み込みの Head コンポーネントを使用した `<head>` セクションへの要素注入。
 weight: 4
 starryNight: true
 ---
 
 # `Head` / `head`
 
-Methanol はすべての `.mdx` ページで `Head` コンポーネント（別名: `head`）を自動で提供します。import は不要です。
+Methanol は、すべての `.mdx` ページにおいて `Head` コンポーネント（別名: `head`）を標準で提供しています。明示的なインポートなしで直接利用可能です。
 
-`Head` の中に書いた要素は収集され、HTML の `<head>` に挿入されます（テーマ側で `<ExtraHead />` を描画している必要があります。デフォルトテーマは対応しています）。
+`Head` コンポーネント内に記述した要素は自動的に収集され、最終的な HTML の `<head>` セクションに挿入されます（テーマ側で `<ExtraHead />` を適切にレンダリングしている必要があります。デフォルトテーマはこれに対応済みです）。
 
-## 例
+## 使用例
 
 ```html
 <Head>
-	<meta name="description" content="My page description" />
+	<meta name="description" content="ページの説明文" />
 	<link rel="canonical" href="https://example.com/docs/page" />
 </Head>
 ```
 
-## 自動で挿入されるアセット
+## 自動注入される静的アセット
 
-Methanol は次のアセットも `<head>` に自動で挿入します:
+Methanol は、以下のルールに基づいてアセットを自動的に `<head>` へ挿入します。
 
-- `pages/style.css`（存在する場合）
-- `pages/index.js` / `pages/index.ts`（存在する場合）
-- MDX ファイルの隣にあるページ専用の CSS / JS / TS（例: `guide.mdx` → `guide.css`, `guide.js`, `guide.ts` など）
+- `pages/style.css` (存在する場合)
+- `pages/index.js` / `pages/index.ts` (存在する場合)
+- 各 MDX ファイルと同名かつ同ディレクトリに配置された専用の CSS / JS / TS (例: `guide.mdx` の場合は `guide.css`, `guide.js`, `guide.ts` など)

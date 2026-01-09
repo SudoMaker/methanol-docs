@@ -1,23 +1,23 @@
 ---
 title: ルーティング
-description: ファイルベースルーティングのルール。
+description: ファイルシステムに基づくルーティングルールの詳細。
 weight: 3
 ---
 
 # ルーティング
 
-Methanol は `pages/` からファイルベースでルーティングします。
+Methanol は、`pages/` ディレクトリの構造に基づき、ファイルベースでルーティングを自動的に構築します。
 
 ## MDX / Markdown ページ
 
 - `pages/about.mdx` → `/about`
-- `pages/guide/index.mdx` → `/guide/`（ディレクトリ index）
+- `pages/guide/index.mdx` → `/guide/`（ディレクトリのインデックス）
 
 ## `.html` ページ
 
-`pages/` に通常の HTML を置くこともできます。ビルド時は Vite によって処理され、`dist/` に出力されます。
+`pages/` 内には通常の HTML ファイルを配置することも可能です。これらのファイルはビルド時に Vite によって処理され、`dist/` ディレクトリに出力されます。
 
-- `pages/custom.html` → `dist/custom.html`（`/custom.html` でアクセス）
+- `pages/custom.html` → `dist/custom.html`（`/custom.html` でアクセス可能）
 
 デモ:
 
@@ -25,10 +25,10 @@ Methanol は `pages/` からファイルベースでルーティングします�
 
 ## 404 ページ
 
-Not Found ページをカスタマイズするには `pages/404.mdx` を作成します（デフォルトではナビゲーションに表示されません）。
+Not Found ページをカスタマイズするには、`pages/404.mdx` を作成してください（このページはデフォルトでナビゲーションから除外されます）。
 
-## hidden と exclude
+## hidden と exclude の違い
 
-- `hidden: true` はナビゲーションから隠すだけで、ルート自体は存在し直接アクセスできます。
-- `exclude: true` は dev/build から除外します（ディレクトリの `index.mdx` に付けると配下も除外）。
-- `_` または `.` で始まるファイル/ディレクトリは無視されます。
+- `hidden: true`: ナビゲーションメニューから非表示になりますが、ルート自体は有効であり、直接 URL を指定してアクセスすることは可能です。
+- `exclude: true`: 開発サーバー（dev）およびビルド（build）のプロセスから完全に除外されます。ディレクトリの `index.mdx` に設定した場合、その配下すべてが除外対象となります。
+- `_` または `.` で始まるファイルやディレクトリは、システムによって自動的に無視されます。

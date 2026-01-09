@@ -1,22 +1,22 @@
 ---
 title: 语言切换
-description: 使用 ctx.languages / ctx.language 渲染语言切换器。
+description: 利用 ctx.languages / ctx.language 实现语言切换功能。
 weight: 6
 starryNight: true
 ---
 
 # 语言切换
 
-Methanol 的多语言是“按目录”组织的：只要某个目录的 `index.mdx` 设置了 `lang`，它就会被识别为一个语言入口。
+Methanol 采用“按目录”组织多语言结构：若某目录的 `index.mdx` 配置了 `lang` 属性，该目录即被识别为独立的语言入口。
 
-在模板里你会拿到：
+模板中可获取以下上下文：
 
 - `ctx.languages`：语言入口列表
 - `ctx.language`：当前激活的语言入口（没有则为 `null`）
 
 每个入口包含 `routePath`, `routeHref`, `label`, `code`。
 
-## 一个简单的 `<select>` 切换器
+## 基于 `<select>` 的简单切换器
 
 ```jsx
 const LanguageSwitch = ({ ctx }) => {
@@ -39,7 +39,7 @@ const LanguageSwitch = ({ ctx }) => {
 }
 ```
 
-## 链接列表版
+## 基于链接列表的切换器
 
 ```jsx
 const LanguageLinks = ({ ctx }) => {
@@ -58,8 +58,8 @@ const LanguageLinks = ({ ctx }) => {
 }
 ```
 
-备注：
+## 注意事项
 
-- 链接建议使用 `routeHref`（它会包含 `site.base`）。
-- 语言根目录通常会配合 `isRoot: true` 使用，这样每种语言都能得到自己的导航树。
+- 链接建议使用 `routeHref`（自动包含 `site.base`）。
+- 建议配合 `isRoot: true` 配置语言根目录，确保每种语言拥有独立的导航树结构。
 

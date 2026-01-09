@@ -1,15 +1,15 @@
 ---
 title: 写作基础
-description: 使用 Methanol 编写 MDX 的基础约定。
+description: 基于 Methanol 的 MDX 编写规范。
 weight: 1
 starryNight: true
 ---
 
 # 写作基础
 
-Methanol 支持 Markdown 与 [MDX](https://mdxjs.com)。基础 Markdown 语法即可覆盖大多数结构与正文需求；需要更丰富的版式或交互时，再引入 JSX 组件。
+Methanol 原生支持 Markdown 与 [MDX](https://mdxjs.com)。标准 Markdown 语法足以应对大多数文档结构与内容需求；若需更丰富的版式或交互体验，可引入 JSX 组件。
 
-## 基本页面
+## 页面结构
 
 ```mdx
 ---
@@ -22,19 +22,19 @@ excerpt: 用于 meta 的简短摘要
 在这里撰写内容。
 ```
 
-被 `---` 包围的内容称为 Frontmatter，用于指定页面配置与 metadata，具体定义请往下阅读。
+顶部以 `---` 包裹的内容即为 Frontmatter，用于定义页面配置与元数据（Metadata），详见下文。
 
-## 标题与目录
+## 标题与目录结构
 
-`##`、`###`、`####` 将会用来生成目录。层级越清晰，侧边栏目录就越容易阅读。
+`##`、`###`、`####` 将用于生成目录。层级越清晰，侧边栏目录的可读性越强。
 
-## 正文
+## 正文段落
 
-Markdown 里，正文通常由“段落”组成：
+在 Markdown 中，正文通常由若干“段落”构成：
 
-- 段落之间用**空行**分隔。
-- 同一段落内的换行通常会被合并为空格（也就是不会强制换行）。
-- 如果你确实需要“强制换行”，可以在行尾加两个空格，或直接写 `<br />`（MDX 支持 JSX/HTML）。
+- 段落之间需用**空行**分隔。
+- 同一段落内的换行通常会被视为空格（即不会触发强制换行）。
+- 若确需“强制换行”，可在行尾添加两个空格，或直接写入 `<br />`（MDX 支持 JSX/HTML）。
 
 示例：
 
@@ -47,7 +47,7 @@ Markdown 里，正文通常由“段落”组成：
 所以会换行
 ```
 
-## 引用
+## 引用块
 
 ```mdx
 > 这是一句引用内容
@@ -58,7 +58,7 @@ Markdown 里，正文通常由“段落”组成：
 > 不连续的换行会被渲染为不同的引用块
 ```
 
-将会渲染为 
+渲染效果如下：
 
 > 这是一句引用内容
 >
@@ -69,7 +69,7 @@ Markdown 里，正文通常由“段落”组成：
 
 ## 代码块
 
-使用带语言标识的围栏代码块（fenced code block）：
+请使用带语言标识的围栏代码块（Fenced Code Block）：
 
 <pre>
 	<code class="language-md">
@@ -79,26 +79,26 @@ export const title = 'Hello'
 	</code>
 </pre>
 
-将会渲染为
+渲染效果如下：
 
 ```js
 export const title = 'Hello'
 ```
 
-## 学习 Markdown
+## 深入学习 Markdown
 
-本页主要介绍 Methanol + MDX。更完整的 Markdown 语法可以参考外部资料：
+本页主要介绍 Methanol + MDX 的基础用法。如需完整的 Markdown 语法参考，可查阅：
 
 - [Markdown（维基百科）](https://zh.wikipedia.org/wiki/Markdown)
 - [CommonMark Help](https://commonmark.org/help/)（英文）
 
-## Frontmatter 小贴士
+## Frontmatter 配置要点
 
 常用字段：
 
-- `title`: 页面标题与导航名称
-- `excerpt`: 用于 meta 的简短描述
+- `title`: 页面标题及导航显示名称
+- `excerpt`: 用于 Meta 标签的简短描述
 - `date`: 发布日期（ISO 格式）
-- `weight`: 导航排序
+- `weight`: 导航排序权重
 
-完整字段请阅读 [Frontmatter 参考](../reference/frontmatter)。
+完整字段说明请参阅 [Frontmatter 参考](../reference/frontmatter)。

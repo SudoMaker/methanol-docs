@@ -1,31 +1,31 @@
 ---
 title: 默认主题元标签
-description: 默认主题如何渲染元标签，以及 logo/favicon 的解析规则（含 false 禁用）。
+description: 默认主题元标签渲染逻辑及 Logo/Favicon 解析规则详解（含禁用选项）。
 weight: 20
 ---
 
 # 默认主题元标签
 
-默认主题只有在提供值时才会渲染元标签（或回退到默认值）。
+默认主题仅在存在有效值时渲染元标签（或回退至默认设定）。
 
-## Logo 与 Favicon 的解析顺序
+## Logo 与 Favicon 解析优先级
 
-优先级：
+优先级顺序如下：
 
-1) 当前页面的 `frontmatter.logo` / `frontmatter.favicon`
-2) 根目录 index 页面的 `frontmatter.logo` / `frontmatter.favicon`
-3) 配置中的 `site.logo` / `site.favicon`
-4) 主题默认值（`/logo.png`, `/favicon.png`）
+1) 当前页面 `frontmatter.logo` / `frontmatter.favicon`
+2) 根目录索引页面的 `frontmatter.logo` / `frontmatter.favicon`
+3) 全局配置 `site.logo` / `site.favicon`
+4) 主题默认预设（`/logo.png`, `/favicon.png`）
 
-如需显式禁用 logo/favicon，可设置 `logo: false` / `favicon: false`（frontmatter 或 config）。`false` 会停止解析并跳过所有回退（包含主题默认值）。
+若需显式禁用 Logo/Favicon，可将 `logo` 或 `favicon` 设为 `false`（支持 Frontmatter 或 Config 配置）。设置为 `false` 将终止解析并跳过所有回退逻辑（包括主题默认值）。
 
-若最终解析结果为 falsy，对应的 `<link rel="icon">`（或 logo 的 `<img>`）将不会渲染。
+若最终解析结果为 Falsy 值，对应的 `<link rel="icon">`（或 Logo `<img>`）将不会被渲染。
 
 ## 页面描述（Meta Description）
 
-- `frontmatter.excerpt`（别名：`description`）将渲染为 `<meta name="description" content={...} />`。
+- `frontmatter.excerpt`（别名：`description`）将被渲染为 `<meta name="description" content={...} />`。
 
-## Open Graph（OG）
+## Open Graph (OG) 协议
 
 - `frontmatter.ogTitle` → `og:title`
 - `frontmatter.ogDescription` → `og:description`

@@ -1,66 +1,66 @@
 ---
 title: 設定
-description: サイト情報、ディレクトリ、テーマ、public アセット、CLI 上書きの設定。
+description: サイト情報、ディレクトリ構成、テーマ設定、静的アセット管理、および CLI による上書きルール。
 weight: 2
 ---
 
 # 設定
 
-Methanol は以下の設定ファイルを読み込みます。
+Methanol は、プロジェクトのルートにある以下の設定ファイルを自動的にスキャンします。
 
 ```
 methanol.config.{js,mjs,cjs,ts,jsx,tsx,mts,cts}
 ```
 
-設定がない場合、カレントディレクトリを基準にデフォルト値が使われます。
+設定ファイルが存在しない場合、カレントディレクトリを基準としたデフォルトの構成仕様が適用されます。
 
-## 設定の形
+## 設定ファイルの基本構造
 
-設定ファイルは関数を export します。関数はコンテキストを受け取り、設定オブジェクトを返します。
+設定ファイルは、構築コンテキストを受け取り設定オブジェクトを返す関数を export する必要があります。
 
 ```js
 export default ({ mode, root, HTMLRenderer }) => ({
-	// config values
+	// 各種設定値
 })
 ```
 
-コンテキスト:
+コンテキストプロパティの説明:
 
 - `mode`: `development` または `production`
-- `root`: プロジェクトルート
-- `HTMLRenderer`: refui の HTML ユーティリティ（`rawHTML`、`serialize` など）
+- `root`: プロジェクトのルートパス
+- `HTMLRenderer`: rEFui の HTML ユーティリティ（`rawHTML`、`serialize` など）
 
-## 基本オプション
+## 主要なオプション設定
 
 ### `root`
 
-プロジェクトのルート。デフォルトはカレントディレクトリです。
+プロジェクトの基準となるディレクトリ。デフォルトはカレントディレクトリ（CWD）です。
 
 ### `site`
 
-テンプレートで使うサイト情報:
+テンプレート内で参照されるサイトのメタ情報。
 
-- `site.name`: サイト名
-- `site.logo`: ロゴのパス（任意）または `false`（デフォルトテーマで無効化）
-- `site.favicon`: ファビコンのパス（任意）または `false`（デフォルトテーマで無効化）
-- `site.base`: サイトがサブパス配信される場合のベース（例: `'/docs/'`）
-- `site.repoBase`: リポジトリ上のコンテンツフォルダを指すベース URL（デフォルトテーマの「Edit this page」リンク生成に使用）
+- `site.name`: サイトのタイトル
+- `site.logo`: ロゴファイルへのパス（文字列）、または `false`（デフォルトテーマで非表示にする場合）
+- `site.favicon`: ファビコンへのパス（文字列）、または `false`（デフォルトテーマで非表示にする場合）
+- `site.base`: サブパス配信時のベースパス（例: `'/docs/'`）
+- `site.repoBase`: ソースリポジトリのベース URL。デフォルトテーマの「Edit this page」リンクの生成に使用されます。
 
 注意点:
 
-- `site.base` は先頭と末尾の `/` を含む形に正規化されます（例: `docs` → `'/docs/'`）。
-- `vite.base` を明示指定しない限り、`site.base` は Vite の `base` としても使われます。
-- dev（`methanol dev`）では `site.base` は無視され、`/` として扱われます。サブパス配信は `methanol build` + `methanol serve` で確認してください。
+- `site.base` は、自動的に先頭と末尾に `/` を含む形式に正規化されます（例: `docs` → `'/docs/'`）。
+- `vite.base` を明示的に指定しない限り、`site.base` の値が Vite の `base` パスとしても使用されます。
+- 開発モード（`methanol dev`）では `site.base` の設定は無視され、常に `/`（ルート）として扱われます。サブパス配信の動作を確認するには、`build` 実行後に `serve` コマンドを使用してください。
 
 ### `pagefind`
 
-Pagefind 検索の有効化・設定。デフォルト: `false`。
+Pagefind 全文検索の有効化および設定。デフォルト: `false`。
 
 ```js
 pagefind: false
-// or
+// または
 pagefind: { enabled: true }
-// or
+// または詳細設定
 pagefind: {
 	enabled: true,
 	excerptLength: 30,
@@ -73,156 +73,127 @@ pagefind: {
 
 注意点:
 
-- `enabled` と `build` 以外のキーは Pagefind JS の `options()` に渡されます。
-- `build` が唯一のビルド設定エントリです。
+- `enabled` および `build` 以外のキーは、Pagefind JS の `options()` に直接渡されます。
+- `build` オブジェクトはビルド時専用の構成エントリです。
 
 ### `starryNight`
 
-コードハイライト（rehype-starry-night）の制御。デフォルト: `false`。
+構文ハイライト（rehype-starry-night）の制御。デフォルト: `false`。
 
 ```js
 starryNight: false
-// or
+// または
 starryNight: true
-// or
+// または詳細設定
 starryNight: {
-	// options forwarded to rehype-starry-night
+	// rehype-starry-night に渡されるオプション
 }
 ```
 
-- `starryNight` がオブジェクトの場合、`enabled: false` がない限り有効になります。
-- ページの frontmatter `starryNight` が常に優先されます。
-- CLI の `--code-highlighting` で実行ごとに切り替えできます。
+- `starryNight` プロパティがオブジェクトの場合、`enabled: false` が明示されない限り機能が有効になります。
+- 各ページのフロントマターで設定された `starryNight` の値が常に最優先されます。
+- CLI の `--code-highlighting` フラグにより、実行ごとにグローバル設定を切り替えることが可能です。
 
 ### `gfm`
 
-GitHub Flavored Markdown（GFM）の有効/無効。デフォルト: `true`。
+GitHub Flavored Markdown (GFM) の有効/無効設定。デフォルト: `true`。
 
-有効な場合、GFM の記法（テーブル、タスクリスト、取り消し線、脚注、自動リンク等）が利用できます。
+有効な場合、GFM 特有の記法（テーブル、タスクリスト、取り消し線、脚注、自動リンクなど）がフルサポートされます。
 
 ```js
 gfm: true
-// or
+// または
 gfm: false
 ```
 
 ### `pagesDir`
 
-MDX/MD ファイルの場所（ルート）。デフォルトは `pages`。`pages/` がない場合は `docs` にフォールバックします。
+MDX/MD ソースファイルの配置ディレクトリ。デフォルトは `pages` です。`pages/` が存在しない場合は、自動的に `docs` をスキャンします。
 
 ### `componentsDir`
 
-JSX/TSX コンポーネントの場所。デフォルトは `components`。
+JSX/TSX コンポーネントの配置ディレクトリ。デフォルトは `components` です。
 
-`pagesDir` や `componentsDir` を明示指定した場合（CLI も含む）、ディレクトリが存在しないとエラーになります。
+`pagesDir` や `componentsDir` を明示的に指定（CLI 引数を含む）した場合、対象のディレクトリが存在しないとビルドエラーとなります。
 
 ### `publicDir`
 
-静的アセットフォルダ（サイトルートで配信。例: `public/foo.png` → `/foo.png`）。デフォルトは `public`。
+静的アセットの配置ディレクトリ（サイトルート直下で配信されます。例: `public/foo.png` → `/foo.png`）。デフォルトは `public` です。
 
-Methanol はテーマの public アセット（`theme.publicDir`）も含めます。テーマ → ユーザーの順で 1 つのディレクトリに統合されるため、同一パスの場合はユーザー側が優先されます。
+Methanol は、テーマ側の静的アセット（`theme.publicDir`）も同時に統合します。ユーザープロジェクト側のファイルと同名のパスが衝突した場合は、ユーザー側のファイルが優先的に適用されます。
 
-統合が必要な場合、内部の統合ディレクトリは `node_modules/.methanol/assets`（`node_modules/` がない場合は `{pagesDir}/.methanol/assets`）に作られます。
+統合が必要な際、内部的な作業ディレクトリとして `node_modules/.methanol/assets`（`node_modules/` がない場合は `{pagesDir}/.methanol/assets`）が一時的に構築されます。
 
-`publicDir: false` で public アセットを完全に無効化します（テーマ側も含む）。
+`publicDir: false` を設定すると、テーマ側のアセットを含め、静的アセットの配信機能が完全に無効化されます。
 
 ### `distDir`
 
-本番ビルドの出力先。デフォルトは `dist`。
+本番環境用ビルド成果物の出力先。デフォルトは `dist` です。
 
 ### `buildDir`
 
-中間ビルドディレクトリ（`emitIntermediate` 用）。デフォルトは `build`。
-
-### `intermediateDir`
-
-中間 HTML を書き出すディレクトリ（build のみ）。
+ビルド時の中間作業用ディレクトリ（`emitIntermediate` 用）。デフォルトは `build` です。
 
 ### `emitIntermediate`
 
-`true` のとき、ビルド時に `build/` へ中間 HTML を出力します。
+`true` に設定すると、ビルド実行時に `build/` ディレクトリへレンダリング後の中間 HTML ファイルを出力します。
 
 ### `theme`
 
-テーマ設定。使い方は [Advanced themes](../advanced/themes/) を参照。
+テーマに関する詳細設定。詳細は [アドバンスド・テーマ](../advanced/themes/) を参照してください。
 
-主なフィールド:
+主要なフィールド:
 
-- `theme.root`: テーマのルートディレクトリ（必須）
-- `theme.template`: HTML テンプレート関数（`{ ctx, page, PageContent, ExtraHead, withBase, HTMLRenderer, components }` を受け取ります）
-- `theme.components`: デフォルトの MDX コンポーネント
-- `theme.componentsDir`: テーマコンポーネントのフォルダ
-- `theme.pagesDir`: テーマページのフォルダ
-- `theme.publicDir`: テーマの public アセット（`publicDir` に統合）
-- `theme.sources`: Methanol の resolver 用の仮想マップ
-- `theme.mdx`: ユーザー `mdx` とマージされるデフォルト MDX オプション
-- `theme.vite`: ユーザー `vite` とマージされるデフォルト Vite 設定
+- `theme.root`: テーマのルートディレクトリ（必須設定）。
+- `theme.template`: HTML テンプレート関数（`{ ctx, PageContent, ExtraHead, withBase, HTMLRenderer, components }` を引数に取ります）。
+- `theme.components`: テーマ標準の MDX コンポーネント定義。
+- `theme.componentsDir`: テーマ固有のコンポーネントディレクトリ。
+- `theme.pagesDir`: テーマ同梱のページディレクトリ。
+- `theme.publicDir`: テーマ同梱の静的アセット。
+- `theme.sources`: 仮想パスを物理ファイルにマッピングするための定義。
+- `theme.mdx`: ユーザー設定とマージされるテーマ標準の MDX オプション。
+- `theme.vite`: ユーザー設定とマージされるテーマ標準の Vite 設定。
 
 ### `mdx`
 
-MDX のコンパイルをカスタマイズします。`{ mode, root }` を受け取り、MDX オプションを返します。
+MDX のコンパイル設定をカスタマイズします。`{ mode, root }` を引数として受け取ります。
 
 ### `vite`
 
-Vite 設定をマージします。`{ command, mode, root, isPreview }` を受け取ります。
+Vite の設定を詳細にマージします。`{ command, mode, root, isPreview }` を引数として受け取ります。
 
 ### `preBuild` / `preBundle` / `postBundle` / `postBuild`
 
-ビルドパイプラインを拡張するためのフックです。
+ビルド一連のプロセスにフックを挿入するための設定です。
 
-- `preBuild` は dev の起動時と build 前に実行されます。
-- `preBundle` は build のときのみ実行され、ページのレンダリング後〜Vite のバンドル前に呼ばれます。
-- `postBundle` は build のときのみ実行され、Vite のバンドル後〜Pagefind のインデックス前に呼ばれます。
-- `postBuild` は build 後のみ実行されます（dev では実行されません）。
-- いずれも関数または関数配列を指定できます。
-- 実行順: user `preBuild` → theme `preBuild` → render → user `preBundle` → theme `preBundle` → bundle → theme `postBundle` → user `postBundle` →（任意）Pagefind → theme `postBuild` → user `postBuild`。
+- `preBuild`: 開発サーバーの起動時、およびビルドプロセスの開始前に実行されます。
+- `preBundle`: ビルド時のみ実行され、ページレンダリングの完了後かつ Vite バンドル実行前に呼び出されます。
+- `postBundle`: ビルド時のみ実行され、Vite バンドル完了後かつ Pagefind インデックス生成前に呼び出されます。
+- `postBuild`: ビルドプロセス全体の完了後にのみ実行されます（開発サーバーでは実行されません）。
 
-フックのコンテキスト:
+いずれも単一の関数、または関数の配列を指定可能です。
+
+フックコンテキストの主要なプロパティ:
 
 - `mode`, `root`, `command`, `isDev`, `isBuild`, `isPreview`
 - `HTMLRenderer`
-- `site`（`ctx.site` と同じ形）
-- `data`（フック間で共有する可変オブジェクト）
+- `site` (設定オブジェクトの `site` プロパティ)
+- `data`: フック間で永続的にデータを共有するための可変オブジェクト
 
-`preBundle` / `postBundle` / `postBuild` には以下も渡されます:
+### CLI による設定の上書きルール
 
-- `pagesContext`
-- `pages`
-- `pagesTree`
-- `pagesByRoute`
+コマンドライン引数で渡された値は、常に設定ファイルの値よりも優先されます。
 
-例:
+- `--input` および `--components`: それぞれ `pagesDir` と `componentsDir` を上書きします。
+- `--assets`: `publicDir` を上書きします。
+- `--output`: `distDir` を上書きします。
+- `--site-name`: `site.name` を上書きします。
+- `--base`: 実行時の `site.base` を一時的に上書きします。
+- `-v`/`--verbose`: 詳細なログ出力を有効化します。
+- `--config`: 使用する設定ファイルのパスを指定します。
+- 位置引数としての `input`/`output` は、`--input`/`--output` フラグと同等の動作をします。
 
-```js
-export default () => ({
-	preBuild: ({ data, site }) => {
-		data.startedAt = Date.now()
-		console.log('Building', site.name)
-	},
-	preBundle: ({ pages }) => {
-		console.log('Rendered pages:', pages.length)
-	},
-	postBuild: ({ data, pages }) => {
-		console.log('Duration (ms):', Date.now() - data.startedAt)
-		console.log('Pages:', pages.length)
-	}
-})
-```
-
-## CLI での上書き
-
-コマンドラインの値は設定より優先されます。
-
-- `--input` と `--components` は `pagesDir` と `componentsDir` を上書き
-- `--assets` は `publicDir` を上書き
-- `--output` は `distDir` を上書き
-- `--site-name` は `site.name` を上書き
-- `--base` は実行時の `site.base` を上書き（dev では無視されます）
-- `-v`/`--verbose` は実行時の詳細ログを有効化
-- `--config` は設定ファイルを指定
-- 位置引数の `input`/`output` は `--input`/`--output` と同じ意味（dev は `input` のみ）
-
-## 例
+## 設定ファイルの記述例
 
 ```js
 import tailwindcss from '@tailwindcss/vite'

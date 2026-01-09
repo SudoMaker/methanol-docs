@@ -1,34 +1,34 @@
 ---
-title: 语言
-description: 多语言与语言切换配置。
+title: 多语言
+description: 多语言架构与语言切换配置指南。
 weight: 7
 ---
 
-# 语言（多语言目录）
+# 多语言（多语言目录架构）
 
-Methanol 采用“多语言目录”的方式实现多语言：只要在某个目录的 `index.mdx` 里设置 `lang`，这个目录就会被识别为一个语言入口。这样无需额外的 i18n 系统，也能用很轻量的方式组织多份翻译内容。
+Methanol 采用“多语言目录”架构：若某目录的 `index.mdx` 设置了 `lang` 属性，该目录即被识别为独立的语言入口。该方案无需引入复杂的 i18n 系统，即可实现轻量且清晰的翻译内容组织。
 
-## 工作方式
+## 核心机制
 
-- 带 `lang` 的 `index.mdx` 所对应的目录会成为 **语言根目录**。
-- 语言选择器显示 `lang` 的值。
-- 当前路由会匹配最近的语言根目录作为激活语言。
-- HTML 的 `lang` 属性优先使用 `langCode`（包括根目录的 `index`）；如果没有提供，则回退到目录名。
+- 包含 `lang` 属性的 `index.mdx` 所在目录即为该语言的 **语言根目录**。
+- 语言选择器将以 `lang` 字段值作为展示标签。
+- 系统根据当前路由自动匹配最近的语言根目录，并据此判定激活语言。
+- HTML 的 `lang` 属性将映射至 `langCode` 字段（包含根目录索引）；若未定义，则自动回退至目录名。
 
-示例结构：
+目录结构示例：
 
 ```
 pages/
-  index.mdx          # root language
+  index.mdx          # 默认语言根目录
   zh/
-    index.mdx        # Chinese language root
+    index.mdx        # 中文语言根目录
     guide.mdx
   fr/
-    index.mdx        # French language root
+    index.mdx        # 法语语言根目录
     guide.mdx
 ```
 
-示例 frontmatter：
+Frontmatter 示例：
 
 ```mdx
 ---
@@ -40,24 +40,24 @@ hidden: true
 ---
 ```
 
-## 语言选择器
+## 语言选择器集成
 
-默认主题会在发现带 `lang` 的目录 `index.mdx` 时显示语言选择器（包括根 `/`）。它使用：
+默认主题在检测到配置了 `lang` 属性的目录索引页时，将自动激活语言选择器（涵盖根路径 `/`）。
 
-- `lang` 作为显示标签
-- `ctx.language` 作为当前选择
+- **展示标签：** 源自 `lang` 字段。
+- **当前激活项：** 由 `ctx.language` 自动判定。
 
-## 导航根路径
+## 导航根路径设定
 
-语言根目录通常会配合 `isRoot: true` 使用，用来把侧边栏导航限定在该语言目录中。
+语言根目录通常建议配合 `isRoot: true` 使用，以将侧边栏导航范围限定在该语言子树中。
 
-注意：`isRoot` 页面默认隐藏，如需显示在侧边栏，请设置 `hidden: false`。
+注意：`isRoot` 标记的页面默认隐藏；若需在侧边栏展示，请显式设置 `hidden: false`。
 
-这样不同语言就可以有各自独立的导航结构。
+通过此项配置，各语言版本即可拥有完全独立的导航结构。
 
-## `ctx.languages` 内容
+## `ctx.languages` 数据结构
 
-`ctx.languages` 是从带 `lang` 的目录 `index` 收集到的数组。生成链接请使用 `routeHref`（包含 `site.base`）。
+`ctx.languages` 是聚合了所有已配置语言入口的数组。在生成链接时，请务必使用 `routeHref`（已自动适配 `site.base`）。
 
 ```js
 {
@@ -68,10 +68,10 @@ hidden: true
 }
 ```
 
-当根目录的 `index.mdx` 也设置了 `lang` 时，根语言同样会出现在列表里。
+若根目录的 `index.mdx` 同样配置了 `lang` 属性，则默认语言亦会包含在该列表中。
 
-## 提示
+## 开发提示
 
-- `isRoot` 页面默认隐藏；需要显示时设置 `hidden: false`。
-- 让路径成对出现（例如 `/guide` 与 `/zh/guide`），结构更直观。
-- 在语言索引页设置 `isRoot: true`，可以避免默认语言入口显示在路由列表中，同时保留导航范围。
+- `isRoot` 页面默认隐藏；若需展示，请设置 `hidden: false`。
+- 推荐使用对称的路径结构（如 `/guide` 与 `/zh/guide`），使项目架构更为直观。
+- 在语言索引页应用 `isRoot: true`，可在保留导航范围的同时，避免默认语言入口冗余出现在路由列表中。

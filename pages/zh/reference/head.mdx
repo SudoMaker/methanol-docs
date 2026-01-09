@@ -1,17 +1,17 @@
 ---
 title: Head
-description: 使用内置 Head 组件向 head 注入内容。
+description: 利用内置 Head 组件自定义 `<head>` 内容。
 weight: 4
 starryNight: true
 ---
 
 # `Head` / `head`
 
-Methanol 会在每个 `.mdx` 页面里默认提供 `Head` 组件（别名：`head`），因此不需要 import 就能直接使用。
+Methanol 为每个 `.mdx` 页面预置了 `Head` 组件（别名：`head`），无需显式导入即可直接使用。
 
-你在 `Head` 里渲染的内容会被收集并注入到 HTML 的 `<head>` 中（主题需要渲染 `<ExtraHead />`；默认主题已包含）。
+在 `Head` 组件中渲染的内容将自动聚合，并注入到最终 HTML 的 `<head>` 标签内（需确保主题已渲染 `<ExtraHead />`；默认主题已内置此逻辑）。
 
-## 示例
+## 使用示例
 
 ```html
 <Head>
@@ -20,10 +20,10 @@ Methanol 会在每个 `.mdx` 页面里默认提供 `Head` 组件（别名：`hea
 </Head>
 ```
 
-## 自动注入的 head 资源
+## 自动注入的静态资源
 
-Methanol 也会自动把一些资源注入到 `<head>`：
+Methanol 还会根据约定自动将以下资源注入 `<head>`：
 
-- `pages/style.css`（如果存在）
-- `pages/index.js` / `pages/index.ts`（如果存在）
-- 与 MDX 同名、同目录的页面级 CSS/JS/TS（例如 `guide.mdx` → `guide.css`, `guide.js`, `guide.ts` 等）
+- `pages/style.css`（若存在）
+- `pages/index.js` / `pages/index.ts`（若存在）
+- 与页面同名且同目录的专属 CSS/JS/TS 资源（例如 `guide.mdx` → `guide.css`, `guide.js`, `guide.ts` 等）

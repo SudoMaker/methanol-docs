@@ -1,26 +1,26 @@
 ---
 title: GFM
-description: Methanol で利用できる GitHub Flavored Markdown（GFM）の機能デモ。
+description: Methanol がサポートする GitHub Flavored Markdown (GFM) の機能デモンストレーション。
 weight: 8
 ---
 
-# GitHub Flavored Markdown（GFM）
+# GitHub Flavored Markdown (GFM)
 
-このページは、Methanol の Markdown/MDX で使える GitHub Flavored Markdown（GFM）の代表的な機能をまとめて確認するためのデモです。
+本ページでは、Methanol の Markdown/MDX 環境で利用可能な GitHub Flavored Markdown (GFM) の主要な機能を紹介します。
 
-## GFM とは？
+## GFM とは
 
-GFM は GitHub で使われている Markdown の方言（拡張仕様）です。基本の Markdown に、実用的な記法がいくつか追加されています。
+GFM は GitHub が策定・運用している Markdown の方言（拡張仕様）です。標準的な Markdown 記法に加え、技術執筆や共同作業に便利な以下の機能が追加されています。
 
-代表的な機能:
+主な機能拡張:
 
-- テーブル
+- 表（テーブル）
 - タスクリスト（チェックボックス）
-- 取り消し線
+- 取り消し線（打消し線）
 - 脚注
-- 自動リンク（URL/メールアドレスをそのまま書いてリンクにする）
+- 自動リンク（URL やメールアドレスの自動検知とリンク化）
 
-Methanol では GFM はデフォルトで有効です。無効化したい場合は設定で `gfm: false` を指定します:
+Methanol では GFM が標準で有効化されています。機能を無効化したい場合は、設定ファイルで `gfm: false` を指定してください。
 
 ```js
 // methanol.config.js
@@ -29,32 +29,32 @@ export default () => ({
 })
 ```
 
-関連: [設定（Configuration）](./configuration)
+関連情報: [設定リファレンス](./configuration)
 
-Markdown のパイプライン（MDX/MD のパース、スタイル、テーマのレンダリング）をチェックしたいときに便利です。
+Markdown の処理プロセス（MDX/MD パース、スタイリング、テーマによるレンダリング）を検証する際のサンプルとして活用してください。
 
 ## 自動リンク（Autolink literals）
 
-www.example.com, https://example.com, and contact@example.com.
+www.example.com, https://example.com, contact@example.com
 
 ## 脚注（Footnote）
 
-A note[^1]
+本文[^1]
 
-[^1]: Big note.
+[^1]: 脚注の詳細な説明文。
 
 ## 取り消し線（Strikethrough）
 
-~one~ or ~~two~~ tildes.
+~一つ~ または ~~二つ~~ のチルダで囲みます。
 
-## テーブル（Table）
+## 表（Table）
 
-| a | b  |  c |  d  |
-| - | :- | -: | :-: |
+| 項目 A | 項目 B | 項目 C | 項目 D |
+| :---- | :----: | :----: | ----: |
+| 左寄せ | 中央 | 中央 | 右寄せ |
 | 1 | 2 | 3 | 4 |
-| I | II | III | IV |
 
 ## タスクリスト（Tasklist）
 
-* [ ] to do
-* [x] done
+* [ ] 未完了タスク
+* [x] 完了済みタスク

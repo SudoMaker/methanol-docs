@@ -1,6 +1,6 @@
 ---
 title: ようこそ
-description: Methanol ドキュメントの概要とセクション案内。
+description: Methanol ドキュメントの概要と各セクションへのインデックス。
 lang: 日本語
 langCode: ja
 isRoot: true
@@ -16,18 +16,18 @@ weight: 1
 	<LinkButton variant="secondary" href="https://github.com/SudoMaker/Methanol" target="_blank">GitHub</LinkButton>
 </ButtonGroup>
 
-Methanol は [rEFui](https://github.com/SudoMaker/rEFui) と [MDX](https://mdxjs.com) を基盤にした、こだわりと拡張性を両立した静的サイトジェネレーターです。速くてすっきりしており、明快な文章や大胆なアイデアをそのまま形にできます。
+Methanol は、[rEFui](https://github.com/SudoMaker/rEFui) と [MDX](https://mdxjs.com) を基盤とした、柔軟なカスタマイズ性と使いやすさを両立した静的サイトジェネレーターです。高速な動作と洗練された構造により、執筆に集中できる環境を提供します。
 
-特別な設定は不要です。`pages/`（または `docs/`）にファイルを置くだけでルートが決まり、`index.mdx` がホームページになり、ナビゲーションも自動で構築されます。
+複雑な設定は必要ありません。`pages/`（または `docs/`）にファイルを配置するだけでルートが自動生成され、`index.mdx` はホームページとして、ナビゲーションツリーも自動的に構築されます。
 
-## できること
+## 主な特徴
 
-- `pages/`（または `docs/`）に MDX を置くだけで自動ルーティング
-- `components/` の再利用コンポーネントを Markdown から呼び出し
-- フロントマターでナビゲーション、順序、表示制御
-- `dist/` に静的出力してローカルでプレビュー
-- [Pagefind](https://pagefind.app) の検索や [Starry Night](https://github.com/wooorm/starry-night) のハイライトを必要に応じて追加
+- `pages/`（または `docs/`）への MD/MDX 配置による自動ルーティング
+- `components/` に作成したコンポーネントを MDX 内で直接利用可能
+- フロントマターによるナビゲーション構造、順序、表示のきめ細かな制御
+- `dist/` へのビルド出力とローカルでのプレビュー確認
+- [Pagefind](https://pagefind.app) による全文検索や [Starry Night](https://github.com/wooorm/starry-night) による構文ハイライトの統合
 
-## rEFui: HTML + islands
+## rEFui: HTML + Islands
 
-Methanol は rEFui を HTML 生成（SSG）とクライアント側のインタラクションの両方に使います。ページ全体を「アプリ」として hydrate するのではなく、必要なクライアントコンポーネントだけを小さな “islands” として hydrate します。
+Methanol は、サーバーサイド HTML 生成とクライアントサイドのインタラクションの両方に rEFui を採用しています。ページの大半は静的な HTML として出力され、インタラクティブな要素が必要な箇所のみが小さな “islands” として部分的にハイドレーション（Partial Hydration）されます。これにより、全ページをハイドレーションすることなく、高いパフォーマンスを実現しています。

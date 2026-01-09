@@ -1,39 +1,39 @@
 ---
 title: 快速上手
-description: 项目结构、常用命令与创建第一个页面。
+description: 项目结构、核心命令及首个页面的创建。
 weight: 2
 starryNight: true
 ---
 
 # 快速上手
 
-Methanol 可以把一个装有 Markdown/MDX 的目录直接变成带路由、导航与构建流程的静态站点。
+Methanol 可将包含 Markdown/MDX 的目录直接转化为具备完整路由、导航及构建流程的静态站点。
 
-几乎不需要额外配置：创建 `pages/index.mdx`，再逐步添加文件/目录，路由与导航会自动生成和更新。
+几无配置门槛：只需创建 `pages/index.mdx` 并逐步添加文件或目录，路由与导航即可自动生成并实时更新。
 
-## 快速运行
+## 快速体验
 
-想快速体验，直接使用 `npx` 运行：
+如需快速体验，可直接通过 `npx` 运行：
 
 ```bash
 npx methanol dev
 ```
 
-然后打开 `http://localhost:5173`。
+随后访问 `http://localhost:5173`。
 
-## 使用已有的 Markdown 文件夹
+## 使用现有 Markdown 目录
 
-如果你已经有一份 Markdown/MDX 文档目录，可以直接指向此目录：
+若你已有一份 Markdown/MDX 文档目录，可直接指定该目录：
 
 ```bash
 npx methanol dev ./my-docs
 ```
 
-该目录会作为内容根目录，如 `./my-docs/index.mdx` 将会对应 `/`。
+该目录将作为内容根目录，例如 `./my-docs/index.mdx` 将映射至 `/`。
 
-## 加速本地开发
+## 提升本地开发效率
 
-如果使用频繁，建议全局安装（启动更快）：
+若需频繁使用，建议进行全局安装以提升启动速度：
 
 ```bash
 npm install methanol -g
@@ -47,21 +47,21 @@ npx methanol build
 npx methanol serve
 ```
 
-`serve` 会基于 `dist/` 的产物进行本地预览。
+`serve` 命令将基于 `dist/` 中的产物启动本地预览。
 
 ## 项目结构
 
 ```
-pages/        # MDX/MD 页面（或者 docs/）
-components/   # MDX 中可用的 JSX/TSX 组件
-public/       # 静态资源（覆盖主题的 public 资源）
-build/        # 中间 HTML（可选）
-dist/         # 生产输出
+pages/        # MDX/MD 页面（亦可使用 docs/）
+components/   # 可在 MDX 中使用的 JSX/TSX 组件
+public/       # 静态资源（将覆盖主题默认资源）
+build/        # 中间 HTML 文件（可选）
+dist/         # 生产环境输出产物
 ```
 
-`public/` 中的文件会在 `/` 下提供（例如 `public/logo.png` → `/logo.png`），并会覆盖主题提供的 public 资源。
+`public/` 目录下的文件将服务于根路径 `/`（例如 `public/logo.png` → `/logo.png`），并会覆盖主题提供的同名资源。
 
-## 创建第一个页面
+## 创建首个页面
 
 创建 `pages/index.mdx`：
 
@@ -72,10 +72,10 @@ title: 首页
 
 # 欢迎
 
-这是我的站点。
+这是我的个人站点。
 ```
 
-文件路径会自动转换为路由：
+文件路径将自动转换为路由：
 
 ```
 pages/index.mdx       -> /

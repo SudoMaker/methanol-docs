@@ -1,27 +1,27 @@
 ---
 title: rEFui ランタイム
-description: テンプレートでの rEFui と HTML レンダラーの利用。
+description: テンプレートにおける rEFui および HTML レンダラーの活用。
 weight: 5
 ---
 
 # rEFui ランタイム
 
-Methanol は JSX ランタイムとして [rEFui](https://github.com/SudoMaker/rEFui) を使います。ドキュメントを書く人は必ずしも rEFui を学ぶ必要はありませんが、テーマやコンポーネントを作る人には役立ちます。
+Methanol は JSX ランタイムとして [rEFui](https://github.com/SudoMaker/rEFui) を採用しています。ドキュメント執筆者が必ずしも rEFui の詳細を理解する必要はありませんが、独自のテーマや高度なコンポーネントを開発する際には非常に強力なツールとなります。
 
-Methanol は rEFui を両方で使います:
+Methanol は、以下の両方のフェーズで rEFui を活用しています。
 
-- **Server/SSG:** `build`（および dev サーバー）で JSX を HTML にレンダリング
-- **Client:** クライアントコンポーネントだけを小さな “islands” として hydrate（ページ全体の hydrate はしません）
+- **サーバーサイド (SSG):** `build` 時（および開発サーバー）に JSX を静的な HTML へとレンダリングします。
+- **クライアントサイド:** クライアント専用コンポーネントのみを小さな “islands” として部分的にハイドレーション（Partial Hydration）します。ページ全体をハイドレーションすることなく、高いパフォーマンスを維持します。
 
-## 役に立つ場面
+## 主な活用シーン
 
-- カスタムテンプレート（`theme.template`）
-- `components/` のインタラクティブなコンポーネント
-- `rawHTML` やコンテキストヘルパーの利用
+- カスタムテンプレートの構築（`theme.template`）
+- `components/` ディレクトリにおけるインタラクティブなコンポーネント開発
+- `rawHTML` やコンテキストヘルパーによるレンダリング制御
 
-## JSX ランタイム
+## JSX ランタイムの仕組み
 
-Methanol は自動 JSX ランタイムと `refui` を import source として MDX をコンパイルします。通常の JSX コンポーネントもそのまま書けます。
+Methanol は自動 JSX ランタイムを使用し、`refui` をインポートソースとして MDX をコンパイルします。そのため、開発者は標準的な JSX 仕様に従ってコンポーネントを記述できます。
 
 ```jsx
 export default function Callout(props, ...children) {
@@ -29,9 +29,9 @@ export default function Callout(props, ...children) {
 }
 ```
 
-## コンポーネントデモ（Web）
+## コンポーネントデモ（Web 環境）
 
-Methanol の外で rEFui を試す場合は、DOM レンダラーで小さなリアクティブコンポーネントを作ると分かりやすいです。
+Methanol の外部で rEFui を試す場合は、DOM レンダラーを使用してシンプルなリアクティブコンポーネントを構築するのが最も直感的です。
 
 ```jsx
 import { signal } from 'refui'
@@ -58,8 +58,8 @@ const App = () => {
 DOMRenderer.render(document.body, App)
 ```
 
-Methanol では、コンポーネントを export して MDX レンダラーにマウントさせるのが一般的です。
+Methanol 環境下では、通常コンポーネントを export するだけで、MDX レンダラーが適切なタイミングでマウント処理を行います。
 
-## リファレンス
+## 参考資料
 
-詳しくは [rEFui リポジトリ](https://github.com/SudoMaker/rEFui) を参照してください。
+詳細については、[rEFui 公式リポジトリ](https://github.com/SudoMaker/rEFui) を参照してください。

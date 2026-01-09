@@ -1,22 +1,22 @@
 ---
-title: 言語スイッチ
-description: ctx.languages / ctx.language で言語切り替え UI を描画する。
+title: 言語スイッチャー
+description: ctx.languages および ctx.language を活用した多言語切り替え UI の実装。
 weight: 6
 starryNight: true
 ---
 
-# 言語スイッチ
+# 言語スイッチャー
 
-Methanol の多言語は「ディレクトリ単位」です。ディレクトリの `index.mdx` に `lang` があると、そのディレクトリが言語エントリとして扱われます。
+Methanol の多言語対応はディレクトリ単位で管理されます。ディレクトリ内の `index.mdx` に `lang` プロパティが設定されている場合、そのディレクトリは独立した言語エントリとして識別されます。
 
-テンプレートでは次が利用できます:
+テンプレート内では、以下の情報を利用可能です。
 
-- `ctx.languages`: 言語エントリ一覧
-- `ctx.language`: 現在アクティブな言語エントリ（なければ `null`）
+- `ctx.languages`: 定義されているすべての言語エントリのリスト。
+- `ctx.language`: 現在表示中のページに対応するアクティブな言語エントリ（設定がない場合は `null`）。
 
-各エントリは `routePath`, `routeHref`, `label`, `code` を持ちます。
+各エントリには、`routePath`, `routeHref`, `label`, `code` などのプロパティが含まれます。
 
-## シンプルな `<select>` スイッチャー
+## `<select>` タグによるシンプルなスイッチャーの実装
 
 ```jsx
 const LanguageSwitch = ({ ctx }) => {
@@ -39,7 +39,7 @@ const LanguageSwitch = ({ ctx }) => {
 }
 ```
 
-## リンク一覧のバリアント
+## リンクリスト形式のスイッチャー
 
 ```jsx
 const LanguageLinks = ({ ctx }) => {
@@ -58,8 +58,7 @@ const LanguageLinks = ({ ctx }) => {
 }
 ```
 
-補足:
+## 実装のポイント
 
-- リンクには `routeHref` を使ってください（`site.base` を含みます）。
-- 言語ルートに `isRoot: true` を併用すると、言語ごとにナビゲーションツリーを分けられます。
-
+- リンク先には必ず `routeHref` を使用してください（`site.base` の設定が自動的に反映されます）。
+- 各言語のルートディレクトリに `isRoot: true` を設定することで、言語ごとに独立したナビゲーションツリーを構築できます。

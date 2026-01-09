@@ -1,22 +1,22 @@
 ---
 title: 配置
-description: 配置站点信息、目录、主题、public 资源与 CLI 覆盖项。
+description: 站点信息、目录结构、主题配置、资源管理及 CLI 覆盖规则详解。
 weight: 2
 ---
 
 # 配置
 
-Methanol 会尝试读取以下配置文件：
+Methanol 将按顺序尝试加载以下配置文件：
 
 ```
 methanol.config.{js,mjs,cjs,ts,jsx,tsx,mts,cts}
 ```
 
-如果没有配置文件，Methanol 则会基于当前目录推断并使用默认值。
+若未发现配置文件，Methanol 将基于当前目录推断并应用默认设置。
 
-## 配置形态
+## 配置结构
 
-配置文件需要导出一个函数，此函数需要接收上下文并返回配置对象。
+配置文件需导出一个函数，该函数接收构建上下文并返回配置对象。
 
 ```js
 export default ({ mode, root, HTMLRenderer }) => ({
@@ -24,53 +24,53 @@ export default ({ mode, root, HTMLRenderer }) => ({
 })
 ```
 
-上下文字段：
+上下文参数说明：
 
 - `mode`: `development` 或 `production`
 - `root`: 项目根目录
-- `HTMLRenderer`: refui HTML 工具（`rawHTML`、`serialize` 等）
+- `HTMLRenderer`: refui HTML 渲染工具集（`rawHTML`、`serialize` 等）
 
-## 核心属性
+## 核心配置属性
 
 ### `root`
 
-项目根目录。默认为当前工作目录。
+项目根目录，默认为当前工作目录（CWD）。
 
 ### `site`
 
-模板使用的站点信息：
+站点元信息（供模板使用）：
 
-- `site.name`: 站点标题
-- `site.logo`: logo 路径（字符串）或 `false`（在默认主题中禁用）
-- `site.favicon`: favicon 路径（字符串）或 `false`（在默认主题中禁用）
-- `site.base`: 站点部署在子路径下时的 base（例如 `'/docs/'`）
-- `site.repoBase`: 指向仓库内容目录的 base URL（默认主题会用它生成 “Edit this page” 链接）
+- `site.name`: 站点名称/标题
+- `site.logo`: Logo 路径（字符串）或设为 `false` 以禁用（默认主题生效）
+- `site.favicon`: Favicon 路径（字符串）或设为 `false` 以禁用（默认主题生效）
+- `site.base`: 站点部署在子路径下时的 Base Path（例如 `'/docs/'`）
+- `site.repoBase`: 指向仓库内容目录的 Base URL（默认主题会用它生成 “Edit this page” 链接）
 
 注意：
 
-- `site.base` 会被规范化为首尾都带 `/`（例如 `docs` → `'/docs/'`）。
-- 除非你显式设置 `vite.base`，否则 `site.base` 也会作为 Vite 的 `base` 使用。
+- `site.base` 将被自动规范化为首尾斜杠形式（例如 `docs` → `'/docs/'`）。
+- 除非显式配置 `vite.base`，否则 `site.base` 将作为 Vite 的 `base` 路径。
 - dev（`methanol dev`）模式下 `site.base` 会被忽略并当作 `/`。请用 `methanol build` + `methanol serve` 验证子路径部署效果。
 
 ### `pagesDir`
 
-MDX/MD 文件目录（路由来源）。默认为 `pages`；当 `pages/` 不存在时，则会寻找 `docs`。
+MDX/MD 源文件目录（路由根源）。默认为 `pages`；若 `pages/` 不存在，将自动回退查找 `docs`。
 
 ### `componentsDir`
 
 JSX/TSX 组件目录。默认为 `components`。
 
-如果显式设置 `pagesDir` 或 `componentsDir`（包含 CLI），目录不存在将会报错。
+若显式指定了 `pagesDir` 或 `componentsDir`（包括 CLI 参数指定），当目录不存在时将抛出错误。
 
 ### `publicDir`
 
-静态资源目录（在站点根路径提供，例如 `public/foo.png` → `/foo.png`）。默认为 `public`。
+静态资源目录（映射至站点根路径，如 `public/foo.png` → `/foo.png`）。默认为 `public`。
 
-Methanol 也会包含主题的 public 资源（`theme.publicDir`）。当主题与用户资源同时存在时，会合并为一个目录（先主题、后用户），因此同路径冲突时用户资源优先。
+Methanol 亦支持主题资源（`theme.publicDir`）。构建时将执行合并策略（主题资源垫底，用户资源覆盖），同名文件以用户资源为准。
 
-需要合并时，内部合并目录会创建在 `node_modules/.methanol/assets`（若不存在 `node_modules/`，则创建在 `{pagesDir}/.methanol/assets`）。
+执行合并操作时，临时目录将生成于 `node_modules/.methanol/assets`（若无 `node_modules/`，则生成于 `{pagesDir}/.methanol/assets`）。
 
-设为 `publicDir: false` 可完全禁用 public 资源（包含主题资源）。
+设置 `publicDir: false` 可彻底禁用 Public 资源功能（包括主题资源）。
 
 ### `distDir`
 
@@ -82,7 +82,7 @@ Methanol 也会包含主题的 public 资源（`theme.publicDir`）。当主题�
 
 ### `intermediateDir`
 
-中间状态 HTML 输出目录（仅 build 时生效）。
+中间态 HTML 输出目录（仅 build 时生效）。
 
 ### `emitIntermediate`
 
@@ -90,47 +90,47 @@ Methanol 也会包含主题的 public 资源（`theme.publicDir`）。当主题�
 
 ### `theme`
 
-主题配置。详细用法见 [主题（进阶）](../advanced/themes/)。
+主题深度配置。详见 [主题（进阶）](../advanced/themes/)。
 
 关键字段：
 
 - `theme.root`: 主题根目录（必填）
-- `theme.template`: HTML 模板函数（接收 `{ ctx, page, PageContent, ExtraHead, withBase, HTMLRenderer, components }`）
+- `theme.template`: HTML 布局模板函数（接收 `{ ctx, page, PageContent, ExtraHead, withBase, HTMLRenderer, components }`）
 - `theme.components`: 默认 MDX 组件
 - `theme.componentsDir`: 主题组件目录
 - `theme.pagesDir`: 主题页面目录
-- `theme.publicDir`: 主题 public 资源（合并到 `publicDir`）
+- `theme.publicDir`: 主题 Public 资源（合并到 `publicDir`）
 - `theme.sources`: 由 Methanol 解析的虚拟路径映射
-- `theme.mdx`: 与用户 `mdx` 合并的默认 MDX 配置
-- `theme.vite`: 与用户 `vite` 合并的默认 Vite 配置
+- `theme.mdx`: 与用户 `mdx` 合并的默认 MDX 选项
+- `theme.vite`: 与用户 `vite` 合并的默认 Vite 选项
 
 ### `mdx`
 
-自定义 MDX 配置。该函数接收 `{ mode, root }` 并返回 MDX 选项。
+自定义 MDX 配置函数。接收 `{ mode, root }` 并返回配置对象。
 
 ### `vite`
 
-自定义 Vite 配置。该函数接收 `{ command, mode, root, isPreview }`。
+自定义 Vite 配置函数。接收 `{ command, mode, root, isPreview }`。
 
 ### `preBuild` / `preBundle` / `postBundle` / `postBuild`
 
-用于扩展构建流程的 hooks。
+构建流程扩展钩子（Hooks）。
 
 - `preBuild` 在 dev 启动时与 build 前执行。
 - `preBundle` 仅在 build 时执行：页面渲染完成后、Vite 打包之前。
 - `postBundle` 仅在 build 时执行：Vite 打包完成后、Pagefind 建索引之前。
 - `postBuild` 只在 build 后执行（dev 不执行）。
 - 这些 hook 都可以是函数或函数数组。
-- 执行顺序：user `preBuild` → theme `preBuild` → render → user `preBundle` → theme `preBundle` → bundle → theme `postBundle` → user `postBundle` →（可选）Pagefind → theme `postBuild` → user `postBuild`。
+- 执行流：User `preBuild` → Theme `preBuild` → Render → User `preBundle` → Theme `preBundle` → Bundle → Theme `postBundle` → User `postBundle` →（可选）Pagefind → Theme `postBuild` → User `postBuild`。
 
-钩子上下文：
+Hook 上下文：
 
 - `mode`, `root`, `command`, `isDev`, `isBuild`, `isPreview`
 - `HTMLRenderer`
 - `site`（与 `ctx.site` 同形）
-- `data`（可变对象，用于跨钩子共享数据）
+- `data`（可变数据对象，用于跨 Hook 共享状态）
 
-`preBundle` / `postBundle` / `postBuild` 还会收到：
+`preBundle` / `postBundle` / `postBuild` 额外参数：
 
 - `pagesContext`
 - `pages`
@@ -157,7 +157,7 @@ export default () => ({
 
 ### `pagefind`
 
-启用或配置 Pagefind 搜索。默认：`false`。
+启用或配置 Pagefind 搜索。默认值：`false`。
 
 ```js
 pagefind: false
@@ -177,11 +177,11 @@ pagefind: {
 说明：
 
 - `enabled` 和 `build` 以外的键会传给 Pagefind JS 的 `options()`。
-- `build` 是唯一的构建配置入口。
+- `build` 属性专用于构建配置。
 
 ### `starryNight`
 
-控制代码高亮（rehype-starry-night）。默认：`false`。
+代码高亮配置（基于 `rehype-starry-night`）。默认值：`false`。
 
 ```js
 starryNight: false
@@ -193,15 +193,15 @@ starryNight: {
 }
 ```
 
-- 当 `starryNight` 为对象时，除非设置 `enabled: false`，否则视为启用。
-- 页面 frontmatter 的 `starryNight` 优先级最高。
+- 当 `starryNight` 配置为对象时，除非显式设置 `enabled: false`，否则视为开启。
+- 页面 Frontmatter 的 `starryNight` 优先级最高。
 - CLI 参数 `--code-highlighting` 可运行时切换是否启用全局代码高亮。
 
 ### `gfm`
 
-启用/禁用 GitHub Flavored Markdown（GFM）。默认：`true`。
+GitHub Flavored Markdown (GFM) 开关。默认值：`true`。
 
-启用后，Methanol 会支持常见的 GFM 语法（表格、任务列表、删除线、脚注、自动链接等）。
+开启后，Methanol 将支持标准 GFM 语法特性（表格、任务列表、删除线、脚注、自动链接等）。
 
 ```js
 gfm: true
@@ -211,16 +211,16 @@ gfm: false
 
 ## CLI 覆盖
 
-命令行参数会覆盖配置文件参数：
+命令行参数优先级高于配置文件：
 
 - `--input` 和 `--components` 覆盖 `pagesDir` 与 `componentsDir`
 - `--assets` 覆盖 `publicDir`
 - `--output` 覆盖 `distDir`
 - `--site-name` 覆盖 `site.name`
-- `--base` 本次运行覆盖 `site.base`（dev 模式下会被忽略）
-- `-v`/`--verbose` 启用更详细的日志输出
-- `--config` 指定配置文件
-- 位置参数 `input`/`output` 等同于 `--input`/`--output`（dev 仅使用 `input`）
+- `--base` 临时覆盖 `site.base`（dev 模式下会被忽略）
+- `-v`/`--verbose` 开启详细日志模式
+- `--config` 指定配置文件路径
+- 位置参数 `input`/`output` 分别映射至 `--input`/`--output`（dev 仅使用 `input`）
 
 ## 示例
 

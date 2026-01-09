@@ -1,23 +1,23 @@
 ---
 title: 主题
-description: 主题对象结构、默认目录与模板约定。
+description: 主题对象结构、默认目录布局及模板规范。
 weight: 3
 ---
 
 # 主题
 
-主题控制布局（HTML 模板）、默认 MDX 组件，以及可选的主题页面/资源。Methanol 仓库里的默认主题是很好的参考。
+主题全权掌控布局（HTML 模板）、默认 MDX 组件，以及可选的主题页面与静态资源。Methanol 仓库中的默认主题可作为最佳参考范例。
 
-## 主题实现指南
+## 主题开发指南
 
-- [主题实现指南](../theme-guide/)
-- [渲染导航](../theme-guide/navigation)
-- [渲染目录（ToC）](../theme-guide/toc)
-- [上一页/下一页](../theme-guide/prev-next)
-- [语言切换](../theme-guide/language-switch)
-- [专门用途页面](../theme-guide/special-pages)
+- [主题开发指南](../theme-guide/)
+- [导航渲染机制](../theme-guide/navigation)
+- [目录（TOC）渲染](../theme-guide/toc)
+- [相邻页面导航](../theme-guide/prev-next)
+- [多语言切换实现](../theme-guide/language-switch)
+- [特殊用途页面](../theme-guide/special-pages)
 
-## 主题结构
+## 主题配置结构
 
 ```jsx
 export default () => ({
@@ -56,71 +56,71 @@ export default () => ({
 
 ### 必填
 
-- `theme.root` 必须指定，作为主题路径的基准目录。
+- `theme.root` 必填项，指定主题路径的基准目录。
 
 ### 默认值与校验
 
-- `componentsDir` / `pagesDir` / `publicDir` 支持三种写法：
-	- 省略（默认使用主题根目录下的 `./components` / `./pages` / `./public`；目录不存在则跳过）
-	- 设置为 `false`（禁用该功能）
-	- 显式设置（目录不存在会报错）
+- `componentsDir` / `pagesDir` / `publicDir` 支持三种配置模式：
+	- 省略：默认映射至主题根目录下的 `./components` / `./pages` / `./public`（若目录不存在则自动跳过）
+	- 设置为 `false`：显式禁用该功能
+	- 显式路径字符串：指定特定目录（若目录不存在将抛出错误）
 
-## 主题目录结构
+## 推荐目录结构
 
 建议结构：
 
 ```
 theme/
-  index.js          # 主题对象
-  page.jsx          # 模板组件
-  components/       # 默认 MDX 组件
-  pages/            # 可选主题页面
-  public/           # 可选静态资源
-  sources/          # theme.sources 映射的资源
+  index.js          # 主题配置入口
+  page.jsx          # 布局模板组件
+  components/       # 默认 MDX 组件集合
+  pages/            # 主题预设页面
+  public/           # 主题静态资源
+  sources/          # theme.sources 映射资源目录
 ```
 
-主题的 `public/` 会在 dev/build 时合并到项目的 `publicDir`。若同一路径同时存在，则项目资源优先。
+主题的 `public/` 目录将在 dev/build 阶段合并至项目的 `publicDir`。若遇同名文件冲突，项目资源优先级高于主题资源。
 
-## 模板约定
+## 模板接口规范
 
-`theme.template` 接收：
+`theme.template` 接收以下参数：
 
-- `PageContent`: 当前页面内容的 JSX 组件
-- `ExtraHead`: 注入到 `<head>` 的额外内容（页面资源 + Methanol 运行时 + 页面 `<Head>`/`head` 输出）
-- `ctx`: 页面/站点上下文（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`）
-- `page`: `ctx.page` 的别名
-- `withBase`: 用于生成带 base 的 URL（与 `ctx.withBase` 相同）
-- `HTMLRenderer`: refui HTML 渲染器（用于提供 rawHTML 与 serialize，或者用于手动渲染 JSX 组件）
-- `components`: 合并后的组件对象（主题组件 + 用户组件）
+- `PageContent`: 渲染当前页面内容的 JSX 组件
+- `ExtraHead`: 需注入 `<head>` 的额外内容（包含页面资源、Methanol 运行时及页面自定义 `<Head>`/`head` 内容）
+- `ctx`: 页面与站点上下文（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`）
+- `page`: `ctx.page` 别名
+- `withBase`: URL Base 处理函数（等同于 `ctx.withBase`）
+- `HTMLRenderer`: refui HTML 渲染器（提供 `rawHTML` 与 `serialize` 方法，或用于手动渲染 JSX 组件）
+- `components`: 合并后的组件集合（包括主题组件与用户自定义组件）
 
-返回一个 JSX 树即可。
+函数需返回一个完整的 JSX 树。
 
-**重要：**请把 `<ExtraHead />` 放在 `<head>` 里，否则页面的 `<Head>`/`head` 与自动注入的资源不会生效。
+**重要：**务必将 `<ExtraHead />` 置于 `<head>` 标签内，否则页面 `<Head>`/`head` 及自动注入资源将无法生效。
 
-当站点部署在子路径下（`site.base !== '/'`）时：
+当站点部署于子路径（`site.base !== '/'`）时：
 
-- 对需要跟随 Vite `base` 的 URL（例如 Vite 管理的运行时资源）使用 `withBase('/...')`（或 `ctx.withBase('/...')`）。
-- 一般不需要对 `theme.sources` 的 URL 或 `public/` 下的静态文件使用 `withBase()`（Methanol 会在构建时进行解析）。但如果你在 JS 中动态生成 URL 并遇到 Vite dev 下解析不一致，`withBase()` 仍然是一个实用的规避手段。
+- 对于需遵循 Vite `base` 的 URL（如 Vite 管理的运行时资源），请使用 `withBase('/...')`（或 `ctx.withBase('/...')`）。
+- 通常无需对 `theme.sources` URL 或 `public/` 静态文件使用 `withBase()`（Methanol 会在构建时进行解析）。但在 JS 中动态生成 URL 时若遇 Vite dev 路径解析不一致，`withBase()` 仍是有效的解决方案。
 
-## 主题组件
+## 主题默认组件
 
-`theme.components` 提供主题默认 MDX 组件。用户 `components/` 中同名组件会覆盖主题组件。
+`theme.components` 定义主题默认 MDX 组件。用户 `components/` 目录下的同名组件将覆盖主题组件。
 
-模板同样会收到 `components`（适合在布局里使用，例如导航/搜索等）。
+模板亦会接收 `components` 对象（便于在布局中调用，如导航、搜索组件等）。
 
-## 主题页面
+## 主题预设页面机制
 
-主题页面遵循与用户页面相同的路由规则。用户页面始终优先。
+主题页面遵循与用户页面一致的路由规则。用户页面始终拥有更高优先级。
 
-主题提供的 `/404` 只有在用户未提供 404 页面时才会生效。
+主题提供的 `/404` 页面仅在用户未定义 404 页面时生效。
 
-## 主题 public 资源
+## 主题静态资源合并
 
-如果主题有 `publicDir`，在 dev/build 开始时会被复制到用户 public 目录。即使用户设置了 `publicDir`，主题资源也会复制进去，若存在同名文件则跳过。若用户侧没有 public 目录，则会回退使用主题的 public 目录。
+若主题配置了 `publicDir`，其内容将在 dev/build 启动时复制至用户 `public` 目录。即使用户已配置 `publicDir`，主题资源仍会被复制，同名文件将自动跳过。若用户侧未创建 `public` 目录，则直接使用主题的 `public` 目录。
 
-## 主题 sources
+## 主题资源映射
 
-`theme.sources` 将虚拟 URL 映射到文件。它由 Methanol 的 resolver 处理，并非 Vite alias。
+`theme.sources` 将虚拟 URL 映射至物理文件。该机制由 Methanol 解析器处理，而非 Vite alias。
 
 ```js
 export default () => ({
@@ -133,11 +133,11 @@ export default () => ({
 })
 ```
 
-## 主题 Hooks
+## 构建钩子（Hooks）
 
-主题也可以提供构建 hooks（与用户配置的 hook 形状一致）：
+主题亦可提供构建钩子（结构与用户配置 hook 一致）：
 
-- `preBuild`（dev 启动 + build 前）
-- `preBundle`（页面渲染完成后、Vite 打包前）
-- `postBundle`（Vite 打包后、Pagefind 前）
-- `postBuild`（build 后）
+- `preBuild`（dev 启动及 build 流程开始前）
+- `preBundle`（页面渲染完成之后、Vite 打包开始之前）
+- `postBundle`（Vite 打包完成之后、Pagefind 执行之前）
+- `postBuild`（整个构建流程结束后）

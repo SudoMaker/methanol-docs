@@ -1,31 +1,31 @@
 ---
 title: デフォルトテーマのメタタグ
-description: デフォルトテーマのメタタグ出力とロゴ/ファビコンの解決（false による無効化含む）。
+description: デフォルトテーマにおけるメタタグの出力ロジック、およびロゴ・ファビコンの解析と適用ルール。
 weight: 20
 ---
 
 # デフォルトテーマのメタタグ
 
-デフォルトテーマは値がある場合のみメタタグを出力します（またはデフォルト値にフォールバックします）。
+デフォルトテーマは、設定値が存在する場合にのみメタタグを出力します。値が未定義の場合は、システム標準のデフォルト値にフォールバックされます。
 
-## ロゴとファビコンの解決順
+## ロゴとファビコンの解析順序
 
-優先順位:
+以下の優先順位に従って、使用されるリソースが決定されます。
 
-1) 現在ページの `frontmatter.logo` / `frontmatter.favicon`
-2) ルート index の `frontmatter.logo` / `frontmatter.favicon`
-3) 設定の `site.logo` / `site.favicon`
-4) テーマのデフォルト値（`/logo.png`, `/favicon.png`）
+1) 現在のページの `frontmatter.logo` / `frontmatter.favicon`
+2) ルートディレクトリの `index.mdx` における `frontmatter.logo` / `frontmatter.favicon`
+3) グローバル設定の `site.logo` / `site.favicon`
+4) テーマのデフォルトプリセット（`/logo.png`, `/favicon.png`）
 
-ロゴ/ファビコンを明示的に無効化したい場合は、`logo: false` / `favicon: false` を指定してください（frontmatter または config）。`false` はその時点で解決を止め、後続のフォールバック（テーマのデフォルト含む）を使いません。
+ロゴやファビコンを明示的に無効化したい場合は、フロントマターまたは設定ファイルで `logo: false` / `favicon: false` を指定してください。`false` が指定されると、システムはその時点で解析を停止し、後続のフォールバック処理（テーマのデフォルト値の適用を含む）を行いません。
 
-解決結果が falsy の場合、対応する `<link rel="icon">`（またはロゴの `<img>`）は出力されません。
+解析結果が Falsy（`false` または未定義）の場合、対応する `<link rel="icon">` タグやロゴの `<img>` タグはレンダリングされません。
 
-## メタ説明
+## メタ説明文 (Meta Description)
 
-- `frontmatter.excerpt`（別名: `description`）は `<meta name="description" content={...} />` として出力されます。
+- `frontmatter.excerpt`（またはエイリアスの `description`）は、`<meta name="description" content="..." />` としてレンダリングされます。
 
-## Open Graph
+## Open Graph (OG) プロトコル
 
 - `frontmatter.ogTitle` → `og:title`
 - `frontmatter.ogDescription` → `og:description`

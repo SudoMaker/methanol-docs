@@ -1,21 +1,21 @@
 ---
-title: 前/次リンク
-description: ctx.getSiblings() で前後のページリンクを描画する。
+title: 前後ページへのリンク
+description: ctx.getSiblings() を使用した前後ページへのナビゲーションの実装。
 weight: 5
 starryNight: true
 ---
 
-# 前/次リンク
+# 前後ページへのリンク
 
-Methanol は「前へ/次へ」のためのヘルパーを提供します:
+Methanol は、現在表示中のページの「前」と「次」のページ情報を取得するためのヘルパー関数を提供しています。
 
 ```js
 const { prev, next } = ctx.getSiblings.() || {}
 ```
 
-この並びは、現在のナビゲーションルートとサイドバーの順序に揃います。
+この関数で取得されるページ順序は、現在のナビゲーションルートの設定およびサイドバーの表示順序と完全に同期しています。
 
-## 例
+## 実装例
 
 ```jsx
 const PrevNext = ({ ctx }) => {
@@ -50,8 +50,7 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-補足:
+## ポイントと注意点
 
-- リンクは `routeHref` を使ってください（`site.base` を含みます）。
-- ナビゲーションから外したいページは `hidden: true` などで調整できます。
-
+- リンク先には必ず `routeHref` を使用してください（`site.base` の設定が自動的に反映されます）。
+- 前後ページのシーケンスから特定のページを外したい場合は、`hidden: true` などを設定してナビゲーションから除外することが可能です。

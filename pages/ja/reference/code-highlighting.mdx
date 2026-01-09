@@ -1,17 +1,17 @@
 ---
 title: コードハイライト
-description: コードハイライトの設定。
+description: 構文ハイライトの有効化、設定、および拡張方法。
 weight: 5
 starryNight: true
 ---
 
 # コードハイライト
 
-Methanol は [Starry Night](https://github.com/wooorm/starry-night) を使ってコードハイライトを行います（`rehype-starry-night` 経由）。デフォルトではパフォーマンスのため無効です。
+Methanol は、[Starry Night](https://github.com/wooorm/starry-night) を使用してコードブロックの構文ハイライトを行います（`rehype-starry-night` 経由）。ビルドパフォーマンスと速度を優先するため、デフォルトでは無効に設定されています。
 
-## 有効化・無効化
+## 有効化と無効化
 
-`methanol.config.*` に `starryNight` を追加します。
+`methanol.config.*` 内で `starryNight` オプションを設定します。
 
 ```js
 // methanol.config.js
@@ -20,7 +20,7 @@ export default () => ({
 })
 ```
 
-明示的に無効にする場合:
+明示的に無効化する場合:
 
 ```js
 // methanol.config.js
@@ -29,16 +29,16 @@ export default () => ({
 })
 ```
 
-CLI で一時的に切り替え:
+CLI で一時的に切り替えることも可能です（1 回のビルドのみ有効）:
 
 ```bash
 npx methanol build --code-highlighting
 npx methanol build --code-highlighting false
 ```
 
-## ページ単位の上書き
+## ページ単位での設定上書き
 
-フロントマターが常に優先されます。
+各ページのフロントマター設定は、グローバル設定よりも優先されます。
 
 ```mdx
 ---
@@ -46,12 +46,12 @@ starryNight: true
 ---
 ```
 
-## ほかのハイライターに置き換える
+## 他のハイライターへの置き換え
 
-別のハイライターを使う場合:
+Starry Night 以外のソリューションを使用する場合の手順:
 
-1) `starryNight: false` で無効化
-2) `mdx` 設定で別のプラグインを追加
+1) `starryNight: false` で標準機能を無効化します。
+2) `mdx` 設定オプションを通じて、任意のリハイク（rehype）プラグインを追加します。
 
 ```js
 export default () => ({
@@ -62,13 +62,13 @@ export default () => ({
 })
 ```
 
-## スタイル
+## スタイリング
 
-Methanol はコードスタイルを自動で挿入しません。テーマ側で必要な CSS を読み込んでください。
+Methanol は、ハイライト用の CSS を自動的に挿入しません。使用するテーマ側で必要なスタイルを読み込むか、独自にスタイル定義を用意してください。
 
-## 追加言語
+## サポート言語の追加
 
-Starry Night には基本の文法が含まれています。追加したい場合は `starryNight.grammars` に指定します。
+Starry Night には標準的な言語セットが含まれています。特定の言語を追加したい場合は、`starryNight.grammars` オプションを使用します。
 
 ```js
 import { common } from '@wooorm/starry-night'
@@ -81,4 +81,4 @@ export default () => ({
 })
 ```
 
-文法を読み込むために `@wooorm/starry-night` をプロジェクトに追加する必要があります。
+※ 追加の文法データを読み込むには、プロジェクトに `@wooorm/starry-night` を直接インストールする必要があります。

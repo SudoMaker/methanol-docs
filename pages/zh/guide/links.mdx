@@ -1,16 +1,16 @@
 ---
 title: 链接与导航
-description: 链接、导航与内部 URL。
+description: 链接管理、导航结构及内部 URL 处理。
 weight: 2
 ---
 
 # 链接与导航
 
-Methanol 使用基于文件的路由。站内链接直接写“路由路径”即可。
+Methanol 采用基于文件的路由机制。站内链接可直接引用“路由路径”。
 
 ## 内部链接
 
-使用站内路由（不带扩展名）：
+引用站内路由（无需文件扩展名）：
 
 ```md
 [写作基础](./writing)
@@ -18,20 +18,20 @@ Methanol 使用基于文件的路由。站内链接直接写“路由路径”�
 
 渲染为：[写作基础](./writing)
 
-页面移动或改名后，记得同步更新链接路径。
+若页面发生迁移或重命名，请务必同步更新链接路径。
 
-### 子路径部署（`site.base`）
+### 子路径部署配置（`site.base`）
 
-如果站点部署在子路径下（例如 `https://example.com/docs/`），请设置 `site.base: '/docs/'`，并避免在内容里写 `/blog/post` 这类根路径的站内链接。
+若站点需部署于子路径下（例如 `https://example.com/docs/`），请设置 `site.base: '/docs/'`，并避免在内容中硬编码如 `/blog/post` 的绝对根路径。
 
-推荐使用相对链接：
+建议优先使用相对链接：
 
 ```md
 [下一篇](./next-post)
 [返回博客](../blog/)
 ```
 
-如果在 MDX/JSX 中需要生成根路径链接，请用 `ctx.withBase` 包一下：
+若需在 MDX/JSX 中生成基于根路径的链接，请使用 `ctx.withBase` 进行包装：
 
 ```mdx
 <a href={ctx.withBase('/blog/post')}>阅读</a>
@@ -39,7 +39,7 @@ Methanol 使用基于文件的路由。站内链接直接写“路由路径”�
 
 ## 外部链接
 
-外部站点使用完整 URL：
+引用外部站点需使用完整 URL：
 
 ```md
 [Example](https://example.com)
@@ -49,10 +49,10 @@ Methanol 使用基于文件的路由。站内链接直接写“路由路径”�
 
 ## 导航排序
 
-通过 Frontmatter 控制顺序与可见性：
+可通过 Frontmatter 精确控制导航顺序与可见性：
 
-- `weight`: 数值越小越靠前
-- `hidden`: 在侧边栏隐藏
-- `isRoot`: 用于 `index.mdx`，定义导航根
+- `weight`: 数值越小排序越靠前
+- `hidden`: 在侧边栏导航中隐藏
+- `isRoot`: 用于 `index.mdx`，定义导航根节点
 
-更完整的规则见 [Frontmatter 参考](../reference/frontmatter)。
+完整规则详见 [Frontmatter 参考](../reference/frontmatter)。

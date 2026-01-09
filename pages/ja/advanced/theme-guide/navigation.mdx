@@ -1,15 +1,15 @@
 ---
-title: ナビゲーションを描画する
-description: ctx.pagesTree からサイドバー/メニューを組み立てる。
+title: ナビゲーションのレンダリング
+description: ctx.pagesTree を使用したサイドバーおよびメニューの実装。
 weight: 3
 starryNight: true
 ---
 
-# ナビゲーションを描画する
+# ナビゲーションのレンダリング
 
-Methanol は `ctx.pagesTree` にナビゲーションツリーを用意します。これは現在のナビゲーションルート（`isRoot`）にスコープされ、hidden/exclude のルールも反映済みです。
+Methanol は、`ctx.pagesTree` を通じて階層化されたナビゲーションツリーを提供します。このデータは、現在のナビゲーションルート（`isRoot`）の設定に基づき適切にスコープされており、`hidden` や `exclude` などの規則が適用済みです。
 
-各ノードの例:
+ノードデータの構造例:
 
 ```js
 {
@@ -17,12 +17,12 @@ Methanol は `ctx.pagesTree` にナビゲーションツリーを用意します
 	title: '...',
 	name: '...',
 	routePath: '/guide/',
-	routeHref: '/docs/guide/', // base 対応
+	routeHref: '/docs/guide/', // Base Path 対応済み
 	children: []
 }
 ```
 
-## 最小のサイドバー
+## 最小構成のサイドバー実装例
 
 ```jsx
 const NavTree = ({ nodes, currentHref }) => (
@@ -70,8 +70,7 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-ヒント:
+## 実装のアドバイス
 
-- リンクには `routeHref` を使うのが安全です（`site.base` を含みます）。
-- ディレクトリ index のルートは `routePath` が末尾 `/` 付きになります（例: `/guide/`）。
-
+- リンク先には必ず `routeHref` を使用してください（`site.base` の設定が自動的に反映されます）。
+- ディレクトリのインデックスページの場合、`routePath` の末尾には常に `/` が付与されます（例: `/guide/`）。

@@ -1,43 +1,43 @@
 ---
 title: デフォルトテーマ
-description: デフォルトテーマの機能と設定。
+description: デフォルトテーマの機能概要とカスタマイズ方法。
 weight: 1
 ---
 
 # デフォルトテーマ
 
-デフォルトテーマ（Methanol リポジトリの `themes/default`）は、基本レイアウト、サイドバー、スタイルを提供します。
+デフォルトテーマ（Methanol リポジトリ内 `themes/default`）は、サイトの基礎となるレイアウト、サイドバーナビゲーション、および標準的なスタイルを提供します。
 
-## 機能
+## 主要機能
 
-- ページツリーから生成されるサイドバー
-- 見出しに応じた目次（任意）
-- `lang` を持つディレクトリ index がある場合の言語セレクタ
-- Pagefind 検索 UI の統合
+- ページ構造に基づき自動生成されるサイドバーナビゲーション
+- 見出し階層に応じたページ内目次（オプション）
+- ディレクトリの `index.mdx` に `lang` が設定されている場合の言語スイッチャー
+- Pagefind を利用した全文検索 UI の統合
 
-## 言語セレクタ
+## 言語スイッチャー
 
-ディレクトリの `index.mdx` に `frontmatter.lang` があると（ルートを含む）言語セレクタが表示されます。表示ラベルは `lang` で、現在の選択は `ctx.language` から決まります。
+ディレクトリ（ルートを含む）の `index.mdx` において `frontmatter.lang` が定義されている場合、言語スイッチャーが自動的に有効化されます。表示されるラベルは `lang` の値に基づき、現在の選択状態は `ctx.language` によって判定されます。
 
-## 検索（Pagefind）
+## 全文検索 (Pagefind)
 
-`pagefind: true` を設定し、Pagefind をインストールすると検索が有効になります。
+設定ファイルで `pagefind: true` を有効にし、プロジェクトに Pagefind をインストールすることで、検索機能が利用可能になります。
 
 ```bash
 npm i -D pagefind
 ```
 
-`pagefind` が有効な場合、Methanol はビルド後に Pagefind CLI を実行し、`dist/pagefind` に出力します。
+`pagefind` が有効な場合、Methanol はビルドプロセスの最後に Pagefind CLI を実行し、`dist/pagefind` に検索用索引を生成します。
 
-## Starry Night のスタイル
+## 構文ハイライト (Starry Night)
 
-テーマは Starry Night のスタイルを CSS に含めています。
+本テーマの CSS には、Starry Night によるコードハイライト用のスタイルが組み込まれています。
 
-## 「Edit this page」リンク（`site.repoBase`）
+## 「このページを編集」リンク (`site.repoBase`)
 
-デフォルトテーマはフッターに「Edit this page」リンクを表示できます。
+フッター領域にソースコードへの編集リンクを表示できます。
 
-`site.repoBase` に、リポジトリ上のコンテンツフォルダ（`pages/` など）を指すベース URL を設定してください:
+`site.repoBase` に、リポジトリ内のコンテンツディレクトリ（`pages/` など）を指すベース URL を設定してください。
 
 ```js
 // methanol.config.js
@@ -48,4 +48,4 @@ export default () => ({
 })
 ```
 
-ページの frontmatter に `sourceURL` がある場合、そのページでは `site.repoBase` より `sourceURL` が優先されます。
+個別のページのフロントマターに `sourceURL` が定義されている場合は、`site.repoBase` よりもその値が優先されます。

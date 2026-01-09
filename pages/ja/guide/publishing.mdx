@@ -1,36 +1,36 @@
 ---
 title: ビルドと公開
-description: ビルドとデプロイ方法。
+description: プロジェクトのビルド手順とホスティングサービスへのデプロイ方法。
 weight: 8
 ---
 
 # ビルドと公開
 
-Methanol の出力は静的サイトなので、`dist/` をどんな静的ホストにも配置できます。
+Methanol は純粋な静的サイトとしてビルド成果物を出力するため、`dist/` ディレクトリの内容をあらゆる静的ホスティングサービスにデプロイすることが可能です。
 
-## ビルド
+## ビルドの実行
 
 ```bash
 npx methanol build
 ```
 
-`dist/` が生成されます。
+実行後、プロジェクトのルートに `dist/` ディレクトリが生成されます。
 
-## プレビュー
+## ローカルでのプレビュー
 
 ```bash
 npx methanol serve
 ```
 
-本番出力をローカルで確認できます。
+ビルドされた成果物をローカル環境で立ち上げ、動作を確認できます。
 
-## デプロイ
+## デプロイ手順
 
-`dist/` を任意のホスト（GitHub Pages、Netlify、Cloudflare Pages、S3 など）へアップロードします。
+生成された `dist/` ディレクトリ内のファイルを、GitHub Pages、Netlify、Cloudflare Pages、Amazon S3 などの任意のホスティングサービスにアップロードしてください。
 
-## サブパス配信
+## サブパスでの配信設定
 
-サイトをサブパス配信する場合（例: `https://example.com/docs/`）、`methanol.config.*` で `site.base` を設定します:
+サイトを特定のサブパス（例: `https://example.com/docs/`）で配信する場合は、`methanol.config.*` 内の `site.base` プロパティを設定してください。
 
 ```js
 export default () => ({
@@ -40,4 +40,4 @@ export default () => ({
 })
 ```
 
-dev（`methanol dev`）では `site.base` は無視され、`/` として扱われます。サブパス配信は `methanol build` + `methanol serve` で確認してください。
+開発サーバー（`methanol dev`）では `site.base` の設定は無視され、常に `/`（ルート）として扱われます。サブパス配信の動作を確認するには、`methanol build` 実行後に `methanol serve` を使用してください。

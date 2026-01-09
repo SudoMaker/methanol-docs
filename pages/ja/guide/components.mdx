@@ -1,15 +1,15 @@
 ---
 title: コンポーネントの利用
-description: MDX でのコンポーネント利用と上書き。
+description: MDX 内でのコンポーネント利用とカスタマイズ方法。
 weight: 6
 starryNight: true
 ---
 
 # コンポーネントの利用
 
-MDX は Markdown の中に JSX コンポーネントを埋め込めます。再利用したいコンポーネントは `components/` に置き、どのページからでも使えます。
+MDX では、Markdown の中に [rEFui](https://github.com/SudoMaker/rEFui) JSX コンポーネントを直接埋め込むことができます。再利用可能なコンポーネントを `components/` ディレクトリに配置することで、すべてのページから即座に利用可能になります。
 
-## コンポーネントを作る
+## コンポーネントの作成
 
 ```jsx
 // components/Callout.jsx
@@ -18,25 +18,25 @@ export default function Callout(props, ...children) {
 }
 ```
 
-## MDX で使う
+## MDX 内での使用
 
 ```mdx
 <Callout>
-  ヒント: セクションは短く、要点を絞ると読みやすくなります。
+  ヒント: 各セクションを簡潔にまとめると、読者の可読性が向上します。
 </Callout>
 ```
 
-## クライアントコンポーネント
+## クライアント専用コンポーネント
 
-コンポーネントがブラウザ API に依存する場合は、ファイル名に `.client` サフィックスを付けます。
+ブラウザ API に依存するコンポーネント（Window オブジェクトの使用など）を作成する場合は、ファイル名に `.client` サフィックスを付与してください。
 
 ```
 components/Map.client.jsx
 ```
 
-## カウンターの例
+## インタラクティブなコンポーネントの例
 
-簡単なインタラクティブな例です。
+以下は、シンプルなカウンターコンポーネントの例です。
 
 ```jsx
 // components/Counter.client.jsx
@@ -55,27 +55,27 @@ export default function Counter({ initial = 0 }) {
 }
 ```
 
-このコンポーネントは CSS の import を使用しており、サーバーサイドでの静的レンダリング時にはサポートされていないため、静的レンダリング用に別のバージョンを作成する必要があります。
+このコンポーネントは CSS のインポートを含んでおり、サーバーサイドでの静的レンダリング（SSG）時に直接処理できないため、静的レンダリング用のフォールバックバージョンを用意する必要があります。
 
 ```jsx
 // components/Counter.static.jsx
 export default function Counter({ initial = 0 }) {
 	return (
 		<div>
-			[ You need to enable JavaScript to load this component. ]
+			[ このコンポーネントを表示するには JavaScript を有効にしてください ]
 		</div>
 	)
 }
 ```
 
-ページ内での使用方法:
+ページ内での記述方法:
 
 ```mdx
 <Counter />
 ```
 
-プレビュー:
+実際のプレビュー:
 
 <Counter />
 
-より高度な使い方は [カスタムコンポーネント](../advanced/components) を参照してください。
+より詳細なカスタマイズ方法については、[カスタムコンポーネント](../advanced/components) を参照してください。

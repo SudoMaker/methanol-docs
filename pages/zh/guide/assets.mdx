@@ -1,20 +1,20 @@
 ---
 title: 图片与资源
-description: 图片与静态资源的使用方式。
+description: 图片管理及静态资源引用指南。
 weight: 5
 ---
 
 # 图片与资源
 
-全局静态资源存放在 `public/` 目录中，而页面附近的专用资源文件则使用相对路径引用即可。
+全局静态资源应存放于 `public/` 目录，而页面专属资源推荐使用相对路径就近引用。
 
 ## `public/` 目录
 
-`public/` 内的文件会从站点根路径（`/`）直接提供。
+`public/` 目录下的文件将直接映射至站点根路径（`/`）。
 
-即使站点部署在子路径下（`site.base !== '/'`），通常也不需要为 public 静态资源加 `ctx.withBase()`（Methanol 会在构建时进行解析）。
+即便站点部署于子路径下（`site.base !== '/'`），通常无需手动为 public 静态资源添加 `ctx.withBase()`（Methanol 构建系统会自动处理路径解析）。
 
-不过如果你在 JS（client-only 组件）中动态生成 URL，并遇到 Vite dev 下资源解析不一致，`ctx.withBase('/...')` 可以作为一个实用的规避手段。
+若在 JS（客户端专用组件）中动态生成 URL，并遇到 Vite dev 下资源解析不一致，使用 `ctx.withBase('/...')` 可有效规避路径问题。
 
 ```
 public/
@@ -32,7 +32,7 @@ public/
 
 ## 本地文件
 
-图片也可以放在页面文件旁边，并用相对路径引用：
+图片亦可放置于页面文件同级目录，并通过相对路径引用：
 
 ```
 pages/
@@ -45,11 +45,11 @@ pages/
 ![Diagram](./writing-diagram.png)
 ```
 
-## 全局样式与脚本
+## 全局样式与脚本注入
 
-如果存在 `pages/style.css`，会自动注入到所有页面。如果存在 `pages/index.js` 或 `pages/index.ts`，会作为模块脚本注入到所有页面。
+若存在 `pages/style.css`，系统将自动将其注入至所有页面。若存在 `pages/index.js` 或 `pages/index.ts`，会作为模块脚本注入到所有页面。
 
-生产构建时这些 URL 会自动考虑 base（等价于 `ctx.withBase('/style.css')` / `ctx.withBase('/index.js')`）。
+生产构建时这些 URL 会自动适配 Base Path（等价于 `ctx.withBase('/style.css')` / `ctx.withBase('/index.js')`）。
 
 ```html
 <link rel="stylesheet" href="/style.css" />

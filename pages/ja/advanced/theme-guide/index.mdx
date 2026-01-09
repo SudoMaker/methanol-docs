@@ -1,31 +1,31 @@
 ---
 title: テーマ実装ガイド
-description: テーマの作り方（ルート、テーマオブジェクト、テンプレート実装）。
+description: ディレクトリ構造からテーマオブジェクト、テンプレートの実装までを段階的に解説。
 weight: 4
 starryNight: true
 ---
 
 # テーマ実装ガイド
 
-このガイドでは、カスタムテーマ（レイアウト + コンポーネント + 任意のテーマページ/アセット）を実装する手順をまとめます。
+本ガイドでは、カスタムテーマ（レイアウト、コンポーネント、および任意のテーマページやアセット）の実装手順を詳しく解説します。ナビゲーション、目次、前後ページへのリンク、言語スイッチャー、特殊用途ページの処理など、標準的なテーマに求められる機能を網羅的に構築します。
 
-## テーマのフォルダ構成
+## 標準的なディレクトリ構成
 
-おすすめの構成:
+推奨される構成は以下の通りです。
 
 ```
 theme/
-  index.js          # テーマオブジェクトを export
-  page.jsx          # テンプレートコンポーネント
-  components/       # デフォルトの MDX コンポーネント（任意）
-  pages/            # テーマが提供するページ（任意）
-  public/           # テーマの public アセット（任意）
-  sources/          # theme.sources で参照するアセット（任意）
+  index.js          # テーマオブジェクトのエントリポイント
+  page.jsx          # レイアウトテンプレート
+  components/       # テーマ標準の MDX コンポーネント（任意）
+  pages/            # テーマ同梱の特殊ページ（任意）
+  public/           # テーマ専用の静的アセット（任意）
+  sources/          # theme.sources でマッピングするリソース（任意）
 ```
 
-## テーマを設定する
+## テーマの設定方法
 
-`methanol.config.js`:
+`methanol.config.js` にて、テーマのルートとテンプレートを指定します。
 
 ```js
 import PageTemplate from './theme/page.jsx'
@@ -38,9 +38,9 @@ export default () => ({
 })
 ```
 
-## テーマオブジェクト
+## テーマオブジェクトの定義
 
-`theme/index.js`:
+`theme/index.js` で、テーマの各リソースパスを定義します。
 
 ```js
 import PageTemplate from './page.jsx'
@@ -59,19 +59,19 @@ export default () => ({
 })
 ```
 
-## テンプレートの契約（Template Contract）
+## テンプレートのインターフェース仕様（Template Contract）
 
-`theme.template` に渡されるもの:
+`theme.template` 関数には、レンダリングに必要な以下のプロパティが渡されます。
 
-- `ctx`: 現在ページ/サイトのコンテキスト
-- `page`: `ctx.page` の別名
-- `PageContent`: 現在ページ本文のコンポーネント
-- `ExtraHead`: `<head>` に注入される追加内容（Methanol ランタイム、ページアセット、ページの `<Head>` 出力など）
-- `withBase`: base 対応 URL ヘルパー（`ctx.withBase` と同じ）
-- `components`: マージ済みコンポーネント（テーマ既定 + ユーザー上書き）
-- `HTMLRenderer`: refui のレンダラー関連
+- `ctx`: 現在のページおよびサイト全体のコンテキスト。
+- `page`: `ctx.page` へのエイリアス。
+- `PageContent`: ページ本文をレンダリングするコンポーネント。
+- `ExtraHead`: `<head>` セクションに注入される動的なコンテンツ（ランタイム、アセット、ページ固有のメタタグなど）。
+- `withBase`: Base Path を考慮した URL 生成ヘルパー（`ctx.withBase` と同等）。
+- `components`: テーマ標準とユーザー定義がマージされたコンポーネントセット。
+- `HTMLRenderer`: rEFui のレンダリングユーティリティ。
 
-最小テンプレート:
+最小構成のテンプレート例:
 
 ```jsx
 import { HTMLRenderer } from 'methanol'
@@ -94,10 +94,10 @@ export default ({ PageContent, ExtraHead, ctx }) => (
 )
 ```
 
-実際のテーマでは、ナビゲーション、目次、ページメタなどを追加することが多いです。次のページで各要素を解説します:
+実際のテーマ開発では、ここになナビゲーションや目次などの要素を追加していきます。詳細は各ガイドを参照してください。
 
-- [ナビゲーションを描画する](./navigation)
-- [目次（ToC）を描画する](./toc)
-- [前/次リンク](./prev-next)
-- [言語スイッチ](./language-switch)
-- [特別用途ページ](./special-pages)
+- [ナビゲーションのレンダリング](./navigation)
+- [ページ内目次（ToC）のレンダリング](./toc)
+- [前後ページへのリンク実装](./prev-next)
+- [言語スイッチャーの実装](./language-switch)
+- [特殊用途ページの作成](./special-pages)
