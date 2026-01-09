@@ -45,11 +45,13 @@ npx methanol dev ./pages
 - `--output`, `-o`: override `dist/`
 - `--config`, `-c`: set a config file path
 - `--site-name`: override the site name
+- `--base`: override `site.base` for this run (ignored in dev)
 - `--port`: set the dev/preview port (default: 5173)
 - `--host`: bind the dev/preview server to a host (`--host` alone binds to all interfaces)
 - `--intermediate-dir`: write intermediate HTML output to a directory (build only)
 - `--emit-intermediate`: write intermediate HTML output to `build/` (build only)
-- `--code-highlighting`: enable code highlighting; `--code-highlighting false` disables it
+- `--code-highlighting`: enable/disable code highlighting (`--code-highlighting` enables; `--code-highlighting false` disables)
+- `-v`, `--verbose`: enable verbose output (shows Vite + Pagefind logs during build)
 
 Highlighting is off by default. Use the flag to enable it for a run.
 

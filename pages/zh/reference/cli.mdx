@@ -45,11 +45,13 @@ npx methanol dev ./pages
 - `--output`, `-o`: 覆盖 `dist/`
 - `--config`, `-c`: 指定配置文件路径
 - `--site-name`: 覆盖站点名称
+- `--base`: 本次运行覆盖 `site.base`（dev 模式下会被忽略）
 - `--port`: dev/preview 端口（默认 5173）
 - `--host`: dev/preview 绑定主机（仅写 `--host` 表示绑定全部接口）
 - `--intermediate-dir`: 中间 HTML 输出目录（仅 build）
 - `--emit-intermediate`: 输出到 `build/`（仅 build）
-- `--code-highlighting`: 启用高亮；`--code-highlighting false` 可禁用
+- `--code-highlighting`: 启用/禁用高亮（`--code-highlighting` 启用；`--code-highlighting false` 禁用）
+- `-v`, `--verbose`: 输出更详细的日志（build 时显示 Vite / Pagefind 日志）
 
 代码高亮默认关闭，需要时打开即可。
 

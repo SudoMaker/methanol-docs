@@ -94,6 +94,18 @@ starryNight: {
 - ページの frontmatter `starryNight` が常に優先されます。
 - CLI の `--code-highlighting` で実行ごとに切り替えできます。
 
+### `gfm`
+
+GitHub Flavored Markdown（GFM）の有効/無効。デフォルト: `true`。
+
+有効な場合、GFM の記法（テーブル、タスクリスト、取り消し線、脚注、自動リンク等）が利用できます。
+
+```js
+gfm: true
+// or
+gfm: false
+```
+
 ### `pagesDir`
 
 MDX/MD ファイルの場所（ルート）。デフォルトは `pages`。`pages/` がない場合は `docs` にフォールバックします。
@@ -205,6 +217,8 @@ export default () => ({
 - `--assets` は `publicDir` を上書き
 - `--output` は `distDir` を上書き
 - `--site-name` は `site.name` を上書き
+- `--base` は実行時の `site.base` を上書き（dev では無視されます）
+- `-v`/`--verbose` は実行時の詳細ログを有効化
 - `--config` は設定ファイルを指定
 - 位置引数の `input`/`output` は `--input`/`--output` と同じ意味（dev は `input` のみ）
 

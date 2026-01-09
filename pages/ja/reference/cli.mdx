@@ -45,11 +45,13 @@ npx methanol dev ./pages
 - `--output`, `-o`: `dist/` を上書き
 - `--config`, `-c`: 設定ファイルのパス
 - `--site-name`: サイト名を上書き
+- `--base`: この実行だけ `site.base` を上書き（dev では無視されます）
 - `--port`: dev/preview のポート（デフォルト: 5173）
 - `--host`: dev/preview のホストにバインド（`--host` 単独で全インターフェース）
 - `--intermediate-dir`: 中間 HTML の出力先（build のみ）
 - `--emit-intermediate`: `build/` に中間 HTML を出力（build のみ）
-- `--code-highlighting`: ハイライト有効化。`--code-highlighting false` で無効化
+- `--code-highlighting`: ハイライトの有効/無効（`--code-highlighting` で有効、`--code-highlighting false` で無効）
+- `-v`, `--verbose`: 詳細ログを出力（build 時に Vite / Pagefind のログを表示）
 
 ハイライトはデフォルトで無効です。必要な実行だけ有効化できます。
 

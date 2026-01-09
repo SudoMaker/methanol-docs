@@ -197,6 +197,18 @@ starryNight: {
 - 页面 frontmatter 的 `starryNight` 优先级最高。
 - CLI 参数 `--code-highlighting` 可运行时切换是否启用全局代码高亮。
 
+### `gfm`
+
+启用/禁用 GitHub Flavored Markdown（GFM）。默认：`true`。
+
+启用后，Methanol 会支持常见的 GFM 语法（表格、任务列表、删除线、脚注、自动链接等）。
+
+```js
+gfm: true
+// or
+gfm: false
+```
+
 ## CLI 覆盖
 
 命令行参数会覆盖配置文件参数：
@@ -205,6 +217,8 @@ starryNight: {
 - `--assets` 覆盖 `publicDir`
 - `--output` 覆盖 `distDir`
 - `--site-name` 覆盖 `site.name`
+- `--base` 本次运行覆盖 `site.base`（dev 模式下会被忽略）
+- `-v`/`--verbose` 启用更详细的日志输出
 - `--config` 指定配置文件
 - 位置参数 `input`/`output` 等同于 `--input`/`--output`（dev 仅使用 `input`）
 

@@ -94,6 +94,18 @@ starryNight: {
 - Per-page frontmatter `starryNight` always overrides this value.
 - CLI `--code-highlighting` can enable or disable highlighting for a run.
 
+### `gfm`
+
+Enable or disable GitHub Flavored Markdown (GFM). Default: `true`.
+
+When enabled, Methanol applies GFM parsing (tables, task lists, strikethrough, footnotes, autolink literals).
+
+```js
+gfm: true
+// or
+gfm: false
+```
+
 ### `pagesDir`
 
 Where MDX/MD files live (routes). Default: `pages` with a fallback to `docs` if `pages/` does not exist.
@@ -205,6 +217,8 @@ Command line options override config values:
 - `--assets` overrides `publicDir`
 - `--output` overrides `distDir`
 - `--site-name` overrides `site.name`
+- `--base` overrides `site.base` for a run (ignored in dev)
+- `-v`/`--verbose` enables verbose output for the run
 - `--config` selects a specific config file
 - Positional `input`/`output` match `--input`/`--output` (dev uses only `input`)
 
