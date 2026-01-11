@@ -1,42 +1,39 @@
----
-title: Offline Access (PWA)
-description: Enable offline access and PWA features.
-weight: 10
-starryNight: true
----
-
 # Offline Access (PWA)
 
-To add offline access, you can use [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app).
+Methanol includes built-in PWA support powered by Workbox. It features a **highly optimized** Service Worker implementation designed to efficiently serve frequent content updates while ensuring that installation remains smooth and won't stall, even on large-scale documentation sites.
 
-## Installation
+## Enabling PWA
 
-```bash
-npm install vite-plugin-pwa -D
-```
-
-## Configuration
-
-Add the plugin to your `methanol.config.js`:
+Activate PWA features within `methanol.config.js`:
 
 ```js
-import { VitePWA } from 'vite-plugin-pwa'
-
 export default () => ({
-	vite: {
-		plugins: [
-			VitePWA({
-				injectRegister: 'auto',
-				registerType: 'autoUpdate',
-				workbox: {
-					globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-					navigateFallback: '/404.html',
-					ignoreURLParametersMatching: [/./]
-				}
-			})
-		]
+	pwa: true
+})
+```
+
+### Manifest Customization
+
+You can override the default PWA manifest and `injectManifest` configurations as follows:
+
+```js
+export default () => ({
+	pwa: {
+		manifest: {
+			name: 'My Site',
+			short_name: 'My Site'
+		},
+		injectManifest: {
+			globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+		}
 	}
 })
 ```
 
-This configuration caches standard web assets and falls back to the 404 page for unknown routes.
+### Custom Configuration
+
+If your project requires full control over the PWA setup (such as custom service worker strategies), set `pwa: false` and add your own `vite-plugin-pwa` configuration within the `vite.plugins` section.
+
+## Custom Offline Page
+
+Create a file at `pages/offline.mdx` (or `pages/offline/index.mdx`) to customize the fallback page displayed when a requested route is not cached and the user is offline.

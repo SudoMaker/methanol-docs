@@ -1,20 +1,20 @@
 ---
 title: Images and Assets
-description: Using images and static assets in content.
+description: Management and referencing of images and static assets within your content.
 weight: 5
 ---
 
 # Images and Assets
 
-Use `public/` for static assets and local relative paths for page-specific files.
+Methanol provides two primary methods for managing static assets: global storage in the `public/` directory and local referencing for page-specific files.
 
-## Public Folder
+## The `public/` Directory
 
-Files in `public/` are served from the site root.
+Files placed within the `public/` directory are served directly from the site root.
 
-Even when you deploy under a subpath (`site.base !== '/'`), you typically *don’t* need to wrap public assets with `ctx.withBase()`: Methanol resolves public assets at build time.
+Even when deploying to a subpath (`site.base !== '/'`), you typically do not need to wrap public asset paths with `ctx.withBase()`. Methanol automatically resolves these paths at build time.
 
-If you’re generating URLs in JS (client-only components) and hit Vite dev inconsistencies, `ctx.withBase('/...')` can be a practical workaround.
+However, if you are generating URLs dynamically within JavaScript (e.g., in client-only components) and encounter resolution issues in the development environment, `ctx.withBase('/...')` serves as a reliable workaround.
 
 ```
 public/
@@ -23,16 +23,16 @@ public/
     brochure.pdf
 ```
 
-Use them in MDX:
+Referencing assets in MDX:
 
 ```md
 ![Logo](/logo.png)
-[Download the brochure](/downloads/brochure.pdf)
+[Download Brochure](/downloads/brochure.pdf)
 ```
 
-## Local Files
+## Local Asset Referencing
 
-You can also keep images beside a page and link with a relative path:
+You may also store images alongside your page files and reference them using relative paths:
 
 ```
 pages/
@@ -47,9 +47,9 @@ pages/
 
 ## Global Styles and Scripts
 
-If you add `pages/style.css`, Methanol injects it into every page. If you add `pages/index.js` or `pages/index.ts`, Methanol injects that as a module script.
+If a `pages/style.css` file exists, Methanol automatically injects it into every page. Similarly, `pages/index.js` or `pages/index.ts` will be injected as a module script globally.
 
-These URLs are base-aware in production builds (equivalent to `ctx.withBase('/style.css')` and `ctx.withBase('/index.js')`).
+These URLs are automatically adjusted for Base Path during production builds (equivalent to utilizing `ctx.withBase('/style.css')` or `ctx.withBase('/index.js')`).
 
 ```html
 <link rel="stylesheet" href="/style.css" />

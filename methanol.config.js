@@ -1,7 +1,6 @@
 import { common } from '@wooorm/starry-night'
 import sourceMdx from '@wooorm/starry-night/source.mdx'
 
-import { VitePWA } from 'vite-plugin-pwa'
 import Sitemap from 'vite-plugin-sitemap'
 
 export default ({ mode }) => ({
@@ -13,17 +12,9 @@ export default ({ mode }) => ({
 		grammars: [...common, sourceMdx]
 	},
 	pagefind: true,
+	pwa: true,
 	vite: {
 		plugins: [
-			VitePWA({
-				injectRegister: 'auto',
-				registerType: 'autoUpdate',
-				workbox: {
-					globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-					navigateFallback: '/404.html',
-					ignoreURLParametersMatching: [/./]
-				}
-			}),
 			Sitemap({
 				hostname: 'https://methanol.sudomaker.com'
 			})

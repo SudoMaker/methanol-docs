@@ -7,36 +7,78 @@ starryNight: true
 
 # 离线访问 (PWA)
 
-若希望赋予站点离线访问能力，可集成 [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app)。
 
-## 安装
 
-```bash
-npm install vite-plugin-pwa -D
-```
+Methanol 原生集成了基于 Workbox 的 PWA 支持。该功能采用**高度优化**的 Service Worker 实现方案，在保障内容更新实时性的同时，能有效防止大型站点因资源过多而导致的安装停滞问题。
 
-## 配置
 
-在 `methanol.config.js` 中添加插件：
+
+## 启用 PWA
+
+
+
+在 `methanol.config.js` 配置文件中即可轻松开启：
+
+
 
 ```js
-import { VitePWA } from 'vite-plugin-pwa'
 
 export default () => ({
-	vite: {
-		plugins: [
-			VitePWA({
-				injectRegister: 'auto',
-				registerType: 'autoUpdate',
-				workbox: {
-					globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-					navigateFallback: '/404.html',
-					ignoreURLParametersMatching: [/./]
-				}
-			})
-		]
-	}
+
+	pwa: true
+
 })
+
 ```
 
-该配置将自动缓存标准网页资源，并在遭遇未知路由时回退至 404 页面。
+
+
+### 自定义 Manifest
+
+
+
+你可以覆盖 PWA manifest 与 injectManifest 配置：
+
+
+
+```js
+
+export default () => ({
+
+	pwa: {
+
+		manifest: {
+
+			name: 'My Site',
+
+			short_name: 'My Site'
+
+		},
+
+		injectManifest: {
+
+			globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+
+		}
+
+	}
+
+})
+
+```
+
+
+
+### 完全自定义
+
+
+
+若需完全控制 PWA（如自定义插件配置、Service Worker 策略等），可设置 `pwa: false` 并在 `vite.plugins` 中自行配置 `vite-plugin-pwa`。
+
+
+
+## 离线页面
+
+
+
+通过创建 `pages/offline.mdx`（或 `pages/offline/index.mdx`）可自定义离线回退页面。

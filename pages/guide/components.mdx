@@ -1,15 +1,15 @@
 ---
 title: Using Components
-description: How to use and override components in MDX.
+description: Techniques for embedding and overriding JSX components within MDX.
 weight: 6
 starryNight: true
 ---
 
 # Using Components
 
-MDX lets you embed JSX components inside Markdown. Put reusable components in `components/` and use them in any page.
+MDX allows you to directly embed [rEFui](https://github.com/SudoMaker/rEFui) JSX components within your Markdown. By placing reusable components in the `components/` directory, they become seamlessly integrated and available for use across all pages.
 
-## Create a Component
+## Component Creation
 
 ```jsx
 // components/Callout.jsx
@@ -18,25 +18,25 @@ export default function Callout(props, ...children) {
 }
 ```
 
-## Use It in MDX
+## Utilization in MDX
 
 ```mdx
 <Callout>
-  Tip: Keep sections short and focused.
+  Tip: Maintain concise and focused sections to improve readability.
 </Callout>
 ```
 
-## Client Components
+## Client-side Interactivity
 
-If a component depends on browser APIs, add the `.client` suffix:
+For components that require access to browser-specific APIs, append the `.client` suffix to the filename:
 
 ```
 components/Map.client.jsx
 ```
 
-## Counter Example
+## Interactive Example: Counter
 
-A simple interactive example:
+Below is a simple interactive component:
 
 ```jsx
 // components/Counter.client.jsx
@@ -55,27 +55,27 @@ export default function Counter({ initial = 0 }) {
 }
 ```
 
-Because this component uses a CSS import (which isn't supported during server-side static rendering), you need to create a separate version for static rendering:
+As this component includes a CSS import (which is incompatible with server-side static rendering), a corresponding static version must be provided for the build process:
 
 ```jsx
 // components/Counter.static.jsx
 export default function Counter({ initial = 0 }) {
 	return (
 		<div>
-			[ You need to enable JavaScript to load this component. ]
+			[ JavaScript is required to load this component. ]
 		</div>
 	)
 }
 ```
 
-Use it in a page:
+Invoking the component within a page:
 
 ```mdx
 <Counter />
 ```
 
-Live preview:
+Live Preview:
 
 <Counter />
 
-For advanced usage, see [Custom Components](../advanced/components).
+For more advanced component patterns, refer to [Custom Components](../advanced/components).

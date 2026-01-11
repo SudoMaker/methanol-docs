@@ -1,32 +1,32 @@
 ---
 title: Search
-description: Pagefind search setup and usage.
+description: Configuration and implementation of Pagefind-powered static search.
 weight: 6
 ---
 
 # Search
 
-Methanol integrates [Pagefind](https://pagefind.app) for static search. Search is off by default.
+Methanol provides an integrated static search solution powered by [Pagefind](https://pagefind.app). To maintain development efficiency, search functionality is disabled by default.
 
-Search is only available in production builds. The dev server does not serve Pagefind indexes or UI.
+Search capabilities are exclusively available in production builds. The development server does not generate search indexes or serve the search UI.
 
-## Install
+## Installation
 
-Install Pagefind locally in your project:
+Install Pagefind as a local development dependency:
 
 ```bash
 npm i -D pagefind
 ```
 
-Or install it globally:
+Alternatively, it can be installed globally:
 
 ```bash
 npm i -g pagefind
 ```
 
-## Enable or Disable
+## Enabling and Disabling
 
-Add `pagefind` in your `methanol.config.*` file:
+Configure the `pagefind` property within your `methanol.config.*` file:
 
 ```js
 // methanol.config.js
@@ -35,7 +35,7 @@ export default () => ({
 })
 ```
 
-Disable explicitly in the same config:
+To explicitly disable search:
 
 ```js
 // methanol.config.js
@@ -44,7 +44,7 @@ export default () => ({
 })
 ```
 
-## Configure
+## Detailed Configuration
 
 ```js
 export default () => ({
@@ -59,13 +59,22 @@ export default () => ({
 })
 ```
 
-Keys other than `enabled` and `build` are passed to the Pagefind UI options.
+Properties other than `enabled` and `build` are passed directly to the Pagefind client-only UI initialization.
 
-## Replace With Your Own Tool
+## CLI Overrides
 
-To use a different search system:
+Search indexing can be toggled per-build via the CLI:
 
-1) Disable Pagefind (`pagefind: false`).
-2) Add your own UI and indexing workflow (custom client component, external service, etc.).
+```bash
+npx methanol build --search
+npx methanol build --search false
+```
 
-The default theme only renders the Pagefind UI when `pagefind` is enabled, so disabling it gives you a clean slate.
+## Custom Search Integrations
+
+If you wish to utilize an alternative search provider:
+
+1) Disable the built-in Pagefind support (`pagefind: false`).
+2) Implement your own search UI and indexing workflow (e.g., via custom client components or external services).
+
+The standard Methanol theme only renders the search UI when `pagefind` is enabled, providing a clean foundation for custom implementations.

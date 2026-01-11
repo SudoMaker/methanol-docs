@@ -1,15 +1,15 @@
----
-title: Render Navigation
-description: Render a sidebar or menu from ctx.pagesTree.
+--- 
+title: Rendering Navigation
+description: Building a sidebar or menu navigation utilizing `ctx.pagesTree`.
 weight: 3
 starryNight: true
----
+--- 
 
-# Render Navigation
+# Rendering Navigation
 
-Methanol provides a navigation tree in `ctx.pagesTree`. It is already scoped to the current navigation root (`isRoot`) and respects hidden/excluded rules.
+Methanol provides a hierarchical navigation tree via `ctx.pagesTree`. This tree is automatically scoped to the current navigation root (`isRoot`) and adheres to all `hidden` and `exclude` rules.
 
-Each node looks like:
+Each node in the tree follows this structure:
 
 ```js
 {
@@ -22,7 +22,7 @@ Each node looks like:
 }
 ```
 
-## Minimal Sidebar
+## Minimal Sidebar Implementation
 
 ```jsx
 const NavTree = ({ nodes, currentHref }) => (
@@ -70,7 +70,8 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-Tips:
+## Implementation Advice
 
-- Prefer `routeHref` for `<a href>` (it includes `site.base`).
-- Directory index routes use a trailing slash in `routePath` (e.g. `/guide/`).
+- **Prefer `routeHref`**: Always use `routeHref` for links to ensure the `site.base` prefix is correctly applied.
+- **Index Routes**: The `routePath` for directory index pages always includes a trailing slash (e.g., `/guide/`).
+

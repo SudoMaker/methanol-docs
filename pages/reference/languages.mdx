@@ -1,25 +1,25 @@
 ---
 title: Languages
-description: Configure multilingual docs and language switching.
+description: Configuration specifications for multi-language architecture and language switching.
 weight: 7
 ---
 
-# Languages (Multi-language Directories)
+# Languages (Multi-language Architecture)
 
-Methanol supports multi-language sites by treating each **directory index page** with a `lang` field as a language entry. This is a lightweight way to organize translations without a separate i18n system.
+Methanol implements multi-language support through a directory-based architecture. When a **directory index page** includes a `lang` field, that directory is identified as a language entry point. This provides a lightweight method for organizing translations without the complexity of an external i18n system.
 
-## How It Works
+## Core Mechanism
 
-- A directory `index.mdx` with `lang` becomes a **language root**.
-- The label shown in the language selector is the `lang` value.
-- The active language is resolved by matching the current route to the closest language root.
-- The HTML `lang` attribute uses `langCode` when provided (including the root index), otherwise the directory name.
+- An `index.mdx` file containing a `lang` property defines the **Language Root** for its directory.
+- The `lang` property value is utilized as the display label within the language selector.
+- The system determines the active state by matching the current URL route to the nearest language root.
+- The HTML `lang` attribute is derived from `langCode` (including the root index); if undefined, the directory name is used as a fallback.
 
-Example structure:
+Directory structure example:
 
 ```
 pages/
-  index.mdx          # root language
+  index.mdx          # Default language root
   zh/
     index.mdx        # Chinese language root
     guide.mdx
@@ -28,36 +28,36 @@ pages/
     guide.mdx
 ```
 
-Example frontmatter:
+Frontmatter example:
 
 ```mdx
 ---
-title: 简体中文
-lang: 简体中文
-langCode: zh
+title: English
+lang: English
+langCode: en
 isRoot: true
 hidden: true
 ---
 ```
 
-## Language Selector
+## Language Selector Integration
 
-The default theme shows a language selector when it finds any directory `index.mdx` pages with `lang` defined (including the root `/`). It uses:
+The standard theme automatically displays a language selector upon detecting directory index pages with a defined `lang` property (including the site root `/`). It utilizes:
 
-- `lang` for the display label
-- `ctx.language` for the current selection
+- `lang` for the display label.
+- `ctx.language` to determine the currently active selection.
 
-## Navigation Roots
+## Navigation Scoping
 
-A language root often pairs with `isRoot: true` to scope the navigation tree to that directory.
+Language roots are typically paired with `isRoot: true` to scope the navigation tree to that specific directory.
 
-Note: `isRoot` pages are hidden by default. Set `hidden: false` if you want the language root to appear in the sidebar.
+*Note: `isRoot` pages are concealed from navigation by default. Set `hidden: false` if you wish for the language root to appear within the sidebar.*
 
-This allows separate navigation trees for each language.
+This mechanism enables independent navigation structures for each supported language.
 
-## What `ctx.languages` Contains
+## The `ctx.languages` Data Structure
 
-`ctx.languages` is an array of language entries collected from directory index pages with `lang`. Use `routeHref` for links (it includes `site.base`).
+`ctx.languages` is an array of language entry objects aggregated from directory index pages. When generating links, always use `routeHref` to ensure the `site.base` prefix is correctly applied.
 
 ```js
 {
@@ -68,10 +68,10 @@ This allows separate navigation trees for each language.
 }
 ```
 
-The root language appears at `/` when the root `index.mdx` includes `lang`.
+The site root language is included in this array if the root `index.mdx` defines a `lang` property.
 
-## Tips
+## Implementation Tips
 
-- `isRoot` pages are hidden by default; set `hidden: false` if you want a language root to appear in the sidebar.
-- Keep translations in matching paths (`/guide` and `/ja/guide`) for predictable structure.
-- Use `isRoot: true` on language index pages to keep default language entries from showing up in the route list while still scoping navigation.
+- **Visibility**: `isRoot` pages are hidden by default; utilize `hidden: false` to display a language root in the sidebar.
+- **Symmetry**: Maintain matching paths across languages (e.g., `/guide` and `/ja/guide`) for a predictable and manageable structure.
+- **Scoping**: Applying `isRoot: true` to language index pages prevents default language entries from appearing redundantly in the route list while maintaining proper navigation scope.

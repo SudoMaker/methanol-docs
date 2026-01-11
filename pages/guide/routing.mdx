@@ -1,34 +1,38 @@
 ---
 title: Routing
-description: File-based routing rules for pages and directories.
+description: Specifications for file-based routing of pages and directories.
 weight: 3
 ---
 
 # Routing
 
-Methanol uses file-based routing from `pages/`.
+Methanol automatically constructs a routing hierarchy based on the structure of the `pages/` directory.
 
-## MDX and Markdown pages
+## MDX and Markdown Pages
 
 - `pages/about.mdx` → `/about`
 - `pages/guide/index.mdx` → `/guide/` (directory index)
 
-## `.html` pages
+## `.html` Pages
 
-You can also place plain HTML files in `pages/`. They are included in the build and processed by Vite:
+Plain HTML files can also be placed within the `pages/` directory. These are included in the production build and processed by Vite:
 
-- `pages/custom.html` → `dist/custom.html` (visit `/custom.html`)
+- `pages/custom.html` → `dist/custom.html` (accessible via `/custom.html`)
 
-Demo:
+Example:
 
 - [Custom HTML page](../custom.html)
 
-## 404 page
+## 404 Page
 
-Create `pages/404.mdx` to customize the Not Found page (it is hidden from navigation by default).
+Create `pages/404.mdx` to customize the "Not Found" page. This page is automatically hidden from the navigation menu.
 
-## Hidden vs excluded
+## Offline Page
 
-- `hidden: true` hides a page from navigation, but the route still exists and can be visited directly.
-- `exclude: true` removes the page from dev/build (and on a directory `index.mdx`, excludes the whole directory).
-- Files/directories starting with `_` or `.` are ignored.
+Create `pages/offline.mdx` to customize the offline fallback page utilized by the built-in PWA. This page is also hidden from navigation by default.
+
+## Hidden vs. Excluded
+
+- `hidden: true`: Hides the page from navigation menus, though the route remains active and accessible via direct URL.
+- `exclude: true`: Completely removes the page from both development and build processes. When applied to a directory `index.mdx`, the entire directory is excluded.
+- Files or directories beginning with `_` or `.` are ignored by the system.

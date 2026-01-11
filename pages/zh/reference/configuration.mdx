@@ -179,6 +179,30 @@ pagefind: {
 - `enabled` 和 `build` 以外的键会传给 Pagefind JS 的 `options()`。
 - `build` 属性专用于构建配置。
 
+### `pwa`
+
+启用 Methanol 内置的 PWA 支持（基于 `vite-plugin-pwa`）。默认值：`false`。
+
+```js
+pwa: true
+// or
+pwa: false
+// or
+pwa: {
+	manifest: {
+		name: 'My Site',
+		short_name: 'My Site'
+	},
+	injectManifest: {
+		globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+	}
+}
+```
+
+注意：
+
+- 若需完全自定义 PWA 逻辑（如自定义 Service Worker 策略等），可设置 `pwa: false` 并在 `vite.plugins` 中自行配置 `vite-plugin-pwa`。
+
 ### `starryNight`
 
 代码高亮配置（基于 `rehype-starry-night`）。默认值：`false`。
@@ -195,7 +219,7 @@ starryNight: {
 
 - 当 `starryNight` 配置为对象时，除非显式设置 `enabled: false`，否则视为开启。
 - 页面 Frontmatter 的 `starryNight` 优先级最高。
-- CLI 参数 `--code-highlighting` 可运行时切换是否启用全局代码高亮。
+- CLI 参数 `--highlight` 可运行时切换是否启用全局代码高亮。
 
 ### `gfm`
 
@@ -218,6 +242,8 @@ gfm: false
 - `--output` 覆盖 `distDir`
 - `--site-name` 覆盖 `site.name`
 - `--base` 临时覆盖 `site.base`（dev 模式下会被忽略）
+- `--search` 覆盖 `pagefind.enabled`
+- `--pwa` 覆盖 `pwa` 开关
 - `-v`/`--verbose` 开启详细日志模式
 - `--config` 指定配置文件路径
 - 位置参数 `input`/`output` 分别映射至 `--input`/`--output`（dev 仅使用 `input`）

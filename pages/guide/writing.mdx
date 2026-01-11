@@ -1,48 +1,50 @@
 ---
 title: Writing Basics
-description: Writing MDX pages with Methanol conventions.
+description: Standard conventions for authoring MDX pages in Methanol.
 weight: 1
 starryNight: true
 ---
 
 # Writing Basics
 
-Methanol supports Markdown and [MDX](https://mdxjs.com). Use Markdown for structure, and add JSX components when you want richer layouts or interactivity.
+Methanol provides native support for Markdown and [MDX](https://mdxjs.com). Standard Markdown syntax satisfies most structural and content requirements, while JSX components can be introduced for advanced layouts or interactive features.
 
-## Basic Page
+## Page Structure
 
 ```mdx
 ---
 title: My Page
-excerpt: Short summary used in meta tags
+excerpt: Short summary used for meta tags
 ---
 
 # My Page
 
-Write your content here.
+Content goes here.
 ```
 
-The `---` block at the top is called *frontmatter*. See below for what it does.
+The block at the top, enclosed by `---`, is the Frontmatter. It is used to define page configurations and metadata, as detailed below.
 
-## Headings and TOC
+## Headings and Table of Contents
 
-Headings (`##`, `###`, `####`) are used to build the table of contents. Keep a clear hierarchy for the sidebar TOC to stay readable.
+`##`, `###`, and `####` headings are automatically utilized to generate the table of contents. Maintaining a clear hierarchy ensures the sidebar navigation remains readable.
 
-## Body Text
+## Body Text and Paragraphs
 
-In Markdown, your content is usually made of paragraphs:
+In Markdown, content is primarily composed of paragraphs:
 
 - Separate paragraphs with a **blank line**.
-- A newline inside the same paragraph is usually treated as a space.
-- To force a line break, add two trailing spaces or write `<br />` (MDX supports JSX/HTML).
+- Newlines within a single paragraph are typically treated as spaces (no forced line break).
+- To force a line break, add two semi-colons at the end of a line or use the `<br />` tag (MDX supports JSX/HTML).
+
+Example:
 
 ```md
 First paragraph line 1
-First paragraph line 2 (usually merges into the same paragraph)
+First paragraph line 2 (typically merges with the previous line)
 
 Second paragraph
-This line has two trailing spaces  
-so it breaks
+This line ends with two spaces  
+resulting in a line break
 ```
 
 ## Blockquotes
@@ -50,24 +52,24 @@ so it breaks
 ```mdx
 > This is a blockquote.
 >
-> Put `>` on an empty line to keep a blank line inside the same quote.
-> Multiple quoted lines become one quote block.
+> A line containing only `>` represents a blank line within the same block.
+> Consecutive quoted lines are merged into a single block.
 
-> A blank line between `>` blocks creates a new quote block.
+> A blank line between `>` blocks renders them as separate quotes.
 ```
 
-This renders as:
+Rendered result:
 
 > This is a blockquote.
 >
-> Put `>` on an empty line to keep a blank line inside the same quote.
-> Multiple quoted lines become one quote block.
+> A line containing only `>` represents a blank line within the same block.
+> Consecutive quoted lines are merged into a single block.
 
-> A blank line between `>` blocks creates a new quote block.
+> A blank line between `>` blocks renders them as separate quotes.
 
 ## Code Blocks
 
-Use fenced code blocks with language identifiers:
+Use fenced code blocks with language identifiers for syntax highlighting:
 
 <pre>
 	<code class="language-md">
@@ -77,26 +79,26 @@ export const title = 'Hello'
 	</code>
 </pre>
 
-This renders as:
+Rendered result:
 
 ```js
 export const title = 'Hello'
 ```
 
-## Learn Markdown
+## Learning Markdown
 
-This guide focuses on Methanol + MDX. For a fuller Markdown syntax reference, see:
+This page focuses on the Methanol + MDX integration. For a comprehensive Markdown syntax reference, please consult:
 
-- [CommonMark Help](https://commonmark.org/help/)
 - [Markdown (Wikipedia)](https://en.wikipedia.org/wiki/Markdown)
+- [CommonMark Help](https://commonmark.org/help/)
 
-## Frontmatter Tips
+## Frontmatter Configuration Tips
 
-Common fields for authors:
+Frequently used fields for authors:
 
-- `title`: page title and nav label
-- `excerpt`: short description for meta tags
-- `date`: publish date (ISO format)
-- `weight`: order in navigation
+- `title`: Page title and navigation label.
+- `excerpt`: Brief description for Meta tags.
+- `date`: Publication date (ISO format).
+- `weight`: Navigation display order.
 
-Full list: [Frontmatter reference](../reference/frontmatter)
+For a full list of available fields, see the [Frontmatter Reference](../reference/frontmatter).

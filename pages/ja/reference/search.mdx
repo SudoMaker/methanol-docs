@@ -61,6 +61,15 @@ export default () => ({
 
 `enabled` および `build` 以外のプロパティは、クライアントサイドで Pagefind UI の初期化オプションとして直接渡されます。
 
+## CLI による設定の上書き
+
+ビルド実行時に CLI フラグを使用して、設定ファイルの検索設定を上書きできます。
+
+```bash
+npx methanol build --search
+npx methanol build --search false
+```
+
 ## 他の検索ソリューションへの置き換え
 
 Pagefind 以外の検索システムを導入する場合の手順:

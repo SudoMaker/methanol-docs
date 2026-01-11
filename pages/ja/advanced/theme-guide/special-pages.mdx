@@ -15,8 +15,9 @@ starryNight: true
 - 専用のメニュー画面やインデックスページ
 - リンク集やコンタクトページ
 - テーマ標準の `/404` フォールバックページ
+- テーマ標準の `/offline` オフライン用フォールバックページ
 
-## テーマからページを提供する方法
+## 配置主题页面
 
 `theme/index.js` でディレクトリを指定します。
 
@@ -38,6 +39,7 @@ pages/
   friends.mdx
   contact.mdx
   404.mdx
+  offline.mdx
 ```
 
 ## フロントマターによるレイアウトの切り替え
@@ -122,7 +124,7 @@ if (route === '/menu') { /* ... */ }
 
 一般的な判定パターン:
 
-- 拡張子判定: `ctx.page.filePath.endsWith('.html')`
+- 拡張子判定: `ctx.page.path.endsWith('.html')`
 - パス判定: `ctx.page.routePath === '/menu'`
 - レイアウト指定: `ctx.page.frontmatter?.layout === 'landing'`
 

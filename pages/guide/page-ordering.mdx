@@ -1,27 +1,27 @@
 ---
 title: Page Ordering
-description: Control navigation order with frontmatter and filenames.
+description: Controlling navigation structure through Frontmatter and naming conventions.
 weight: 4
 starryNight: true
 ---
 
 # Page Ordering
 
-Methanol builds navigation from your `pages/` directory. Within each directory, items are sorted using these rules:
+Methanol automatically builds site navigation based on your `pages/` directory structure. Within each directory, items are sorted according to the following algorithm:
 
-1) `/` (the root index page) always comes first.
-2) `index.mdx` comes before other pages in the same folder. Its frontmatter also controls the folder label and ordering.
-3) `weight` sorts ascending (smaller numbers first). Items without `weight` come after weighted items.
-4) `date` sorts descending (newer first) when weights match. Items without `date` come after dated items.
-5) Finally, items are sorted alphabetically by `title` (or file/folder name).
+1) `/` (The site root index) always takes precedence.
+2) `index.mdx` is positioned before other pages within the same folder. Its Frontmatter also defines the folder's display label and display order.
+3) `weight`: Items are sorted in ascending order (smaller values appear first). Unweighted items are placed after weighted items.
+4) `date`: Items are sorted in descending order (most recent first) when weights are identical. Items without a date are placed after dated items.
+5) Finally, remaining items are sorted alphabetically by `title` (or filename/directory name).
 
-## Practical tips
+## Best Practices
 
-- For folders, put ordering metadata on the folder `index.mdx`.
-- Use `weight` for stable ordering, and `date` for “latest first” lists.
-- Files or directories starting with `_` or `.` are excluded from navigation.
+- For directories, define ordering and labeling metadata in the directory's `index.mdx` file.
+- Use `weight` for permanent, stable navigation structures and `date` for time-sensitive lists.
+- Files or directories prefixed with `_` or `.` are automatically excluded from the navigation tree.
 
-## Example
+## Configuration Example
 
 ```mdx
 ---
@@ -30,4 +30,4 @@ weight: 10
 ---
 ```
 
-See also: [Frontmatter reference](../reference/frontmatter)
+See also: [Frontmatter Reference](../reference/frontmatter)

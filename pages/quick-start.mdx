@@ -1,67 +1,67 @@
 ---
 title: Quick Start
-description: Project layout, commands, and your first page in Methanol.
+description: Project structure, core commands, and creating your first page in Methanol.
 weight: 2
 starryNight: true
 ---
 
 # Quick Start
 
-Methanol turns a folder of Markdown and MDX files into a static site with routing, navigation, and a build pipeline.
+Methanol transforms a directory of Markdown and MDX files into a high-performance static site equipped with automatic routing, navigation, and a robust build pipeline.
 
-No special setup is required: create `pages/index.mdx`, add more files/folders, and Methanol will build routes and navigation automatically.
+Minimal setup is required: simply create `pages/index.mdx`, add your content, and Methanol will automatically construct the routes and navigation tree.
 
 ## Run for a Quick Try
 
-For a fast start, run Methanol directly with `npx`:
+To experience Methanol immediately, execute the following command using `npx`:
 
 ```bash
 npx methanol dev
 ```
 
-Open `http://localhost:5173`.
+Then, navigate to `http://localhost:5173` in your browser.
 
-## Use an Existing Markdown Folder
+## Use an Existing Markdown Directory
 
-If you already have Markdown or MDX files in a folder, point Methanol at it:
+If you already have a collection of Markdown or MDX files, you can point Methanol directly at that directory:
 
 ```bash
 npx methanol dev ./my-docs
 ```
 
-That folder becomes the content root, so `./my-docs/index.mdx` maps to `/`.
+The specified folder becomes the content root; for example, `./my-docs/index.mdx` will map to the site root `/`.
 
-## Faster Local Workflow
+## Workflow Optimization
 
-If you want a faster CLI startup, install globally and use `methanol` directly:
+For frequent usage, we recommend a global installation to benefit from faster CLI startup times:
 
 ```bash
 npm install methanol -g
 methanol dev
 ```
 
-## Build for Production
+## Production Deployment
 
 ```bash
 npx methanol build
 npx methanol serve
 ```
 
-`serve` runs a local preview using the production output in `dist/`.
+The `serve` command initiates a local preview using the optimized production output located in the `dist/` directory.
 
 ## Project Layout
 
 ```
-pages/        # MDX/MD pages (or use docs/)
-components/   # JSX/TSX components used in MDX
-public/       # static assets (override theme assets)
-build/        # intermediate HTML (optional)
-dist/         # production output
+pages/        # MDX/MD source files (or use docs/)
+components/   # Reusable JSX/TSX components
+public/       # Static assets (overrides theme-provided assets)
+build/        # Intermediate HTML artifacts (optional)
+dist/         # Optimized production output
 ```
 
-Files in `public/` are served at `/` (e.g. `public/logo.png` → `/logo.png`) and override theme-provided public assets.
+Files within the `public/` directory are served at the root path (e.g., `public/logo.png` → `/logo.png`) and take precedence over theme-provided assets.
 
-## First Page
+## Creating Your First Page
 
 Create a file at `pages/index.mdx`:
 
@@ -72,10 +72,10 @@ title: Home
 
 # Welcome
 
-This is my site.
+This is my documentation site.
 ```
 
-The file path becomes the route:
+The file structure is automatically mapped to URL routes:
 
 ```
 pages/index.mdx       -> /

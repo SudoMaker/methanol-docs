@@ -1,29 +1,29 @@
 ---
 title: Head
-description: Use the built-in Head component to inject elements into head.
+description: Customizing `<head>` elements utilizing the built-in Head component.
 weight: 4
 starryNight: true
 ---
 
 # `Head` / `head`
 
-Methanol always provides a `Head` component (alias: `head`) inside every `.mdx` page, so you can use it without importing anything.
+Methanol provides a built-in `Head` component (aliased as `head`) available within all `.mdx` pages. It can be utilized directly without the need for an explicit import.
 
-Anything you render inside `Head` is collected and injected into the document `<head>` (your theme must render `<ExtraHead />`; the default theme does).
+Any elements rendered within the `Head` component are automatically aggregated and injected into the final HTML `<head>` section (provided the active theme renders `<ExtraHead />`; the standard Methanol theme includes this by default).
 
-## Example
+## Usage Example
 
 ```html
 <Head>
-	<meta name="description" content="My page description" />
+	<meta name="description" content="A detailed description of the page content." />
 	<link rel="canonical" href="https://example.com/docs/page" />
 </Head>
 ```
 
-## Automatic head assets
+## Convention-based Resource Injection
 
-Methanol also injects some assets into `<head>` automatically:
+Methanol also automatically injects the following assets into the `<head>` based on directory conventions:
 
-- `pages/style.css` (if present)
-- `pages/index.js` / `pages/index.ts` (if present)
-- A page-local stylesheet/script next to the MDX file (e.g. `guide.mdx` → `guide.css`, `guide.js`, `guide.ts`, etc.)
+- `pages/style.css` (if detected).
+- `pages/index.js` or `pages/index.ts` (if detected).
+- Page-specific stylesheets or scripts located alongside the MDX file (e.g., `guide.mdx` → `guide.css`, `guide.js`, `guide.ts`, etc.).

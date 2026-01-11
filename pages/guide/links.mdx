@@ -1,37 +1,37 @@
 ---
 title: Links and Navigation
-description: Linking, navigation, and internal URLs.
+description: Management of links, navigation structure, and internal URL resolution.
 weight: 2
 ---
 
 # Links and Navigation
 
-Methanol uses file-based routing. Link to pages using their route paths.
+Methanol utilizes a file-based routing mechanism. Internal links can be created simply by referencing the route path of the target file.
 
 ## Internal Links
 
-Use site routes (no file extension):
+Reference site routes without file extensions:
 
 ```md
-[Writing basics](./writing)
+[Writing Basics](./writing)
 ```
 
-Renders as: [Writing basics](./writing)
+Rendered result: [Writing Basics](./writing)
 
-If you move or rename a page, update the route in your links.
+If a page is moved or renamed, ensure that any links pointing to it are updated accordingly.
 
 ### Subpath Deployments (`site.base`)
 
-If your site is served under a subpath (for example `https://example.com/docs/`), set `site.base: '/docs/'` and avoid root-absolute internal links like `/blog/post` in your content.
+If your site is hosted under a subpath (e.g., `https://example.com/docs/`), ensure `site.base: '/docs/'` is configured. In such cases, avoid using root-absolute links like `/blog/post` within your content.
 
-Prefer relative links:
+Relative linking is recommended:
 
 ```md
 [Next post](./next-post)
 [Back to blog](../blog/)
 ```
 
-If you need to generate a root-absolute link in MDX/JSX, wrap it with `ctx.withBase`:
+If you need to generate a root-absolute link within MDX or JSX, wrap the path with `ctx.withBase`:
 
 ```mdx
 <a href={ctx.withBase('/blog/post')}>Read</a>
@@ -39,20 +39,20 @@ If you need to generate a root-absolute link in MDX/JSX, wrap it with `ctx.withB
 
 ## External Links
 
-Use full URLs for external sites:
+For external destinations, use fully qualified URLs:
 
 ```md
 [Example](https://example.com)
 ```
 
-Renders as: [Example](https://example.com)
+Rendered result: [Example](https://example.com)
 
-## Navigation Order
+## Navigation Hierarchy
 
-Use frontmatter fields to control order and visibility:
+Use Frontmatter properties to control the configured order and visibility of pages:
 
-- `weight`: lower numbers come first
-- `hidden`: hide from the sidebar
-- `isRoot`: use on an `index.mdx` to define a navigation root
+- `weight`: Lower numerical values are positioned higher in the navigation.
+- `hidden`: Excludes the page from the sidebar menu.
+- `isRoot`: Defines an `index.mdx` file as the root of a navigation sub-tree.
 
-Full details are in the [Frontmatter reference](../reference/frontmatter).
+For complete specifications, refer to the [Frontmatter Reference](../reference/frontmatter).

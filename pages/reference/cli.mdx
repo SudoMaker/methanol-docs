@@ -1,61 +1,63 @@
 ---
 title: CLI
-description: CLI commands and flags.
+description: Detailed reference for CLI commands, arguments, and operational flags.
 weight: 1
 ---
 
 # CLI
 
-Methanol ships a small CLI wrapper with dev, build, and preview commands.
+Methanol includes a dedicated Command-line Interface (CLI) designed to streamline development, execution of static builds, and local previews.
 
-## Commands
+## Core Commands
 
-Quick start with `npx`:
+Quick start with `npx` (recommended):
 
 ```bash
-npx methanol dev      # start dev server
-npx methanol build    # build to dist/
-npx methanol serve    # serve the production build
+npx methanol dev      # Initialize the development server
+npx methanol build    # Execute production build to the dist/ directory
+npx methanol serve    # Preview the production build locally
 ```
 
-For a faster CLI startup, install globally:
+For improved performance and faster startup times, consider a global installation:
 
 ```bash
 npm install methanol -g
 methanol dev
 ```
 
-You can pass `input` and `output` as positional args (order matters):
+The `input` and `output` paths can be provided as positional arguments (order is significant):
 
 ```bash
 npx methanol build ./pages ./dist
 ```
 
-For dev, only `input` is used:
+In `dev` mode, only the `input` argument is utilized:
 
 ```bash
 npx methanol dev ./pages
 ```
 
-## Common Flags
+## Flag Reference
 
-- `--input`, `-i`: override `pages/`
-- `--components`: override `components/`
-- `--assets`: override `public/`
-- `--output`, `-o`: override `dist/`
-- `--config`, `-c`: set a config file path
-- `--site-name`: override the site name
-- `--base`: override `site.base` for this run (ignored in dev)
-- `--port`: set the dev/preview port (default: 5173)
-- `--host`: bind the dev/preview server to a host (`--host` alone binds to all interfaces)
-- `--intermediate-dir`: write intermediate HTML output to a directory (build only)
-- `--emit-intermediate`: write intermediate HTML output to `build/` (build only)
-- `--code-highlighting`: enable/disable code highlighting (`--code-highlighting` enables; `--code-highlighting false` disables)
-- `-v`, `--verbose`: enable verbose output (shows Vite + Pagefind logs during build)
+- `--input`, `-i`: Specifies the source directory (overrides the default `pages/`).
+- `--components`: Specifies the components directory (overrides the default `components/`).
+- `--assets`: Specifies the static assets directory (overrides the default `public/`).
+- `--output`, `-o`: Specifies the build destination (overrides the default `dist/`).
+- `--config`, `-c`: Defines the path to a custom configuration file.
+- `--site-name`: Overrides the site title defined in configuration.
+- `--base`: Temporarily overrides `site.base` for the current execution (ignored in `dev` mode).
+- `--port`: Sets the port for the development and preview servers (default: 5173).
+- `--host`: Binds the server to a specific host (using `--host` without a value binds to all interfaces).
+- `--intermediate-dir`: Directory for intermediate HTML output (build only).
+- `--emit-intermediate`: Enables the output of intermediate HTML to `build/` (build only).
+- `--highlight`: Controls syntax highlighting (`--highlight` to enable; `--highlight false` to disable).
+- `--search`: Controls Pagefind search indexing (`--search` to enable; `--search false` to disable).
+- `--pwa`: Controls PWA support (`--pwa` to enable; `--pwa false` to disable).
+- `-v`, `--verbose`: Enables detailed logging, including Vite and Pagefind output during the build process.
 
-Highlighting is off by default. Use the flag to enable it for a run.
+Syntax highlighting is disabled by default to optimize performance and can be enabled per-execution via the flag.
 
-## Running Without npx
+## Execution via Node
 
 ```bash
 node node_modules/methanol/bin/methanol.js dev

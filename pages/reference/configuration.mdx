@@ -1,66 +1,66 @@
 ---
 title: Configuration
-description: Configure site metadata, directories, themes, public assets, and CLI overrides.
+description: Detailed specifications for site metadata, directory structures, themes, asset management, and CLI overrides.
 weight: 2
 ---
 
 # Configuration
 
-Methanol reads configuration from:
+Methanol automatically resolves configuration from the following file patterns:
 
 ```
 methanol.config.{js,mjs,cjs,ts,jsx,tsx,mts,cts}
 ```
 
-If no config is present, Methanol uses defaults based on the current directory.
+In the absence of a configuration file, Methanol applies sensible defaults inferred from the project's root directory.
 
-## Config Shape
+## Configuration Schema
 
-The config file must export a function. The function receives a context object and returns a config object.
+The configuration file must export a function that receives an execution context and returns a configuration object.
 
 ```js
 export default ({ mode, root, HTMLRenderer }) => ({
-	// config values
+	// configuration properties
 })
 ```
 
-Context fields:
+Execution context properties:
 
-- `mode`: `development` or `production`
-- `root`: project root
-- `HTMLRenderer`: refui HTML utilities (`rawHTML`, `serialize`, etc.)
+- `mode`: Either `development` or `production`.
+- `root`: The absolute path to the project root.
+- `HTMLRenderer`: rEFui HTML utilities (including `rawHTML` and `serialize`).
 
 ## Core Options
 
 ### `root`
 
-Project root. Defaults to the current working directory.
+The project root directory. Defaults to the current working directory (CWD).
 
 ### `site`
 
-Site metadata used by templates:
+Site-wide metadata utilized by templates:
 
-- `site.name`: site title
-- `site.logo`: logo path (string) or `false` to disable (default theme)
-- `site.favicon`: favicon path (string) or `false` to disable (default theme)
-- `site.base`: deployment base (path prefix) when the site is served under a subpath (e.g. `'/docs/'`)
-- `site.repoBase`: base URL to your content folder in a repo (used by the default theme to build “Edit this page” links)
+- `site.name`: The title of the site.
+- `site.logo`: Path to the logo asset (string), or `false` to disable (standard theme support).
+- `site.favicon`: Path to the favicon asset (string), or `false` to disable (standard theme support).
+- `site.base`: The Base Path prefix used when the site is hosted under a subpath (e.g., `'/docs/'`).
+- `site.repoBase`: The base URL for the content directory within a repository, used by the standard theme to generate "Edit this page" links.
 
 Notes:
 
-- `site.base` is normalized to a leading and trailing slash (e.g. `docs` → `'/docs/'`).
-- `site.base` is used as the default Vite `base` unless you explicitly set `vite.base`.
-- In dev (`methanol dev`), `site.base` is ignored and treated as `/` due to Vite module resolution inconsistencies. Verify subpath deployments with `methanol build` + `methanol serve`.
+- `site.base` is automatically normalized to include both leading and trailing slashes (e.g., `docs` becomes `'/docs/'`).
+- `site.base` serves as the default Vite `base` unless `vite.base` is explicitly defined.
+- In `dev` mode (`methanol dev`), `site.base` is ignored and treated as `/` to ensure module resolution consistency. Verify subpath deployments using the `build` and `serve` workflow.
 
 ### `pagefind`
 
-Enable or configure Pagefind search. Default: `false`.
+Enables and configures full-text search via Pagefind. Default: `false`.
 
 ```js
 pagefind: false
 // or
 pagefind: { enabled: true }
-// or
+// or detailed configuration
 pagefind: {
 	enabled: true,
 	excerptLength: 30,
@@ -73,32 +73,56 @@ pagefind: {
 
 Notes:
 
-- Keys other than `enabled` and `build` are forwarded to the Pagefind JS `options()` call.
-- `build` is the only build options entry.
+- Properties other than `enabled` and `build` are passed directly to the Pagefind JavaScript `options()` initialization.
+- The `build` object contains options specific to the build-time indexing process.
+
+### `pwa`
+
+Enables Methanol's integrated PWA support (powered by `vite-plugin-pwa`). Default: `false`.
+
+```js
+pwa: true
+// or
+pwa: false
+// or detailed configuration
+pwa: {
+	manifest: {
+		name: 'My Site',
+		short_name: 'My Site'
+	},
+	injectManifest: {
+		globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+	}
+}
+```
+
+Notes:
+
+- If you require bespoke PWA logic (such as custom service worker strategies), set `pwa: false` and implement your own configuration within `vite.plugins`.
 
 ### `starryNight`
 
-Controls code highlighting (rehype-starry-night). Default: `false`.
+Controls syntax highlighting via Starry Night (rehype-starry-night). Default: `false`.
 
 ```js
 starryNight: false
 // or
 starryNight: true
-// or
+// or detailed configuration
 starryNight: {
-	// options forwarded to rehype-starry-night
+	// options passed to rehype-starry-night
 }
 ```
 
-- If `starryNight` is an object, highlighting is enabled unless `enabled: false` is set.
-- Per-page frontmatter `starryNight` always overrides this value.
-- CLI `--code-highlighting` can enable or disable highlighting for a run.
+- When configured as an object, highlighting is enabled unless `enabled: false` is explicitly set.
+- Per-page Frontmatter settings always take precedence over global configuration.
+- The CLI flag `--highlight` can be used to override this setting per-execution.
 
 ### `gfm`
 
-Enable or disable GitHub Flavored Markdown (GFM). Default: `true`.
+Enables or disables GitHub Flavored Markdown (GFM) support. Default: `true`.
 
-When enabled, Methanol applies GFM parsing (tables, task lists, strikethrough, footnotes, autolink literals).
+When enabled, Methanol applies GFM-specific parsing, including tables, task lists, strikethrough, footnotes, and autolink literals.
 
 ```js
 gfm: true
@@ -108,88 +132,85 @@ gfm: false
 
 ### `pagesDir`
 
-Where MDX/MD files live (routes). Default: `pages` with a fallback to `docs` if `pages/` does not exist.
+The source directory for MDX and Markdown files. Defaults to `pages`, with an automatic fallback to `docs` if `pages/` is not found.
 
 ### `componentsDir`
 
-Where JSX/TSX components live. Default: `components`.
+The directory for JSX/TSX components. Defaults to `components`.
 
-If you explicitly set `pagesDir` or `componentsDir` (including via CLI), Methanol throws if the directory does not exist.
+If `pagesDir` or `componentsDir` are explicitly defined (via configuration or CLI) but do not exist, Methanol will throw an error.
 
 ### `publicDir`
 
-Static assets folder served at the site root (e.g. `public/foo.png` → `/foo.png`). Default: `public`.
+The directory for static assets served at the site root (e.g., `public/foo.png` maps to `/foo.png`). Default: `public`.
 
-Methanol also includes theme public assets (`theme.publicDir`). When both theme and user assets exist, Methanol merges them into a single directory (theme first, then user), so user assets override theme assets on path conflicts.
+Methanol automatically merges assets from the theme's `publicDir`. In the event of a path conflict, user-provided assets override theme assets.
 
-When merging is needed, the internal merged directory is created under `node_modules/.methanol/assets` (or `{pagesDir}/.methanol/assets` if `node_modules/` does not exist).
+Temporary merged assets are managed within `node_modules/.methanol/assets` (or `{pagesDir}/.methanol/assets` if `node_modules/` is unavailable).
 
-Set `publicDir: false` to disable public assets entirely (including theme assets).
+Set `publicDir: false` to disable all static asset processing.
 
 ### `distDir`
 
-Output folder for production builds. Default: `dist`.
+The destination directory for production builds. Default: `dist`.
 
 ### `buildDir`
 
-Intermediate build directory (used with `emitIntermediate`). Default: `build`.
+The directory for intermediate build artifacts. Default: `build`.
 
 ### `intermediateDir`
 
-Explicit directory to write intermediate HTML output (build only).
+Explicit directory for intermediate HTML output (build only).
 
 ### `emitIntermediate`
 
-Boolean. When true, Methanol writes intermediate HTML to `build/` during build.
+Boolean. If `true`, Methanol writes intermediate HTML to the `build/` directory during the build process.
 
 ### `theme`
 
-Theme configuration. See [Advanced themes](../advanced/themes/) for full usage.
+Detailed theme configuration. Refer to the [Advanced Theme Guide](../advanced/themes/) for complete specifications.
 
-Key fields:
+Key properties:
 
-- `theme.root`: theme root directory (required)
-- `theme.template`: HTML template function (receives `{ ctx, page, PageContent, ExtraHead, withBase, HTMLRenderer, components }`)
-- `theme.components`: default MDX components
-- `theme.componentsDir`: folder of theme components
-- `theme.pagesDir`: folder of theme pages
-- `theme.publicDir`: theme public assets (merged into `publicDir`)
-- `theme.sources`: virtual file map used by Methanol’s resolver
-- `theme.mdx`: default MDX options merged with user `mdx`
-- `theme.vite`: default Vite config merged with user `vite`
+- `theme.root`: The theme's root directory (required).
+- `theme.template`: The JSX function defining the HTML layout.
+- `theme.components`: Default components provided by the theme.
+- `theme.componentsDir`: Directory for theme-specific components.
+- `theme.pagesDir`: Directory for theme-provided pages.
+- `theme.publicDir`: Theme static assets (merged into `publicDir`).
+- `theme.sources`: Virtual path mappings resolved by Methanol.
+- `theme.mdx`: Default MDX options merged with user settings.
+- `theme.vite`: Default Vite configuration merged with user settings.
 
 ### `mdx`
 
-Customize MDX compilation. This function receives `{ mode, root }` and should return MDX options.
+Customizes the MDX compilation process. Receives `{ mode, root }` and returns an MDX options object.
 
 ### `vite`
 
-Merge custom Vite config. This function receives `{ command, mode, root, isPreview }`.
+Merges custom Vite configurations. Receives `{ command, mode, root, isPreview }`.
 
 ### `preBuild` / `preBundle` / `postBundle` / `postBuild`
 
-Hooks for customizing the build pipeline.
+Hooks for extending the build pipeline.
 
-- `preBuild` runs in dev startup and before build.
-- `preBundle` runs only during build, after pages are rendered and before Vite bundles assets.
-- `postBundle` runs only during build, after Vite bundles assets and before Pagefind indexing.
-- `postBuild` runs only after build (not in dev).
-- Hooks can be a function or an array of functions.
-- Hook order: user `preBuild` → theme `preBuild` → render → user `preBundle` → theme `preBundle` → bundle → theme `postBundle` → user `postBundle` → (optional) Pagefind → theme `postBuild` → user `postBuild`.
+- `preBuild`: Executes at dev server initialization and prior to the build process.
+- `preBundle`: Build only; executes after page rendering but before Vite asset bundling.
+- `postBundle`: Build only; executes after Vite bundling but before Pagefind indexing.
+- `postBuild`: Build only; executes after the entire build process is complete.
+- Hooks accept either a single function or an array of functions.
+- Execution sequence: User `preBuild` → Theme `preBuild` → Render → User `preBundle` → Theme `preBundle` → Bundle → Theme `postBundle` → User `postBundle` → (Optional) Pagefind → Theme `postBuild` → User `postBuild`.
 
-Hook context:
+Hook Context:
 
-- `mode`, `root`, `command`, `isDev`, `isBuild`, `isPreview`
-- `HTMLRenderer`
-- `site` (same shape as `ctx.site`)
-- `data` (mutable object for sharing data between hooks)
+- `mode`, `root`, `command`, `isDev`, `isBuild`, `isPreview`.
+- `HTMLRenderer`.
+- `site` (reflects the current `ctx.site` state).
+- `data`: A mutable object for sharing state across the hook lifecycle.
 
-Bundle/post-build hooks also receive:
+`preBundle`, `postBundle`, and `postBuild` hooks additionally receive:
 
-- `pagesContext`
-- `pages`
-- `pagesTree`
-- `pagesByRoute`
+- `pagesContext`, `pages`, `pagesTree`, and `pagesByRoute`.
 
 Example:
 
@@ -197,38 +218,40 @@ Example:
 export default () => ({
 	preBuild: ({ data, site }) => {
 		data.startedAt = Date.now()
-		console.log('Building', site.name)
+		console.log('Building:', site.name)
 	},
 	preBundle: ({ pages }) => {
-		console.log('Rendered pages:', pages.length)
+		console.log('Total rendered pages:', pages.length)
 	},
 	postBuild: ({ data, pages }) => {
-		console.log('Duration (ms):', Date.now() - data.startedAt)
-		console.log('Pages:', pages.length)
+		console.log('Build duration (ms):', Date.now() - data.startedAt)
+		console.log('Final page count:', pages.length)
 	}
 })
 ```
 
 ## CLI Overrides
 
-Command line options override config values:
+Command-line arguments take precedence over configuration file settings:
 
-- `--input` and `--components` override `pagesDir` and `componentsDir`
-- `--assets` overrides `publicDir`
-- `--output` overrides `distDir`
-- `--site-name` overrides `site.name`
-- `--base` overrides `site.base` for a run (ignored in dev)
-- `-v`/`--verbose` enables verbose output for the run
-- `--config` selects a specific config file
-- Positional `input`/`output` match `--input`/`--output` (dev uses only `input`)
+- `--input` and `--components` override `pagesDir` and `componentsDir`.
+- `--assets` overrides `publicDir`.
+- `--output` overrides `distDir`.
+- `--site-name` overrides `site.name`.
+- `--base` temporarily overrides `site.base` (ignored in `dev`).
+- `--search` overrides `pagefind.enabled`.
+- `--pwa` overrides the `pwa` toggle.
+- `-v`/`--verbose` enables detailed build logging.
+- `--config` specifies a non-standard configuration file.
+- Positional `input`/`output` arguments map to the `--input`/`--output` flags.
 
-## Example
+## Implementation Example
 
 ```js
 import tailwindcss from '@tailwindcss/vite'
 
 export default ({ mode }) => ({
-	site: { name: 'My Docs' },
+	site: { name: 'Technical Docs' },
 	theme: {
 		root: '.',
 		template: ({ PageContent, ExtraHead, ctx, withBase, HTMLRenderer, components }) => (
@@ -243,14 +266,14 @@ export default ({ mode }) => ({
 						<link rel="icon" href="/favicon.png" />
 					</head>
 					<body>
-						{components.Callout ? <components.Callout>Hi</components.Callout> : null}
+						{components.Callout ? <components.Callout>Important Note</components.Callout> : null}
 						<PageContent />
 					</body>
 				</html>
 			</>
 		),
 		components: {
-			Callout: ({ children }) => <div class="callout">{children}</div>
+			Callout: ({ children }) => <div class="callout-component">{children}</div>
 		}
 	},
 	mdx: () => ({

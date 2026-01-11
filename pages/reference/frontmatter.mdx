@@ -1,13 +1,13 @@
 ---
 title: Frontmatter
-description: Frontmatter fields and per-page options.
+description: Specifications for page metadata and individual page configurations.
 weight: 3
 starryNight: true
 ---
 
 # Frontmatter
 
-Frontmatter is the YAML block at the top of a page. It controls page metadata, ordering, and navigation behavior.
+Frontmatter is a YAML data block located at the absolute top of a page. It provides a mechanism for defining page metadata and exercising fine-grained control over navigation hierarchy and sorting behavior.
 
 ```mdx
 ---
@@ -21,41 +21,41 @@ starryNight: true
 ---
 ```
 
-## Fields
+## Metadata Specifications
 
-- `title`: page title used in navigation and `<title>`
-- `excerpt` / `description`: short page description used for meta tags (alias fields; either one works)
-- `weight`: ordering in navigation; lower numbers come first
-- `hidden`: hide from navigation (the 404 page and `isRoot` pages are hidden by default). Hidden pages still render when visited directly.
-- `isRoot`: marks an `index` page as a navigation root
-- `exclude`: exclude this page from build/dev; when set on a directory `index`, the whole directory is excluded
-- `date`: used for sorting when weights match
-- `lang`: language label used for the language selector; only read from directory `index.mdx` pages (including `/`)
-- `langCode`: language code used for the HTML `lang` attribute; only read from directory `index.mdx` pages (including `/`)
-- `starryNight`: per-page code highlighting override (`true`, `false`, or options object)
+- `title`: The page title utilized within navigation menus and the HTML `<title>` tag.
+- `excerpt` / `description`: A brief summary utilized for Meta tags (these are aliases; either can be used).
+- `weight`: Navigation display order; items with lower values are positioned higher.
+- `hidden`: Excludes the page from navigation menus (the `/404`, `/offline`, and `isRoot` pages are hidden by default). Hidden pages remain fully accessible via their direct URL.
+- `isRoot`: Designates the `index.mdx` file as the root node for a navigation sub-tree.
+- `exclude`: Completely removes the page from development and build processes. If applied to a directory `index.mdx`, the entire directory is excluded.
+- `date`: Used as a secondary sorting criterion when weights are identical.
+- `lang`: The display label for the language selector; only processed from directory `index.mdx` files (including the root `/`).
+- `langCode`: The language code applied to the HTML `lang` attribute; only processed from directory `index.mdx` files.
+- `starryNight`: A page-level override for syntax highlighting (`true`, `false`, or a configuration object).
 
-## Notes
+## Key Implementation Notes
 
-- `isRoot` applies only to `index.mdx` files.
-- `isRoot` index pages are hidden by default; set `hidden: false` to show them in navigation.
-- Files or directories starting with `_` or `.` are always excluded from navigation.
-- `starryNight` in frontmatter overrides the global `starryNight` config and CLI flag.
-- Frontmatter is parsed using [gray-matter](https://github.com/jonschlinkert/gray-matter).
+- The `isRoot` property is only applicable to `index.mdx` files.
+- `isRoot` index pages are concealed from navigation by default; set `hidden: false` to force display.
+- Automated exclusion: Files or directories prefixed with `_` or `.` are permanently excluded from the navigation tree.
+- Frontmatter settings for `starryNight` take precedence over both global configuration and CLI flags.
+- Frontmatter parsing is implemented via [gray-matter](https://github.com/jonschlinkert/gray-matter).
 
-## Demos
+## Examples
 
-- [Hidden section](../hidden/)
-- [Hidden page](../hidden-page)
+- [Hidden Section](../hidden/)
+- [Hidden Page](../hidden-page)
 
-## Language Index Example
+## Multi-language Index Configuration
 
-Add `lang` only on the index page of a language folder:
+Configure the `lang` property exclusively on the index page of each language directory:
 
 ```mdx
 ---
-title: 简体中文
-lang: 简体中文
-langCode: zh
+title: English
+lang: English
+langCode: en
 isRoot: true
 hidden: true
 ---

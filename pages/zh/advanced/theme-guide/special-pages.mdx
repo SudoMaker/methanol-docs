@@ -15,7 +15,8 @@ starryNight: true
 - 独立的目录/菜单页
 - 友链页
 - 联系页
-- 主题自带的 `/404` 页面
+- 主题自带的 `/404` 错误页面
+- 主题自带的 `/offline` 离线回退页面
 
 ## 配置主题页面
 
@@ -39,6 +40,7 @@ pages/
   friends.mdx
   contact.mdx
   404.mdx
+  offline.mdx
 ```
 
 ## 基于路由的分支逻辑
@@ -123,7 +125,7 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 
 常用分流策略：
 
-- 按文件类型：`ctx.page.filePath.endsWith('.html')`
+- 按文件类型：`ctx.page.path.endsWith('.html')`
 - 按路由：`ctx.page.routePath === '/menu'`
 - 按 frontmatter：`ctx.page.frontmatter?.layout === 'landing'`
 

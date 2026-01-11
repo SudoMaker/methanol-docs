@@ -1,36 +1,36 @@
 ---
-title: Build and Publish
-description: Build the site and deploy the output.
+title: Build and Deployment
+description: Procedures for building the site and deploying the resulting static artifacts.
 weight: 8
 ---
 
-# Build and Publish
+# Build and Deployment
 
-Methanol outputs a static site, so you can deploy the `dist/` directory to any static host.
+Methanol generates purely static artifacts, allowing the `dist/` directory to be hosted on any standard static web server or hosting provider.
 
-## Build
+## Executing a Build
 
 ```bash
 npx methanol build
 ```
 
-This generates `dist/`.
+This command triggers an optimized build and populates the `dist/` directory with the resulting files.
 
-## Preview
+## Local Preview
 
 ```bash
 npx methanol serve
 ```
 
-Use this to verify the production output locally.
+Use this command to validate the production artifacts in a local environment prior to deployment.
 
-## Deploy
+## Deployment Strategy
 
-Upload the `dist/` folder to your host of choice (GitHub Pages, Netlify, Cloudflare Pages, S3, or any static server).
+Upload the contents of the `dist/` folder to your preferred hosting service, such as GitHub Pages, Netlify, Cloudflare Pages, Amazon S3, or any specialized static host.
 
-## Deploy Under a Subpath
+## Deploying to a Subpath
 
-If your site is served under a subpath (e.g. `https://example.com/docs/`), set `site.base` in `methanol.config.*`:
+If your site is to be served from a subpath (e.g., `https://example.com/docs/`), configure the `site.base` property in `methanol.config.*`:
 
 ```js
 export default () => ({
@@ -40,4 +40,4 @@ export default () => ({
 })
 ```
 
-In dev (`methanol dev`), `site.base` is ignored and treated as `/`. Verify subpath behavior with `methanol build` + `methanol serve`.
+During development (`methanol dev`), the `site.base` setting is ignored and the site is served from the root `/`. To verify subpath behavior, use the `methanol build` and `methanol serve` workflow.

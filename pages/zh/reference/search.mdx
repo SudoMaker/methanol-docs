@@ -61,6 +61,15 @@ export default () => ({
 
 除 `enabled` 与 `build` 属性外的字段，将在客户端运行时传递给 Pagefind UI。
 
+## CLI 覆盖
+
+可在执行构建时通过命令行参数覆盖配置文件中的搜索启用状态：
+
+```bash
+npx methanol build --search
+npx methanol build --search false
+```
+
 ## 集成第三方搜索方案
 
 若需切换至其他搜索系统：

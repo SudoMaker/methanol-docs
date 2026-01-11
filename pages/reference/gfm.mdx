@@ -1,24 +1,26 @@
 ---
 title: GFM
-description: GitHub Flavored Markdown features supported in Methanol (demo page).
+description: Demonstration of GitHub Flavored Markdown (GFM) features in Methanol.
 weight: 8
 ---
 
-# GitHub Flavored Markdown
+# GitHub Flavored Markdown (GFM)
 
-This page is a quick demo of GitHub Flavored Markdown (GFM) features in Methanol.
+This page serves as a demonstration of GitHub Flavored Markdown (GFM) features supported within the Methanol environment.
+
+It is particularly useful for validating your Markdown processing pipeline, including parsing, styling, and theme-level rendering.
 
 ## What is GFM?
 
-GFM is the Markdown “dialect” used by GitHub. It extends basic Markdown with practical authoring features such as:
+GFM is a widely-used dialect of Markdown maintained by GitHub. It extends the core Markdown specification with practical authoring features, such as:
 
 - Tables
-- Task lists (checkboxes)
+- Task lists (Checkboxes)
 - Strikethrough
 - Footnotes
-- Autolink literals (URLs/emails without explicit link syntax)
+- Autolink literals (Automatic URL and email recognition)
 
-In Methanol, GFM is enabled by default. You can disable it in config:
+In Methanol, GFM support is enabled by default. To disable it, modify your configuration as follows:
 
 ```js
 // methanol.config.js
@@ -29,30 +31,28 @@ export default () => ({
 
 See also: [Configuration](./configuration)
 
-It’s useful when you’re validating your Markdown pipeline (MDX/MD parsing, styles, and theme rendering).
-
 ## Autolink literals
 
 www.example.com, https://example.com, and contact@example.com.
 
-## Footnote
+## Footnotes
 
 A note[^1]
 
-[^1]: Big note.
+[^1]: This is a detailed footnote.
 
 ## Strikethrough
 
 ~one~ or ~~two~~ tildes.
 
-## Table
+## Tables
 
-| a | b  |  c |  d  |
-| - | :- | -: | :-: |
-| 1 | 2 | 3 | 4 |
-| I | II | III | IV |
+| Header A | Header B | Header C | Header D |
+| :------- | :------: | :------: | -------: |
+| Left     | Center   | Center   | Right    |
+| 1        | 2        | 3        | 4        |
 
-## Tasklist
+## Tasklists
 
-* [ ] to do
-* [x] done
+* [ ] Pending task
+* [x] Completed task

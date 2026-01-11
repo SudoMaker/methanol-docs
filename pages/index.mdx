@@ -1,6 +1,6 @@
 ---
 title: Welcome
-description: Overview of Methanol and the docs sections.
+description: Overview of the Methanol documentation and core section indexes.
 lang: English
 langCode: en
 weight: 1
@@ -15,19 +15,18 @@ weight: 1
 	<LinkButton variant="secondary" href="https://github.com/SudoMaker/Methanol" target="_blank">GitHub</LinkButton>
 </ButtonGroup>
 
+Methanol is an opinionated, fully customizable static site generator powered by [rEFui](https://github.com/SudoMaker/rEFui) and [MDX](https://mdxjs.com). Designed for speed and clarity, it provides a streamlined environment for technical writing and creative ideas.
 
-Methanol is an opinionated, fully customizable static site generator powered by [rEFui](https://github.com/SudoMaker/rEFui) and [MDX](https://mdxjs.com). It’s fast, uncluttered, and built for clear writing, bold ideas, and whatever you want to make.
+Methanol requires nearly zero configuration: simply place your files in `pages/` (or `docs/`) to automatically generate routes, a homepage from `index.mdx`, and a complete navigation tree.
 
-It works out of the box: drop files into `pages/` (or `docs/`), get routes automatically, a homepage from `index.mdx`, and a navigation tree without wiring up a router.
+## Core Features
 
-## What You Can Do
+- **Automated Routing**: Drop MDX files into content directories and let Methanol handle the routing and navigation.
+- **Component Integration**: Author reusable JSX components in `components/` and embed them directly within your Markdown.
+- **Fine-grained Control**: Manage navigation hierarchy, ordering, and visibility using standard frontmatter.
+- **Production Ready**: Build to optimized static files in `dist/` with built-in preview capabilities.
+- **Extensible Pipeline**: Easily integrate [Pagefind](https://pagefind.app) for search and [Starry Night](https://github.com/wooorm/starry-night) for syntax highlighting.
 
-- Write MDX in `pages/` (or `docs/`) and get routes automatically.
-- Add reusable components in `components/` and drop them into Markdown.
-- Control navigation, ordering, and visibility with frontmatter.
-- Build to static files in `dist/` and preview locally.
-- Add search with [Pagefind](https://pagefind.app) and syntax highlighting with [Starry Night](https://github.com/wooorm/starry-night) when you want them.
+## rEFui: HTML + Islands
 
-## rEFui: HTML + islands
-
-Methanol uses rEFui for both server-side HTML generation and client-side interactivity. Most pages ship as static HTML, and only client components are hydrated as small “islands” where needed (no full-page hydration).
+Methanol leverages rEFui for both server-side HTML generation and client-side interactivity. The majority of your site is shipped as pure static HTML; only interactive client components are hydrated as isolated "islands" where necessary, avoiding the overhead of full-page hydration.

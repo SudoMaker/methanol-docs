@@ -7,38 +7,41 @@ starryNight: true
 
 # オフライン対応 (PWA)
 
-サイトにオフラインアクセスの機能を追加したい場合は、[`vite-plugin-pwa`](https://vite-pwa-org.netlify.app) を利用することで簡単に実現できます。
+Methanol は Workbox をベースとした PWA 機能を標準でサポートしています。**高度に最適化された** Service Worker 実装を採用しており、頻繁なコンテンツ更新に柔軟に対応しつつ、大規模なサイトでもインストールの停滞を招くことなくスムーズに動作するよう設計されています。
 
-## 導入手順
+## PWA の有効化
 
-まず、必要なプラグインをインストールします。
-
-```bash
-npm install vite-plugin-pwa -D
-```
-
-## 設定方法
-
-`methanol.config.js` の Vite 設定にプラグインを追加します。
+`methanol.config.js` において、以下の設定で有効化できます。
 
 ```js
-import { VitePWA } from 'vite-plugin-pwa'
-
 export default () => ({
-	vite: {
-		plugins: [
-			VitePWA({
-				injectRegister: 'auto',
-				registerType: 'autoUpdate',
-				workbox: {
-					globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-					navigateFallback: '/404.html',
-					ignoreURLParametersMatching: [/./]
-				}
-			})
-		]
+	pwa: true
+})
+```
+
+### Manifest のカスタマイズ
+
+PWA の manifest と injectManifest 設定を上書きできます。
+
+```js
+export default () => ({
+	pwa: {
+		manifest: {
+			name: 'My Site',
+			short_name: 'My Site'
+		},
+		injectManifest: {
+			globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+		}
 	}
 })
 ```
 
-この設定により、標準的なウェブアセットが自動的にキャッシュされ、ネットワーク接続がない場合でもサイトの閲覧が可能になります。また、存在しないパスへのアクセスは自動的に 404 ページにリダイレクトされます。
+### さらに細かく制御する場合
+
+PWA を完全にカスタマイズしたい場合は `pwa: false` を設定し、
+`vite.plugins` で自分の `vite-plugin-pwa` 設定を追加してください。
+
+## オフラインページ
+
+`pages/offline.mdx` を作成することで、オフライン用のフォールバックページをカスタマイズできます。

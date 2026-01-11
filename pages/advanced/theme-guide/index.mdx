@@ -1,31 +1,31 @@
 ---
 title: Theme Guide
-description: Create a theme root, export a theme object, and implement a template.
+description: A step-by-step guide to building a custom theme, from directory structure to template implementation.
 weight: 4
 starryNight: true
 ---
 
 # Theme Guide
 
-This guide shows how to build a custom theme (layout + components + optional pages/assets).
+This guide provides a comprehensive walkthrough for building a custom Methanol theme, covering layouts, components, and optional theme-provided pages or assets. You will learn how to implement core framework components such as navigation, tables of contents, and multi-language support.
 
-## Theme Folder Layout
+## Recommended Directory Structure
 
-Recommended structure:
+A standard theme layout typically follows this structure:
 
 ```
 theme/
-  index.js          # exports the theme object
-  page.jsx          # template component
-  components/       # default MDX components (optional)
-  pages/            # theme-provided pages (optional)
-  public/           # theme public assets (optional)
-  sources/          # assets used via theme.sources (optional)
+  index.js          # Theme object entry point
+  page.jsx          # Layout template component
+  components/       # Default MDX components (optional)
+  pages/            # Theme-provided pages (optional)
+  public/           # Theme-specific static assets (optional)
+  sources/          # Asset mappings via theme.sources (optional)
 ```
 
-## Theme Config
+## Theme Configuration
 
-In `methanol.config.js`:
+Enable your theme in `methanol.config.js` by specifying its root and template:
 
 ```js
 import PageTemplate from './theme/page.jsx'
@@ -38,11 +38,9 @@ export default () => ({
 })
 ```
 
-Typically you import your template component and pass it as `theme.template`.
+## Theme Object Definition
 
-## Theme Object
-
-`theme/index.js`:
+Typically, you define the theme paths in `theme/index.js`:
 
 ```js
 import PageTemplate from './page.jsx'
@@ -61,19 +59,19 @@ export default () => ({
 })
 ```
 
-## Template Contract
+## Template Specification (Template Contract)
 
-`theme.template` receives:
+The `theme.template` function receives the following properties:
 
-- `ctx`: current page/site context
-- `page`: alias for `ctx.page`
-- `PageContent`: current page body component
-- `ExtraHead`: additional `<head>` content (Methanol runtime, page assets, per-page `<Head>` output)
-- `withBase`: helper for base-aware URLs (same function as `ctx.withBase`)
-- `components`: merged components (theme defaults + user overrides)
-- `HTMLRenderer`: refui renderer utilities
+- `ctx`: Current page and site context.
+- `page`: Alias for `ctx.page`.
+- `PageContent`: Component that renders the current page body.
+- `ExtraHead`: Dynamic content to be injected into the `<head>` (runtime, assets, and per-page `<Head>` output).
+- `withBase`: Base-aware URL helper (functionally identical to `ctx.withBase`).
+- `components`: Merged component set (theme defaults plus user overrides).
+- `HTMLRenderer`: rEFui rendering utilities.
 
-Minimum template:
+Minimum template implementation:
 
 ```jsx
 import { HTMLRenderer } from 'methanol'
@@ -96,10 +94,10 @@ export default ({ PageContent, ExtraHead, ctx }) => (
 )
 ```
 
-In practice you’ll likely render navigation, ToC, and page meta. The next pages cover those pieces:
+For production-ready themes, you will typically need to integrate several standard modules. The following sections cover these in detail:
 
 - [Render navigation](./navigation)
-- [Render a ToC](./toc)
-- [Prev/next links](./prev-next)
-- [Language switch](./language-switch)
+- [Render a Table of Contents (ToC)](./toc)
+- [Adjacent page links](./prev-next)
+- [Language switching](./language-switch)
 - [Special-purpose pages](./special-pages)

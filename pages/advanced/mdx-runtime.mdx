@@ -1,74 +1,86 @@
 ---
 title: MDX Runtime Helpers
-description: Runtime helpers and hydration behavior.
+description: Runtime helpers, context injection, and hydration behavior.
 weight: 2
 starryNight: true
 ---
 
 # MDX Runtime Helpers
 
-Methanol injects a small runtime context into every MDX file to make templates and dynamic content easier to build.
+Methanol automatically injects a lightweight runtime context into every MDX file, facilitating the creation of dynamic content and simplified template integration.
 
-## Context Values
+## Context Variables
 
-These helpers are always available:
+The following helpers are globally available within MDX pages:
 
-- `ctx`: page and site context
-- `frontmatter`: shorthand for `ctx.page.frontmatter`
-- `rawHTML`: escape hatch for unescaped HTML
+- `ctx`: The complete page and site context object.
+- `frontmatter`: An alias for `ctx.page.frontmatter`.
+- `rawHTML`: A utility for injecting unescaped HTML content.
 
 ```mdx
 # {frontmatter.title ?? ctx.page.title}
 
-Current route: {ctx.routePath}
+Current Route: {ctx.routePath}
 ```
 
-## Context Shape
+## Context Structure
 
-Common fields on `ctx`:
+Key properties available on the `ctx` object:
 
-- `ctx.page`: current page metadata (see details below)
-- `ctx.pages`: all pages (flat list; includes hidden and index pages)
-- `ctx.pagesTree`: navigation tree for the current root
-- `ctx.site`: site metadata (`name`, `root`, `pagesDir`, `distDir`, `pagefind`, etc.)
-- `ctx.withBase(path)`: prefixes `site.base`/Vite base for URLs that start with `/` (leaves relative URLs unchanged)
-- `ctx.language`: active language entry (from directory index pages with `lang`; includes `label` and `code`)
-- `ctx.getSiblings()`: returns `{ prev, next }` for the current page within the current navigation root
+- `ctx.page`: Metadata for the current page (see detailed schema below).
+- `ctx.pages`: A comprehensive flat list of all pages (including hidden and index pages).
+- `ctx.pagesTree`: The hierarchical navigation tree scoped to the current root.
+- `ctx.site`: Site-wide metadata (e.g., `name`, `root`, `pagesDir`, `distDir`, `pagefind`).
+- `ctx.withBase(path)`: A utility that prefixes URLs starting with `/` with the configured `site.base` or Vite base (relative URLs remain unchanged).
+- `ctx.language`: The currently active language entry (derived from directory index pages with `lang`; includes `label` and `code`).
+- `ctx.getSiblings()`: Returns the `{ prev, next }` page objects for the current page, respecting the active navigation root.
 
-Caveat: you usually don’t need `ctx.withBase()` for theme source URLs (`theme.sources`) or for static files under `public/` (Methanol resolves those at build time). If you hit Vite dev inconsistencies (especially when generating URLs in JS), `ctx.withBase('/...')` can be a practical workaround.
+*Note: You typically do not need to use `ctx.withBase()` for `theme.sources` or static files in `public/`, as Methanol resolves these at build time. However, it is a useful safeguard for URLs generated dynamically via JavaScript in development environments.*
 
-### ctx.page
+### ctx.page Metadata Object
 
-`ctx.page` is the metadata object for the current page. Common fields include:
+`ctx.page` provides comprehensive metadata for the current page. The full schema includes:
 
-- `routePath`: normalized route (e.g. `/guide/writing`)
-- `routeHref`: base-aware href for links (includes `site.base` / Vite base)
+- `routePath`: The normalized route path (e.g., `/guide/writing`).
+- `routeHref`: The base-aware href for linking (includes `site.base` / Vite base).
+- `path`: The absolute filesystem path to the source file.
+- `source`: Origin of the file (`"user"` or `"theme"`).
+- `relativePath`: The path relative to `pagesDir` (including extension).
+- `name`: The filename without extension.
+- `dir`: The directory path relative to `pagesDir` (`''` for root).
+- `segments`: An array of route segments.
+- `depth`: The number of segments in the route.
+- `isIndex`: Boolean, `true` if the file is an `index.mdx`.
+- `title`: The resolved page title (from frontmatter or inferred from headings).
+- `frontmatter`: The parsed YAML frontmatter object.
+- `matter`: Raw frontmatter block metadata.
+- `content`: Raw Markdown content excluding frontmatter.
+- `toc`: Extracted Table of Contents entries.
+- `weight`: Numeric sort order (from frontmatter).
+- `date`: Normalized ISO date string (from frontmatter).
+- `isRoot`: Boolean, `true` if the page defines a navigation root.
+- `hidden`: Boolean, `true` if the page is hidden from navigation.
+- `hiddenByFrontmatter`: Boolean, `true` if `hidden: true` was explicitly set in frontmatter.
+- `exclude`: Boolean, `true` if the page is excluded from the build.
+- `stats.size`: File size in bytes.
+- `stats.createdAt`: File creation timestamp (ISO) if available.
+- `stats.updatedAt`: Last modified timestamp (ISO) if available.
 
-Note: directory index routes include a trailing slash in `routePath` (e.g. `/guide/`).
-- `filePath`: absolute path to the source file
-- `title`: resolved title (frontmatter title or derived from headings)
-- `frontmatter`: parsed YAML frontmatter
-- `toc`: extracted table of contents entries
-- `isIndex`: `true` when the file is `index.mdx`
-- `dir`: directory path relative to `pagesDir`
-- `segments`: route segments array
-- `hidden`: whether the page is hidden from navigation
-- `isRoot`: whether the page marks a navigation root
-- `date`: normalized ISO date when provided in frontmatter
-- `updatedAt`: last modified timestamp (when available)
+*Note: Directory index routes always include a trailing slash in `routePath` (e.g., `/guide/`).*
+*`ctx.page.getSiblings()` is injected at runtime to facilitate previous/next navigation.*
 
-Example usage:
+Usage Example:
 
 ```mdx
 {ctx.page.title}
 {ctx.page.frontmatter?.excerpt}
 ```
 
-### ctx.pages
+### ctx.pages List
 
-`ctx.pages` is a flat list of page objects (same shape as `ctx.page`) for all pages in the current project and theme. It includes index pages and pages that are hidden in navigation, but excludes pages marked `exclude: true`.
+`ctx.pages` is a flat array containing metadata objects (matching the `ctx.page` schema) for every page in the project and theme. It includes index pages and hidden pages but omits those marked with `exclude: true`.
 
-Use this when you need custom listings, sitemaps, or manual navigation:
+This is ideal for generating custom indices, sitemaps, or manual navigation structures:
 
 ```jsx
 <ul>
@@ -78,16 +90,16 @@ Use this when you need custom listings, sitemaps, or manual navigation:
 </ul>
 ```
 
-### ctx.pagesTree
+### ctx.pagesTree Hierarchy
 
-`ctx.pagesTree` is a hierarchical tree of navigation nodes for the current root (respecting `isRoot` and `hidden` rules). Nodes are shaped like:
+`ctx.pagesTree` represents the navigation hierarchy for the current root context (adhering to `isRoot` and `hidden` rules). Node structure:
 
 - `type`: `"page"` or `"directory"`
-- `title` / `name`: label for display
-- `routePath` / `routeHref`: route for the node
-- `children`: child nodes for directories
+- `title` / `name`: Display label.
+- `routePath` / `routeHref`: Route for the node.
+- `children`: Array of child nodes (for directories).
 
-Use it to build a navigation UI that matches the sidebar:
+Use this to construct navigation UIs that mirror the sidebar structure:
 
 ```jsx
 {ctx.pagesTree.map((node) => (
@@ -95,9 +107,9 @@ Use it to build a navigation UI that matches the sidebar:
 ))}
 ```
 
-### ctx.getSiblings
+### ctx.getSiblings Helper
 
-`ctx.getSiblings()` returns the previous and following pages in the current navigation sequence. It respects the current navigation root and hidden/excluded rules, so it mirrors the sidebar order.
+`ctx.getSiblings()` retrieves the preceding and succeeding pages in the current navigation sequence. It respects the active navigation root and visibility rules, ensuring consistency with the sidebar order.
 
 ```jsx
 {(() => {
@@ -106,19 +118,19 @@ Use it to build a navigation UI that matches the sidebar:
   return (
     <nav>
       {siblings.prev ? <a href={siblings.prev.routeHref || siblings.prev.routePath}>Previous: {siblings.prev.title}</a> : null}
-      {siblings.next ? <a href={siblings.next.routeHref || siblings.next.routePath}>Forward: {siblings.next.title}</a> : null}
+      {siblings.next ? <a href={siblings.next.routeHref || siblings.next.routePath}>Next: {siblings.next.title}</a> : null}
     </nav>
   )
 })()}
 ```
 
-## rawHTML
+## rawHTML Utility
 
-Use `rawHTML` to inject unescaped HTML. This is useful for inline scripts or markup that should not be escaped.
+The `rawHTML` helper allows for the injection of unescaped HTML. This is particularly useful for inline scripts or specific markup that must remain unsanitized.
 
 ```jsx
 {rawHTML('<span class="badge">Beta</span>')}
 {rawHTML`<div data-banner="true">Banner</div>`}
 ```
 
-`rawHTML` also accepts signals and template interpolations.
+`rawHTML` supports reactivity via signals and standard template interpolation.

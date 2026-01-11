@@ -1,21 +1,21 @@
 ---
 title: MDX 运行时助手
-description: MDX 运行时辅助工具与注水（Hydration）机制。
+description: MDX 运行时辅助工具、上下文注入及注水（Hydration）机制详解。
 weight: 2
 starryNight: true
 ---
 
 # MDX 运行时助手
 
-Methanol 默认为每个 MDX 文件注入轻量级运行时上下文，以支持页面信息访问、动态内容生成及模板渲染。
+Methanol 默认为每个 MDX 文件注入轻量级运行时上下文，旨在简化动态内容生成及模板集成流程。
 
-## 核心上下文变量
+## 上下文变量
 
-以下变量在 MDX 环境中始终可用：
+在 MDX 环境中，以下辅助变量始终全局可用：
 
-- `ctx`: 页面与站点上下文
-- `frontmatter`: `ctx.page.frontmatter` 的简写
-- `rawHTML`: 原生 HTML 插入接口
+- `ctx`: 完整的页面与站点上下文对象。
+- `frontmatter`: `ctx.page.frontmatter` 的简写别名。
+- `rawHTML`: 用于插入未转义 HTML 内容的工具函数。
 
 ```mdx
 # {frontmatter.title ?? ctx.page.title}
@@ -23,52 +23,64 @@ Methanol 默认为每个 MDX 文件注入轻量级运行时上下文，以支持
 当前路由：{ctx.routePath}
 ```
 
-## 上下文对象结构详解
+## 上下文结构
 
-`ctx` 对象常用字段说明：
+`ctx` 对象包含的核心属性如下：
 
-- `ctx.page`: 当前页面元数据对象（详见下文）
-- `ctx.pages`: 全站页面集合（包含隐藏页及目录索引）
-- `ctx.pagesTree`: 基于当前根目录的导航树结构
-- `ctx.site`: 全局站点配置信息（`name`, `root`, `pagesDir`, `distDir`, `pagefind` 等）
-- `ctx.withBase(path)`: 自动为根路径 URL（以 `/` 开头）附加 `site.base` 或 Vite base（相对 URL 不受影响）
-- `ctx.language`: 当前语言配置（目录 index 带 `lang` 时，包含 `label` 与 `code`）
-- `ctx.getSiblings()`: 获取当前页面的相邻节点（上一页/下一页）
+- `ctx.page`: 当前页面的元数据对象（详见下文模式说明）。
+- `ctx.pages`: 包含全站页面（含隐藏页及索引页）的扁平化集合。
+- `ctx.pagesTree`: 基于当前根目录范围的层级导航树。
+- `ctx.site`: 全局站点元数据（如 `name`, `root`, `pagesDir`, `distDir`, `pagefind` 等）。
+- `ctx.withBase(path)`: 路径处理工具，自动为以 `/` 开头的 URL 附加配置的 `site.base` 或 Vite base（相对 URL 保持不变）。
+- `ctx.language`: 当前激活的语言入口对象（源自目录索引页的 `lang` 配置；包含 `label` 与 `code`）。
+- `ctx.getSiblings()`: 返回当前页面的相邻节点对象 `{ prev, next }`，遵循当前导航根范围。
 
-注意：对于 `theme.sources` 中的 URL 或 `public/` 目录下的静态文件，通常无需手动调用 `ctx.withBase()`（构建系统将自动解析）。若在 JS 中动态生成 URL 且遇到开发环境路径解析不一致的问题，使用 `ctx.withBase('/...')` 可作为有效解决方案。
+*注意：对于 `theme.sources` 中的 URL 或 `public/` 目录下的静态文件，通常无需手动调用 `ctx.withBase()`（构建系统将自动解析）。但在 JS 中动态生成 URL 且遇到开发环境路径解析不一致时，该工具是有效的解决方案。*
 
-### ctx.page
+### ctx.page 元数据对象
 
-`ctx.page` 封装了当前页面的元数据，关键字段如下：
+`ctx.page` 提供当前页面的完整元数据信息。完整字段列表如下：
 
-- `routePath`: 标准化路由路径（如 `/guide/writing`）
-- `routeHref`: 带 Base Path 的完整链接 Href（包含 `site.base` / Vite base）
+- `routePath`: 标准化后的路由路径（例如 `/guide/writing`）。
+- `routeHref`: 包含 Base Path 的链接 Href（自动适配 `site.base` / Vite base）。
+- `path`: 源文件的绝对系统路径。
+- `source`: 文件来源标识（`"user"` 或 `"theme"`）。
+- `relativePath`: 相对于 `pagesDir` 的路径（包含文件扩展名）。
+- `name`: 去除扩展名后的文件名。
+- `dir`: 相对于 `pagesDir` 的目录路径（根目录为 `''`）。
+- `segments`: 路由路径片段数组。
+- `depth`: 路由层级深度。
+- `isIndex`: 布尔值，若文件为 `index.mdx` 则为 `true`。
+- `title`: 解析后的页面标题（优先取自 Frontmatter，或从标题推断）。
+- `frontmatter`: 解析后的 YAML Frontmatter 对象。
+- `matter`: 原始 Frontmatter 数据块。
+- `content`: 去除 Frontmatter 后的 Markdown 正文原始内容。
+- `toc`: 提取出的目录结构数据。
+- `weight`: 用于排序的数值权重（来自 Frontmatter）。
+- `date`: 标准化的 ISO 日期字符串（来自 Frontmatter）。
+- `isRoot`: 布尔值，若页面定义了导航根节点则为 `true`。
+- `hidden`: 布尔值，若页面在导航中隐藏则为 `true`。
+- `hiddenByFrontmatter`: 布尔值，若在 Frontmatter 中显式设置了 `hidden: true` 则为 `true`。
+- `exclude`: 布尔值，若页面被构建流程排除则为 `true`。
+- `stats.size`: 文件大小（字节）。
+- `stats.createdAt`: 文件创建时间戳（ISO 格式，如可用）。
+- `stats.updatedAt`: 文件最后修改时间戳（ISO 格式，如可用）。
 
-注：目录索引页面的 `routePath` 将以 `/` 结尾（例如 `/guide/`）。
-- `filePath`: 源文件绝对系统路径
-- `title`: 解析后的页面标题（Frontmatter 或标题提取）
-- `frontmatter`: 解析后的 Frontmatter 对象
-- `toc`: 自动生成的目录结构（TOC）
-- `isIndex`: `index.mdx` 时为 `true`
-- `dir`: 相对 `pagesDir` 的目录路径
-- `segments`: 路由片段数组
-- `hidden`: 导航隐藏状态
-- `isRoot`: 导航根节点标记
-- `date`: Frontmatter 的 ISO 日期
-- `updatedAt`: 最后更新时间戳（如存在）
+*注：目录索引页面的 `routePath` 始终包含尾随斜杠（例如 `/guide/`）。*
+*运行时注入了 `ctx.page.getSiblings()` 以支持前后页导航。*
 
-示例：
+使用示例：
 
 ```mdx
 {ctx.page.title}
 {ctx.page.frontmatter?.excerpt}
 ```
 
-### ctx.pages
+### ctx.pages 集合
 
-`ctx.pages` 为全站页面集合（包含所有 `ctx.page` 对象）。该集合包含索引页及隐藏页，但会自动剔除标记为 `exclude: true` 的页面。
+`ctx.pages` 是一个包含项目及主题中所有页面元数据（结构同 `ctx.page`）的扁平数组。该集合包含索引页及隐藏页，但会自动剔除标记为 `exclude: true` 的页面。
 
-适用于生成自定义页面列表、站点地图或构建手动导航：
+此属性适用于生成自定义索引、站点地图或手动构建导航结构：
 
 ```jsx
 <ul>
@@ -78,16 +90,16 @@ Methanol 默认为每个 MDX 文件注入轻量级运行时上下文，以支持
 </ul>
 ```
 
-### ctx.pagesTree
+### ctx.pagesTree 层级树
 
-`ctx.pagesTree` 代表当前根目录下的层级导航树（严格遵循 `isRoot` 与 `hidden` 规则）。节点结构如下：
+`ctx.pagesTree` 表示当前根上下文下的导航层级结构（严格遵循 `isRoot` 与 `hidden` 规则）。节点结构如下：
 
 - `type`: `"page"` 或 `"directory"`
-- `title` / `name`: 导航显示名称
-- `routePath` / `routeHref`: 路由
-- `children`: 子节点列表
+- `title` / `name`: 显示标签。
+- `routePath` / `routeHref`: 节点对应的路由。
+- `children`: 子节点数组（仅目录节点）。
 
-可用于构建与侧边栏一致的自定义导航 UI：
+可用于构建与侧边栏结构一致的导航 UI：
 
 ```jsx
 {ctx.pagesTree.map((node) => (
@@ -95,13 +107,13 @@ Methanol 默认为每个 MDX 文件注入轻量级运行时上下文，以支持
 ))}
 ```
 
-### ctx.getSiblings
+### ctx.getSiblings 辅助函数
 
-`ctx.getSiblings()` 用于获取当前导航序列中的相邻页面。该方法遵循导航根设定及隐藏/排除规则，确保顺序与侧边栏导航保持一致。
+`ctx.getSiblings()` 用于获取当前导航序列中的前一页与后一页。该函数遵循当前导航根设定及可见性规则，确保顺序与侧边栏保持一致。
 
 ```jsx
 {(() => {
-  const siblings = ctx.getSiblings.()
+  const siblings = ctx.getSiblings()
   if (!siblings) return null
   return (
     <nav>
@@ -112,13 +124,13 @@ Methanol 默认为每个 MDX 文件注入轻量级运行时上下文，以支持
 })()}
 ```
 
-## rawHTML
+## rawHTML 工具
 
-`rawHTML` 用于插入未转义的原始 HTML，适用于嵌入内联脚本或需保留原始格式的标记。
+`rawHTML` 用于插入未转义的原始 HTML 内容。这对于嵌入内联脚本或需保留原始格式的标记尤为有用。
 
 ```jsx
 {rawHTML('<span class="badge">Beta</span>')}
 {rawHTML`<div data-banner="true">Banner</div>`}
 ```
 
-`rawHTML` 同样支持信号（Signals）与模板插值语法。
+`rawHTML` 同样支持信号（Signals）与标准模板插值。
