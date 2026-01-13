@@ -205,7 +205,7 @@ pwa: {
 
 ### `starryNight`
 
-代码高亮配置（基于 `rehype-starry-night`）。默认值：`false`。
+代码高亮配置（基于 `rehype-starry-night`）。默认值：`true`。
 
 ```js
 starryNight: false
@@ -219,7 +219,19 @@ starryNight: {
 
 - 当 `starryNight` 配置为对象时，除非显式设置 `enabled: false`，否则视为开启。
 - 页面 Frontmatter 的 `starryNight` 优先级最高。
-- CLI 参数 `--highlight` 可运行时切换是否启用全局代码高亮。
+- CLI 参数 `--highlight`/`--no-highlight` 可运行时切换是否启用全局代码高亮。
+
+### `jobs`
+
+构建时的 worker 线程数。默认值：`0`（根据页面数量自动设置）。
+
+```js
+jobs: 0 // 自动（round(ln(页面数))，不超过 CPU 核心数）
+// or
+jobs: 4
+```
+
+- CLI 参数 `--jobs`（`-j`）可在单次执行时覆盖此设置。
 
 ### `gfm`
 
@@ -242,8 +254,8 @@ gfm: false
 - `--output` 覆盖 `distDir`
 - `--site-name` 覆盖 `site.name`
 - `--base` 临时覆盖 `site.base`（dev 模式下会被忽略）
-- `--search` 覆盖 `pagefind.enabled`
-- `--pwa` 覆盖 `pwa` 开关
+- `--search`/`--no-search` 覆盖 `pagefind.enabled`
+- `--pwa`/`--no-pwa` 覆盖 `pwa` 开关
 - `-v`/`--verbose` 开启详细日志模式
 - `--config` 指定配置文件路径
 - 位置参数 `input`/`output` 分别映射至 `--input`/`--output`（dev 仅使用 `input`）

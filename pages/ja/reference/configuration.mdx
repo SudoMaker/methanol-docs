@@ -102,7 +102,7 @@ pwa: {
 
 ### `starryNight`
 
-構文ハイライト（rehype-starry-night）の制御。デフォルト: `false`。
+構文ハイライト（rehype-starry-night）の制御。デフォルト: `true`。
 
 ```js
 starryNight: false
@@ -116,7 +116,19 @@ starryNight: {
 
 - `starryNight` プロパティがオブジェクトの場合、`enabled: false` が明示されない限り機能が有効になります。
 - 各ページのフロントマターで設定された `starryNight` の値が常に最優先されます。
-- CLI の `--highlight` フラグにより、実行ごとにグローバル設定を切り替えることが可能です。
+- CLI の `--highlight`/`--no-highlight` フラグにより、実行ごとにグローバル設定を切り替えることが可能です。
+
+### `jobs`
+
+ビルド時のワーカースレッド数を指定します。デフォルト: `0`（ページ数に応じた自動設定）。
+
+```js
+jobs: 0 // 自動（round(ln(ページ数))、CPU コア数以内）
+// または
+jobs: 4
+```
+
+- CLI の `--jobs`（`-j`）で実行ごとに上書きできます。
 
 ### `gfm`
 
@@ -213,8 +225,8 @@ Vite の設定を詳細にマージします。`{ command, mode, root, isPreview
 - `--output`: `distDir` を上書きします。
 - `--site-name`: `site.name` を上書きします。
 - `--base`: 実行時の `site.base` を一時的に上書きします。
-- `--search`: `pagefind.enabled` を上書きします。
-- `--pwa`: `pwa` 設定を上書きします。
+- `--search`/`--no-search`: `pagefind.enabled` を上書きします。
+- `--pwa`/`--no-pwa`: `pwa` 設定を上書きします。
 - `-v`/`--verbose`: 詳細なログ出力を有効化します。
 - `--config`: 使用する設定ファイルのパスを指定します。
 - 位置引数としての `input`/`output` は、`--input`/`--output` フラグと同等の動作をします。

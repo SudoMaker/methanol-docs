@@ -50,12 +50,13 @@ npx methanol dev ./pages
 - `--host`: Binds the server to a specific host (using `--host` without a value binds to all interfaces).
 - `--intermediate-dir`: Directory for intermediate HTML output (build only).
 - `--emit-intermediate`: Enables the output of intermediate HTML to `build/` (build only).
-- `--highlight`: Controls syntax highlighting (`--highlight` to enable; `--highlight false` to disable).
-- `--search`: Controls Pagefind search indexing (`--search` to enable; `--search false` to disable).
-- `--pwa`: Controls PWA support (`--pwa` to enable; `--pwa false` to disable).
+- `--highlight`/`--no-highlight`: Controls syntax highlighting.
+- `--jobs`, `-j`: Sets the build worker thread count (`0` auto scales with page count).
+- `--search`/`--no-search`: Controls Pagefind search indexing.
+- `--pwa`/`--no-pwa`: Controls PWA support.
 - `-v`, `--verbose`: Enables detailed logging, including Vite and Pagefind output during the build process.
 
-Syntax highlighting is disabled by default to optimize performance and can be enabled per-execution via the flag.
+Syntax highlighting is enabled by default and can be disabled per-execution via `--no-highlight`.
 
 ## Execution via Node
 

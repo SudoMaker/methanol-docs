@@ -7,11 +7,11 @@ starryNight: true
 
 # Code Highlighting
 
-Methanol utilizes [Starry Night](https://github.com/wooorm/starry-night) to provide robust syntax highlighting (integrated via `rehype-starry-night`). For optimal build performance, this feature is disabled by default.
+Methanol utilizes [Starry Night](https://github.com/wooorm/starry-night) to provide robust syntax highlighting (integrated via `rehype-starry-night`). This feature is enabled by default.
 
 ## Enabling and Disabling
 
-Activate the feature globally by adding `starryNight` to your `methanol.config.*` file:
+Highlighting is enabled by default. To explicitly enable or customize it, add `starryNight` to your `methanol.config.*` file:
 
 ```js
 // methanol.config.js
@@ -33,7 +33,7 @@ You can also toggle highlighting per-execution via the CLI:
 
 ```bash
 npx methanol build --highlight
-npx methanol build --highlight false
+npx methanol build --no-highlight
 ```
 
 ## Per-page Configuration

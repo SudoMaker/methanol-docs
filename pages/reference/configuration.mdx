@@ -102,7 +102,7 @@ Notes:
 
 ### `starryNight`
 
-Controls syntax highlighting via Starry Night (rehype-starry-night). Default: `false`.
+Controls syntax highlighting via Starry Night (rehype-starry-night). Default: `true`.
 
 ```js
 starryNight: false
@@ -116,7 +116,19 @@ starryNight: {
 
 - When configured as an object, highlighting is enabled unless `enabled: false` is explicitly set.
 - Per-page Frontmatter settings always take precedence over global configuration.
-- The CLI flag `--highlight` can be used to override this setting per-execution.
+- The CLI flags `--highlight` and `--no-highlight` can be used to override this setting per-execution.
+
+### `jobs`
+
+Controls the worker thread count used during the build pipeline. Default: `0` (auto based on page count).
+
+```js
+jobs: 0 // auto (round(ln(pageCount))), clamped to CPU cores
+// or
+jobs: 4
+```
+
+- The CLI flag `--jobs` (alias `-j`) overrides this setting per-execution.
 
 ### `gfm`
 
@@ -239,8 +251,8 @@ Command-line arguments take precedence over configuration file settings:
 - `--output` overrides `distDir`.
 - `--site-name` overrides `site.name`.
 - `--base` temporarily overrides `site.base` (ignored in `dev`).
-- `--search` overrides `pagefind.enabled`.
-- `--pwa` overrides the `pwa` toggle.
+- `--search`/`--no-search` override `pagefind.enabled`.
+- `--pwa`/`--no-pwa` override the `pwa` toggle.
 - `-v`/`--verbose` enables detailed build logging.
 - `--config` specifies a non-standard configuration file.
 - Positional `input`/`output` arguments map to the `--input`/`--output` flags.

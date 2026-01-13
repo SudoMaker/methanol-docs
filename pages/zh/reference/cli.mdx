@@ -50,12 +50,13 @@ npx methanol dev ./pages
 - `--host`: dev/preview 绑定 Host（仅写 `--host` 表示绑定全部接口）
 - `--intermediate-dir`: 中间态 HTML 输出目录（仅 build）
 - `--emit-intermediate`: 启用中间构建产物输出（仅 build，输出到 `build/`）
-- `--highlight`: 控制代码高亮功能（`--highlight` 启用；`--highlight false` 禁用）
-- `--search`: 控制 Pagefind 搜索索引构建（`--search` 启用；`--search false` 禁用）
-- `--pwa`: 控制 PWA 功能支持（`--pwa` 启用；`--pwa false` 禁用）
+- `--highlight`/`--no-highlight`: 控制代码高亮功能。
+- `--jobs`, `-j`: 设置构建 worker 线程数（`0` 表示按页面数量自动调整）
+- `--search`/`--no-search`: 控制 Pagefind 搜索索引构建。
+- `--pwa`/`--no-pwa`: 控制 PWA 功能支持。
 - `-v`, `--verbose`: 启用详细日志模式（build 时显示 Vite / Pagefind 日志）
 
-代码高亮功能默认关闭，按需开启即可。
+代码高亮功能默认开启，需要关闭时可用 `--no-highlight`。
 
 ## 非 npx 方式运行
 

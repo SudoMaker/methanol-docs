@@ -7,11 +7,11 @@ starryNight: true
 
 # 代码高亮
 
-Methanol 基于 [Starry Night](https://github.com/wooorm/starry-night) 实现代码高亮（集成 `rehype-starry-night`）。出于性能与构建速度考量，默认处于关闭状态。
+Methanol 基于 [Starry Night](https://github.com/wooorm/starry-night) 实现代码高亮（集成 `rehype-starry-night`）。该功能默认开启。
 
 ## 全局启停
 
-在 `methanol.config.*` 中设置 `starryNight`：
+默认已开启，可在 `methanol.config.*` 中设置 `starryNight` 进行调整：
 
 ```js
 // methanol.config.js
@@ -33,7 +33,7 @@ CLI 临时开关（单次构建生效）：
 
 ```bash
 npx methanol build --highlight # 本次启用
-npx methanol build --highlight false # 本次禁用
+npx methanol build --no-highlight # 本次禁用
 ```
 
 ## 页面级配置覆盖

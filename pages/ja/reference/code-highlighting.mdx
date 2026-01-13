@@ -7,11 +7,11 @@ starryNight: true
 
 # コードハイライト
 
-Methanol は、[Starry Night](https://github.com/wooorm/starry-night) を使用してコードブロックの構文ハイライトを行います（`rehype-starry-night` 経由）。ビルドパフォーマンスと速度を優先するため、デフォルトでは無効に設定されています。
+Methanol は、[Starry Night](https://github.com/wooorm/starry-night) を使用してコードブロックの構文ハイライトを行います（`rehype-starry-night` 経由）。この機能はデフォルトで有効です。
 
 ## 有効化と無効化
 
-`methanol.config.*` 内で `starryNight` オプションを設定します。
+デフォルトで有効です。必要に応じて `methanol.config.*` 内で `starryNight` オプションを設定します。
 
 ```js
 // methanol.config.js
@@ -33,7 +33,7 @@ CLI で一時的に切り替えることも可能です（1 回のビルドの�
 
 ```bash
 npx methanol build --highlight
-npx methanol build --highlight false
+npx methanol build --no-highlight
 ```
 
 ## ページ単位での設定上書き
