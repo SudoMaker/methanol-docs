@@ -8,11 +8,10 @@
     "serve": "methanol serve"
   },
   "dependencies": {
-    "@wooorm/starry-night": "^3.8.0",
-    "refui": "^0.16.3"
+    "@wooorm/starry-night": "^3.8.0"
   },
   "devDependencies": {
-    "methanol": "^0.0.12",
+    "methanol": "^0.0.13",
     "pagefind": "^1.4.0",
     "vite-plugin-sitemap": "^0.8.2"
   }
