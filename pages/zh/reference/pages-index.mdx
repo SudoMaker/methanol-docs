@@ -1,0 +1,30 @@
+---
+title: 页面索引（methanol:pages）
+description: 面向客户端的页面索引列表。
+---
+
+# 页面索引 (`methanol:pages`)
+
+Methanol 提供了一个虚拟模块，导出所有页面的列表。该模块专为构建博客列表、分类筛选以及自定义搜索界面等客户端功能而设计。
+
+```js
+import pages from 'methanol:pages'
+// 或
+import { pages } from 'methanol:pages'
+```
+
+## 包含的内容
+
+索引中的每个条目都包含页面的元数据，但为了保持索引轻量，较大的字段已被移除：
+
+- **移除的字段：** `content`、`mdxComponent`、`mdxCtx` 以及 `getSiblings`。
+- **忽略的内容：** 任何函数类型的字段。
+- **始终包含：** `excerpt`（摘要）。若 Frontmatter 中未定义，Methanol 会自动从页面正文生成。
+- **排除规则：** 标记为 `hidden: true` 的页面不会包含在索引中。
+
+生成的对象包含 `routePath`、`routeHref`、`title`、`frontmatter`、`stats` 和 `excerpt` 等信息。
+
+## 备注
+
+- 此模块专门用于 **客户端** 逻辑。
+- 在开发模式下，当页面发生变化时，该索引内容会自动更新。

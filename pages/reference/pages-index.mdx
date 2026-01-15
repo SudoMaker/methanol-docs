@@ -1,0 +1,30 @@
+---
+title: Pages Index (methanol:pages)
+description: Client-side pages index for search and categorization.
+---
+
+# Pages Index (`methanol:pages`)
+
+Methanol provides a virtual module that exports a list of all pages, intended for client-side features like blog listings, category filters, and custom search.
+
+```js
+import pages from 'methanol:pages'
+// or
+import { pages } from 'methanol:pages'
+```
+
+## Included Content
+
+Each entry in the index represents a page with its metadata, but heavy fields are stripped to ensure the index remains lightweight:
+
+- **Stripped fields:** `content`, `mdxComponent`, `mdxCtx`, and `getSiblings`.
+- **Omitted values:** Any function-type fields.
+- **Always included:** `excerpt`. If not explicitly defined in the frontmatter, Methanol automatically generates it from the page content.
+- **Exclusion:** Hidden pages (`hidden: true`) are omitted from the index.
+
+The resulting objects contain metadata such as `routePath`, `routeHref`, `title`, `frontmatter`, `stats`, and `excerpt`.
+
+## Notes
+
+- This module is designed strictly for **client-side** logic.
+- In development mode, the index is automatically updated whenever pages are modified.

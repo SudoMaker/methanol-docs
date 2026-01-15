@@ -1,0 +1,40 @@
+---
+title: Blog Theme
+description: Built-in blog theme features and customization notes.
+---
+
+# Blog Theme
+
+Methanol includes a built-in blog theme located under `themes/blog`. It provides the following features:
+
+- Specialized layouts for the home page, categories, and collections.
+- Dynamic client-side filtering powered by the `methanol:pages` virtual module.
+- Optimized performance: initial page lists are statically rendered for fast first paint, followed by hydration to support interactive filtering and pagination.
+
+## Nav links
+
+The blog theme retrieves `navLinks` from `pages/index.mdx` (or the root page of your project). While the theme provides default links, you can override them in your frontmatter:
+
+```mdx
+---
+navLinks:
+  - label: Home
+    href: /
+  - label: About
+    href: /about
+  - label: Categories
+    href: /categories
+  - label: Collections
+    href: /collections
+---
+```
+
+Internal links are automatically processed to be base-path aware (via `withBase`).
+
+## Collections and titles
+
+Collections are automatically inferred from the first directory segment of a page's path (e.g., `/series/post` belongs to the `series` collection). The collection label is derived from the title of the collection's index page (e.g., `/series/index.mdx`) if available; otherwise, it defaults to the directory slug.
+
+## Hidden posts
+
+Pages marked with `hidden: true` in their frontmatter are excluded from all automated listings and from the `methanol:pages` index.

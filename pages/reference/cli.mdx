@@ -44,6 +44,7 @@ npx methanol dev ./pages
 - `--assets`: Specifies the static assets directory (overrides the default `public/`).
 - `--output`, `-o`: Specifies the build destination (overrides the default `dist/`).
 - `--config`, `-c`: Defines the path to a custom configuration file.
+- `--theme`: Overrides the `theme` configuration. When a string is provided, Methanol first attempts to resolve it as a built-in theme (e.g., `default`, `blog`). If not found, it searches for a package named `methanol-theme-xxx` (where `xxx` is the provided string). You can also provide a direct file path to a theme's entry point.
 - `--site-name`: Overrides the site title defined in configuration.
 - `--base`: Temporarily overrides `site.base` for the current execution (ignored in `dev` mode).
 - `--port`: Sets the port for the development and preview servers (default: 5173).

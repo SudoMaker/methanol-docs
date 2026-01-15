@@ -180,9 +180,12 @@ Boolean. If `true`, Methanol writes intermediate HTML to the `build/` directory 
 
 ### `theme`
 
-Detailed theme configuration. Refer to the [Advanced Theme Guide](../advanced/themes/) for complete specifications.
+Configures the site's theme. This can be a theme object (see below) or a string. When a string is provided, Methanol resolves it using the following priority:
+1.  **Built-in Themes:** Matches against Methanol's internal themes (e.g., `default`, `blog`).
+2.  **Package Resolution:** Searches for a package named `methanol-theme-xxx` (where `xxx` is your input).
+3.  **Local Path:** Resolves as a relative or absolute path to a theme directory or entry file.
 
-Key properties:
+Refer to the [Advanced Theme Guide](../advanced/themes/) for complete specifications of the theme object.
 
 - `theme.root`: The theme's root directory (required).
 - `theme.template`: The JSX function defining the HTML layout.

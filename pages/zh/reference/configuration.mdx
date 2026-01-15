@@ -90,9 +90,13 @@ Methanol 亦支持主题资源（`theme.publicDir`）。构建时将执行合并
 
 ### `theme`
 
-主题深度配置。详见 [主题（进阶）](../advanced/themes/)。
+配置站点主题。可以是主题对象（见下文）或字符串。当指定为字符串时，Methanol 按以下优先级进行解析：
 
-关键字段：
+1.  **内置主题：** 匹配 Methanol 内部预置的主题（例如 `default`、`blog`）。
+2.  **包解析：** 搜索名为 `methanol-theme-xxx`（`xxx` 为你的输入内容）的 npm 包。
+3.  **本地路径：** 解析为指向主题目录或入口文件的相对或绝对路径。
+
+关于主题对象的完整规范，请参阅 [主题（进阶）](../advanced/themes/)。
 
 - `theme.root`: 主题根目录（必填）
 - `theme.template`: HTML 布局模板函数（接收 `{ ctx, page, PageContent, ExtraHead, withBase, HTMLRenderer, components }`）
