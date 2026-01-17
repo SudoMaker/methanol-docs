@@ -6,25 +6,22 @@ weight: 4
 
 # テーマ実装ガイド
 
-本ガイドでは、カスタムテーマ（レイアウト、コンポーネント、および任意のテーマページやアセット）の実装手順を詳しく解説します。ナビゲーション、目次、前後ページへのリンク、言語スイッチャー、特殊用途ページの処理など、標準的なテーマに求められる機能を網羅的に構築します。
+本ガイドでは、Methanol のアーキテクチャに準拠したカスタムテーマの実装手順を詳しく解説します。ナビゲーション、目次、多言語対応など、ドキュメントサイトに求められる主要な機能の実装方法を学ぶことができます。
 
 ## 標準的なディレクトリ構成
 
-推奨される構成は以下の通りです。
+推奨されるテーマのディレクトリ構成は以下の通りです。
 
-```
-theme/
-  index.js          # テーマオブジェクトのエントリポイント
-  page.jsx          # レイアウトテンプレート
-  components/       # テーマ標準の MDX コンポーネント（任意）
-  pages/            # テーマ同梱の特殊ページ（任意）
-  public/           # テーマ専用の静的アセット（任意）
-  sources/          # theme.sources でマッピングするリソース（任意）
-```
+- `index.js`: テーマオブジェクトのエントリポイント
+- `page.jsx`: メインのレイアウトテンプレート
+- `components/`: デフォルトの MDX コンポーネント（任意）
+- `pages/`: テーマ同梱のページ（任意）
+- `public/`: テーマ専用の静的アセット（任意）
+- `sources/`: `theme.sources` でマッピングするリソース（任意）
 
 ## テーマの設定方法
 
-`methanol.config.js` にて、テーマのルートとテンプレートを指定します。
+カスタムテーマを有効にするには、`methanol.config.js` でテーマのルートディレクトリとテンプレートコンポーネントを指定します。
 
 ```js
 import PageTemplate from './theme/page.jsx'
@@ -39,7 +36,7 @@ export default () => ({
 
 ## テーマオブジェクトの定義
 
-`theme/index.js` で、テーマの各リソースパスを定義します。
+テーマは、エントリポイント（`index.js`）でオブジェクトとして定義することも可能です。これは再配布可能なテーマを作成する場合に特に有効です。
 
 ```js
 import PageTemplate from './page.jsx'
@@ -58,19 +55,42 @@ export default () => ({
 })
 ```
 
-## テンプレートのインターフェース仕様（Template Contract）
+## 公開と解決の仕組み
 
-`theme.template` 関数には、レンダリングに必要な以下のプロパティが渡されます。
+テーマは `methanol-theme-xxx` という名前の npm パッケージとして公開できます。Methanol は以下の優先順位でテーマを解決します。
 
-- `ctx`: 現在のページおよびサイト全体のコンテキスト。
-- `page`: `ctx.page` へのエイリアス。
-- `PageContent`: ページ本文をレンダリングするコンポーネント。
-- `ExtraHead`: `<head>` セクションに注入される動的なコンテンツ（ランタイム、アセット、ページ固有のメタタグなど）。
-- `withBase`: Base Path を考慮した URL 生成ヘルパー（`ctx.withBase` と同等）。
-- `components`: テーマ標準とユーザー定義がマージされたコンポーネントセット。
-- `HTMLRenderer`: rEFui のレンダリングユーティリティ。
+1.  **標準搭載テーマ:** 内蔵のプリセット（`default`、`blog` など）
+2.  **パッケージ解決:** `methanol-theme-xxx` という名前のパッケージを検索
 
-最小構成のテンプレート例:
+ローカルテーマ（プロジェクト内のファイル）を使う場合は、設定ファイルで import して `theme` に渡してください。
+
+### 公開済みテーマの使用方法
+
+CLI の場合:
+```bash
+methanol build --theme xxx
+```
+
+`methanol.config.js` の場合:
+```js
+export default () => ({
+	theme: 'xxx'
+})
+```
+
+## テンプレートの仕様
+
+`theme.template` 関数は、以下のプロパティを含むコンテキストオブジェクトを受け取ります。
+
+- `ctx`: サイトおよびページのコンテキスト
+- `page`: `ctx.page` へのエイリアス
+- `PageContent`: ページ本文をレンダリングするコンポーネント
+- `ExtraHead`: ランタイムスクリプト、スタイル、およびページ固有の `<Head>` コンテンツを注入
+- `withBase`: ベースパスを考慮した URL 生成ヘルパー
+- `components`: テーマ標準とユーザー定義がマージされたコンポーネントセット
+- `HTMLRenderer`: rEFui のレンダリングユーティリティ
+
+### 最小構成の実装例
 
 ```jsx
 import { HTMLRenderer } from 'methanol'
@@ -78,7 +98,7 @@ import { HTMLRenderer } from 'methanol'
 export default ({ PageContent, ExtraHead, ctx }) => (
 	<>
 		{HTMLRenderer.rawHTML`<!doctype html>`}
-		<html lang="en">
+		<html lang="ja">
 			<head>
 				<meta charset="UTF-8" />
 				<meta name="viewport" content="width=device-width" />
@@ -93,7 +113,7 @@ export default ({ PageContent, ExtraHead, ctx }) => (
 )
 ```
 
-実際のテーマ開発では、ここになナビゲーションや目次などの要素を追加していきます。詳細は各ガイドを参照してください。
+実際のテーマ開発における詳細な実装については、以下のガイドを参照してください。
 
 - [ナビゲーションのレンダリング](./navigation)
 - [ページ内目次（ToC）のレンダリング](./toc)

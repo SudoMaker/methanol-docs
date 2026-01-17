@@ -6,19 +6,17 @@ weight: 7
 
 # Special-Purpose Pages
 
-Themes can include their own pre-defined pages via `theme.pagesDir`. These pages follow standard routing rules; however, user-provided pages always take priority in the event of a route conflict.
+Themes can include pre-defined pages via `theme.pagesDir`. These pages follow standard routing rules, but user-provided pages always take precedence in the event of a route conflict.
 
-This feature is ideal for implementing functional pages such as:
+This feature is ideal for providing:
+- Landing pages
+- Specialized index or menu screens
+- Link directories or contact forms
+- Theme-specific `/404` or `/offline` fallbacks
 
-- Custom landing pages
-- Dedicated index or menu screens
-- Link directories or "Friends" pages
-- Contact forms
-- Theme-specific `/404` and `/offline` fallbacks
+## Theme-Provided Pages
 
-## Providing Pages from a Theme
-
-Configure the directory in `theme/index.js`:
+Define your pages directory in the theme entry point:
 
 ```js
 export default () => ({
@@ -29,35 +27,11 @@ export default () => ({
 })
 ```
 
-Typical `theme/pages/` structure:
+## Differentiated Layouts
 
-```
-pages/
-  index.mdx
-  menu.mdx
-  friends.mdx
-  contact.mdx
-  404.mdx
-  offline.mdx
-```
-
-## Route-Based Branching
-
-If you prefer fixed rules, you can implement logic based on the route path:
-
-```js
-const route = ctx.page.routePath
-if (route === '/menu') { /* ... */ }
-```
-
-*Note: Directory index routes include a trailing slash in `routePath` (e.g., `/guide/`).*
-
-## Selecting Layouts via Frontmatter
-
-The most intuitive method is to define a `layout` property in your frontmatter and render accordingly within your template.
+The most effective way to implement specialized layouts is by defining a `layout` property in the page frontmatter.
 
 Example `menu.mdx`:
-
 ```mdx
 ---
 title: Menu
@@ -65,13 +39,10 @@ layout: menu
 hidden: true
 ---
 
-# Menu
-
-This page utilizes a differentiated layout.
+# Menu content
 ```
 
 Template implementation:
-
 ```jsx
 const MenuLayout = ({ ctx, PageContent }) => (
 	<div class="menu-layout">
@@ -82,7 +53,7 @@ const MenuLayout = ({ ctx, PageContent }) => (
 
 const DocLayout = ({ ctx, PageContent }) => (
 	<div class="doc-layout">
-		<aside>{/* navigation */}</aside>
+		<aside>{/* Sidebar */}</aside>
 		<main>
 			<PageContent />
 		</main>
@@ -111,22 +82,16 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-## Interactive Pages (Forms, etc.)
+## Interactive Components
 
-For pages requiring complex interactivity, such as contact forms, it is recommended to render the page content normally while providing a client-only component (e.g., `ContactForm.client.jsx`) in the theme's `components/` directory for use within the page body.
+For pages requiring complex interactivity (e.g., contact forms), we recommend using client-only components. Your theme can provide these in its `components/` directory (e.g., `ContactForm.client.jsx`), which users can then drop into their MDX pages.
 
-## Alternative Strategy: Functional HTML Pages
+## Standalone HTML Pages
 
-Special-purpose pages do not require MDX. You can place pure `.html` files in `pages/` (or the theme's `pagesDir`) to implement standalone landing pages, embedded forms, or lightweight frontend applications.
+Special-purpose pages are not limited to MDX. You can include pure `.html` files in your theme's `pagesDir`. These are processed by Vite and passed through your theme's template.
 
-These files are processed by Vite and passed through `theme.template`. You can then utilize the template to stream these into a "standalone" layout—for instance, by omitting sidebars, tables of contents, or applying custom `<head>` tags.
+This approach is excellent for standalone landing pages or embedded tools that should omit standard documentation elements like sidebars or ToCs. You can use `ctx.page.path.endsWith('.html')` within your template to apply a "standalone" layout.
 
-Common branching patterns:
+## Path and Asset Resolution
 
-- **By file extension**: `ctx.page.path.endsWith('.html')`
-- **By route**: `ctx.page.routePath === '/menu'`
-- **By frontmatter**: `ctx.page.frontmatter?.layout === 'landing'`
-
-## Asset and Base Path Considerations
-
-Typically, you do not need to apply `withBase()` to `theme.sources` URLs or static files in `public/`, as Methanol resolves these during build. However, `withBase('/...')` remains a reliable safeguard when generating URLs dynamically in JavaScript where development-time resolution might differ.
+Methanol automatically resolves asset paths during the build process. While `withBase()` is generally not required for theme-provided static assets in `public/`, it remains a reliable tool for generating dynamic URLs that must remain base-path aware across different environments.

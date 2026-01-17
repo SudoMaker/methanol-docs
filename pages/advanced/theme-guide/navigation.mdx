@@ -6,9 +6,9 @@ weight: 3
 
 # Rendering Navigation
 
-Methanol provides a hierarchical navigation tree via `ctx.pagesTree`. This tree is automatically scoped to the current navigation root (`isRoot`) and adheres to all `hidden` and `exclude` rules.
+Methanol provides a hierarchical navigation tree via `ctx.pagesTree`. This tree is automatically scoped to the current navigation root (`isRoot`) and respects all `hidden` and `exclude` rules.
 
-Each node in the tree follows this structure:
+Each node in the tree uses the following structure:
 
 ```js
 {
@@ -16,12 +16,14 @@ Each node in the tree follows this structure:
 	title: '...',
 	name: '...',
 	routePath: '/guide/',
-	routeHref: '/docs/guide/', // base-aware
+	routeHref: '/docs/guide/', // Base-aware URL
 	children: []
 }
 ```
 
-## Minimal Sidebar Implementation
+## Sidebar Implementation
+
+The following example demonstrates a recursive sidebar component:
 
 ```jsx
 const NavTree = ({ nodes, currentHref }) => (
@@ -36,7 +38,7 @@ const NavTree = ({ nodes, currentHref }) => (
 					</li>
 				)
 			}
-			const isActive = node.routeHref && node.routeHref === currentHref
+			const isActive = node.routeHref === currentHref
 			return (
 				<li>
 					<a href={node.routeHref} aria-current={isActive ? 'page' : null}>
@@ -69,8 +71,7 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-## Implementation Advice
+## Best Practices
 
-- **Prefer `routeHref`**: Always use `routeHref` for links to ensure the `site.base` prefix is correctly applied.
-- **Index Routes**: The `routePath` for directory index pages always includes a trailing slash (e.g., `/guide/`).
-
+- **Use `routeHref`:** Always use `routeHref` for navigation links to ensure the `site.base` prefix is correctly applied.
+- **Trailing Slashes:** Directory index routes always include a trailing slash in their `routePath` (e.g., `/guide/`). This is important for path matching and relative link resolution.

@@ -6,20 +6,17 @@ weight: 7
 
 # 专门用途页面
 
-主题可通过 `theme.pagesDir` 提供预设页面。主题页面遵循与用户页面一致的路由规则；若发生冲突，用户页面拥有更高优先级。
+主题可以通过 `theme.pagesDir` 提供预置页面。这些页面遵循标准的路由规则，但如果用户提供了相同路径的页面，则用户页面始终优先。
 
-适用于承载各类“功能型页面”：
+此功能非常适合提供：
+- 落地页 (Landing Page)
+- 专门的索引或菜单页面
+- 友链页面或联系表单
+- 主题特定的 `/404` 或 `/offline` 回退页面
 
-- 主题自带的落地页（Landing）
-- 独立的目录/菜单页
-- 友链页
-- 联系页
-- 主题自带的 `/404` 错误页面
-- 主题自带的 `/offline` 离线回退页面
+## 定义主题页面目录
 
-## 配置主题页面
-
-`theme/index.js`：
+在主题入口文件中指定页面目录：
 
 ```js
 export default () => ({
@@ -30,49 +27,22 @@ export default () => ({
 })
 ```
 
-`theme/pages/`：
+## 差异化布局
 
-```
-pages/
-  index.mdx
-  menu.mdx
-  friends.mdx
-  contact.mdx
-  404.mdx
-  offline.mdx
-```
+实现特殊布局最有效的方法是在页面 Frontmatter 中定义 `layout` 属性。
 
-## 基于路由的分支逻辑
-
-若偏好“硬编码规则”，亦可基于路由进行逻辑分支：
-
-```js
-const route = ctx.page.routePath
-if (route === '/menu') { /* ... */ }
-```
-
-补充：目录索引页面的 `routePath` 均带有尾随 `/`（例如 `/guide/`）。
-
-## 基于 Frontmatter 选择布局
-
-最直观的方式是为页面添加 `layout` 标记，并在模板中进行差异化渲染。
-
-示例 `menu.mdx`：
-
+示例 `menu.mdx`:
 ```mdx
 ---
-title: Menu
+title: 菜单
 layout: menu
 hidden: true
 ---
 
-# Menu
-
-This page uses a different layout.
+# 菜单内容
 ```
 
-模板里分支：
-
+模板实现示例:
 ```jsx
 const MenuLayout = ({ ctx, PageContent }) => (
 	<div class="menu-layout">
@@ -83,7 +53,7 @@ const MenuLayout = ({ ctx, PageContent }) => (
 
 const DocLayout = ({ ctx, PageContent }) => (
 	<div class="doc-layout">
-		<aside>{/* nav */}</aside>
+		<aside>{/* 侧边栏 */}</aside>
 		<main>
 			<PageContent />
 		</main>
@@ -112,22 +82,16 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-## 表单及交互类页面
+## 交互式组件
 
-对于联系表单等交互页面，通常可保持页面正常渲染，同时在主题 `components/` 中提供 Client-only 组件（例如 `ContactForm.client.jsx`），供页面内容直接调用。
+对于需要复杂交互的页面（如联系表单），我们建议使用 Client-only 组件。你的主题可以在其 `components/` 目录中提供这些组件（如 `ContactForm.client.jsx`），用户随后可以将其直接置入其 MDX 页面中。
 
-## 进阶思路：利用 `.html` 构建功能页
+## 独立 HTML 页面
 
-专门用途页面无需局限于 MDX。亦可在 `pages/`（及主题 `pagesDir`）下创建纯 `.html` 页面，用于构建独立落地页、嵌入式表单或轻量级前端应用。
+专门用途页面不限于 MDX。你也可以在主题的 `pagesDir` 中包含纯 `.html` 文件。这些文件会经由 Vite 处理，并传递给主题模板。
 
-此类页面将被纳入构建流程并交由 Vite 处理，同时依然经过 `theme.template` 渲染。通常需在模板中将其分流至“独立页面”布局：例如隐藏侧边栏/目录/页脚，或加载定制化的 `<head>`。
+这种方法非常适合那些需要排除侧边栏或目录等标准文档元素的独立落地页或嵌入式工具。你可以在模板中使用 `ctx.page.path.endsWith('.html')` 来应用“独立”布局。
 
-常用分流策略：
+## 路径与资源解析
 
-- 按文件类型：`ctx.page.path.endsWith('.html')`
-- 按路由：`ctx.page.routePath === '/menu'`
-- 按 frontmatter：`ctx.page.frontmatter?.layout === 'landing'`
-
-## Base Path 与资源引用注意事项
-
-通常无需对 `theme.sources` URL 及 `public/` 静态文件应用 `withBase()` —— Methanol 构建系统会自动解析。但在 JS 中动态生成 URL 时若遇 Vite dev 路径解析不一致，`withBase('/...')` 仍是有效的解决方案。
+Methanol 会在构建过程中自动解析资源路径。对于 `public/` 下的主题静态资源，通常不需要使用 `withBase()`。但在 JavaScript 中动态生成 URL 以确保其在不同环境下保持基路径兼容时，它仍是一个可靠的工具。

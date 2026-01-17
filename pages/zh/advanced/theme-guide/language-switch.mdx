@@ -6,25 +6,28 @@ weight: 6
 
 # 语言切换
 
-Methanol 采用“按目录”组织多语言结构：若某目录的 `index.mdx` 配置了 `lang` 属性，该目录即被识别为独立的语言入口。
+Methanol 的多语言支持基于目录结构。任何在其 `index.mdx` 的 Frontmatter 中定义了 `lang` 属性的目录，都会被识别为语言入口。
 
-模板中可获取以下上下文：
+主题模板会接收到以下语言相关的属性：
 
-- `ctx.languages`：语言入口列表
-- `ctx.language`：当前激活的语言入口（没有则为 `null`）
+- `ctx.languages`: 所有已识别的语言入口列表。
+- `ctx.language`: 对应当前页面的语言入口（若不存在则为 `null`）。
 
-每个入口包含 `routePath`, `routeHref`, `label`, `code`。
+每个入口包含 `routePath`、`routeHref`、`label` 和 `code` 属性。
 
-## 基于 `<select>` 的简单切换器
+## 下拉菜单切换器实现
+
+使用 `<select>` 元素的标准实现：
 
 ```jsx
 const LanguageSwitch = ({ ctx }) => {
-	const languages = Array.isArray(ctx.languages) ? ctx.languages : []
-	if (!languages.length) return null
-	const currentHref = ctx.language?.routeHref || null
+	const languages = ctx.languages || []
+	if (languages.length === 0) return null
+
+	const currentHref = ctx.language?.routeHref
 	return (
 		<select
-			aria-label="Select language"
+			aria-label="选择语言"
 			onchange="location.href=this.value"
 			value={currentHref || undefined}
 		>
@@ -38,15 +41,18 @@ const LanguageSwitch = ({ ctx }) => {
 }
 ```
 
-## 基于链接列表的切换器
+## 链接列表形式
+
+适用于页眉或页脚的列表形式实现：
 
 ```jsx
 const LanguageLinks = ({ ctx }) => {
-	const languages = Array.isArray(ctx.languages) ? ctx.languages : []
-	if (!languages.length) return null
+	const languages = ctx.languages || []
+	if (languages.length === 0) return null
+
 	const currentHref = ctx.language?.routeHref
 	return (
-		<nav aria-label="Languages">
+		<nav aria-label="语言选择">
 			{languages.map((lang) => (
 				<a href={lang.routeHref} aria-current={lang.routeHref === currentHref ? 'page' : null}>
 					{lang.label}
@@ -59,6 +65,5 @@ const LanguageLinks = ({ ctx }) => {
 
 ## 注意事项
 
-- 链接建议使用 `routeHref`（自动包含 `site.base`）。
-- 建议配合 `isRoot: true` 配置语言根目录，确保每种语言拥有独立的导航树结构。
-
+- **URL 处理:** 链接必须使用 `routeHref` 以确保其兼容基路径设置。
+- **根范围:** 通常在每个语言的入口处设置 `isRoot: true`，以使每种语言能够维护独立的导航树。

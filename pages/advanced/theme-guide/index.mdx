@@ -6,25 +6,22 @@ weight: 4
 
 # Theme Guide
 
-This guide provides a comprehensive walkthrough for building a custom Methanol theme, covering layouts, components, and optional theme-provided pages or assets. You will learn how to implement core framework components such as navigation, tables of contents, and multi-language support.
+This guide provides a comprehensive walkthrough for building a custom Methanol theme. You will learn how to implement core features such as navigation, tables of contents, and multi-language support, while adhering to Methanol's theme architecture.
 
 ## Recommended Directory Structure
 
-A standard theme layout typically follows this structure:
+A standard theme typically follows this structure:
 
-```
-theme/
-  index.js          # Theme object entry point
-  page.jsx          # Layout template component
-  components/       # Default MDX components (optional)
-  pages/            # Theme-provided pages (optional)
-  public/           # Theme-specific static assets (optional)
-  sources/          # Asset mappings via theme.sources (optional)
-```
+- `index.js`: Theme object entry point.
+- `page.jsx`: Main layout template component.
+- `components/`: Default MDX components (optional).
+- `pages/`: Theme-provided pages (optional).
+- `public/`: Theme-specific static assets (optional).
+- `sources/`: Asset mappings via `theme.sources` (optional).
 
 ## Theme Configuration
 
-Enable your theme in `methanol.config.js` by specifying its root and template:
+To enable a custom theme, specify its root directory and template component in `methanol.config.js`:
 
 ```js
 import PageTemplate from './theme/page.jsx'
@@ -39,7 +36,7 @@ export default () => ({
 
 ## Theme Object Definition
 
-Typically, you define the theme paths in `theme/index.js`:
+A theme can also be defined as an object in its entry point (`index.js`). This is particularly useful for distributive themes:
 
 ```js
 import PageTemplate from './page.jsx'
@@ -58,19 +55,42 @@ export default () => ({
 })
 ```
 
-## Template Specification (Template Contract)
+## Publishing and Resolution
 
-The `theme.template` function receives the following properties:
+Themes can be published as npm packages named `methanol-theme-xxx`. Methanol automatically resolves theme names using the following priority:
 
-- `ctx`: Current page and site context.
+1.  **Built-in Themes:** Internal presets (e.g., `default`, `blog`).
+2.  **Package Resolution:** Searches for `methanol-theme-xxx`.
+
+For local themes (files inside your project), import them in `methanol.config.*` and set `theme` to the imported theme object/factory.
+
+### Using a Published Theme
+
+Via CLI:
+```bash
+methanol build --theme xxx
+```
+
+Via `methanol.config.js`:
+```js
+export default () => ({
+	theme: 'xxx'
+})
+```
+
+## Template Specification
+
+The `theme.template` function receives a context object with the following properties:
+
+- `ctx`: Site and page context.
 - `page`: Alias for `ctx.page`.
-- `PageContent`: Component that renders the current page body.
-- `ExtraHead`: Dynamic content to be injected into the `<head>` (runtime, assets, and per-page `<Head>` output).
-- `withBase`: Base-aware URL helper (functionally identical to `ctx.withBase`).
-- `components`: Merged component set (theme defaults plus user overrides).
+- `PageContent`: Renders the current page body.
+- `ExtraHead`: Injects runtime scripts, styles, and per-page `<Head>` content.
+- `withBase`: Base-path aware URL helper.
+- `components`: Merged set of theme and user components.
 - `HTMLRenderer`: rEFui rendering utilities.
 
-Minimum template implementation:
+### Minimal Implementation
 
 ```jsx
 import { HTMLRenderer } from 'methanol'
@@ -93,10 +113,10 @@ export default ({ PageContent, ExtraHead, ctx }) => (
 )
 ```
 
-For production-ready themes, you will typically need to integrate several standard modules. The following sections cover these in detail:
+For production-ready themes, refer to the following specialized guides:
 
-- [Render navigation](./navigation)
-- [Render a Table of Contents (ToC)](./toc)
-- [Adjacent page links](./prev-next)
-- [Language switching](./language-switch)
-- [Special-purpose pages](./special-pages)
+- [Navigation Rendering](./navigation)
+- [Table of Contents (ToC)](./toc)
+- [Adjacent Page Links](./prev-next)
+- [Language Switching](./language-switch)
+- [Special-Purpose Pages](./special-pages)

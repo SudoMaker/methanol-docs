@@ -6,24 +6,25 @@ weight: 5
 
 # 前後ページへのリンク
 
-Methanol は、現在表示中のページの「前」と「次」のページ情報を取得するためのヘルパー関数を提供しています。
+Methanol は、ユーザーが意図した順序でドキュメントを閲覧できるように、「前」と「次」のナビゲーションを実装するためのヘルパーを提供しています。
 
 ```js
-const { prev, next } = ctx.getSiblings.() || {}
+const { prev, next } = ctx.getSiblings() || {}
 ```
 
-この関数で取得されるページ順序は、現在のナビゲーションルートの設定およびサイドバーの表示順序と完全に同期しています。
+この関数で取得されるページ順序は、現在のナビゲーションルートの設定およびサイドバーの表示順序と自動的に同期しています。
 
 ## 実装例
 
 ```jsx
 const PrevNext = ({ ctx }) => {
-	const siblings = ctx.getSiblings.()
+	const siblings = ctx.getSiblings()
 	const prev = siblings?.prev
 	const next = siblings?.next
 	if (!prev && !next) return null
+
 	return (
-		<nav aria-label="Page navigation">
+		<nav aria-label="ページネーション">
 			{prev ? <a href={prev.routeHref}>← {prev.title}</a> : <span />}
 			{next ? <a href={next.routeHref}>{next.title} →</a> : <span />}
 		</nav>
@@ -49,7 +50,7 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-## ポイントと注意点
+## 実装のポイント
 
-- リンク先には必ず `routeHref` を使用してください（`site.base` の設定が自動的に反映されます）。
-- 前後ページのシーケンスから特定のページを外したい場合は、`hidden: true` などを設定してナビゲーションから除外することが可能です。
+- **ベースパスの考慮:** すべてのページ送りリンクには `routeHref` を使用し、`site.base` の設定が正しく反映されるようにしてください。
+- **フィルタリング:** `hidden: true` が設定されたページは、前後ページのシーケンスから自動的に除外されるため、クリーンなナビゲーションフローを維持できます。

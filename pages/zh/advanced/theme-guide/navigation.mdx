@@ -6,9 +6,9 @@ weight: 3
 
 # 渲染导航
 
-Methanol 通过 `ctx.pagesTree` 提供经过裁剪的导航树，该树结构遵循当前导航根（`isRoot`）设定，并严格执行 `hidden`/`exclude` 规则。
+Methanol 通过 `ctx.pagesTree` 提供层级化的导航树。该树会自动根据当前导航根节点（`isRoot`）进行范围限定，并遵循所有 `hidden` 和 `exclude` 规则。
 
-节点数据结构如下：
+树中的每个节点包含以下结构：
 
 ```js
 {
@@ -16,12 +16,14 @@ Methanol 通过 `ctx.pagesTree` 提供经过裁剪的导航树，该树结构遵
 	title: '...',
 	name: '...',
 	routePath: '/guide/',
-	routeHref: '/docs/guide/', // 已包含 base
+	routeHref: '/docs/guide/', // 兼容基路径的 URL
 	children: []
 }
 ```
 
-## 基础侧边栏实现
+## 侧边栏实现示例
+
+以下是一个递归实现的侧边栏组件示例：
 
 ```jsx
 const NavTree = ({ nodes, currentHref }) => (
@@ -36,7 +38,7 @@ const NavTree = ({ nodes, currentHref }) => (
 					</li>
 				)
 			}
-			const isActive = node.routeHref && node.routeHref === currentHref
+			const isActive = node.routeHref === currentHref
 			return (
 				<li>
 					<a href={node.routeHref} aria-current={isActive ? 'page' : null}>
@@ -69,8 +71,7 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-## 开发提示
+## 最佳实践
 
-- 建议优先使用 `routeHref`（自动适配 `site.base`）。
-- 目录索引页面的 `routePath` 均带有尾随 `/`（例如 `/guide/`）。
-
+- **优先使用 `routeHref`:** 务必在导航链接中使用 `routeHref`，以确保基路径 (`site.base`) 被正确应用。
+- **尾随斜杠:** 目录索引路由的 `routePath` 始终包含尾随斜杠（例如 `/guide/`）。这对于路径匹配和相对链接解析至关重要。

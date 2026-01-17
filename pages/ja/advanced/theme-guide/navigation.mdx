@@ -6,9 +6,9 @@ weight: 3
 
 # ナビゲーションのレンダリング
 
-Methanol は、`ctx.pagesTree` を通じて階層化されたナビゲーションツリーを提供します。このデータは、現在のナビゲーションルート（`isRoot`）の設定に基づき適切にスコープされており、`hidden` や `exclude` などの規則が適用済みです。
+Methanol は、`ctx.pagesTree` を通じて階層化されたナビゲーションツリーを提供します。このデータは、現在のナビゲーションルート（`isRoot`）に基づいて自動的にスコープされ、`hidden` や `exclude` などのルールが適用されています。
 
-ノードデータの構造例:
+ツリーの各ノードは以下の構造を持ちます。
 
 ```js
 {
@@ -16,12 +16,14 @@ Methanol は、`ctx.pagesTree` を通じて階層化されたナビゲーショ�
 	title: '...',
 	name: '...',
 	routePath: '/guide/',
-	routeHref: '/docs/guide/', // Base Path 対応済み
+	routeHref: '/docs/guide/', // ベースパス対応 URL
 	children: []
 }
 ```
 
-## 最小構成のサイドバー実装例
+## サイドバーの実装
+
+以下は、再帰的なサイドバーコンポーネントの実装例です。
 
 ```jsx
 const NavTree = ({ nodes, currentHref }) => (
@@ -36,7 +38,7 @@ const NavTree = ({ nodes, currentHref }) => (
 					</li>
 				)
 			}
-			const isActive = node.routeHref && node.routeHref === currentHref
+			const isActive = node.routeHref === currentHref
 			return (
 				<li>
 					<a href={node.routeHref} aria-current={isActive ? 'page' : null}>
@@ -71,5 +73,5 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 
 ## 実装のアドバイス
 
-- リンク先には必ず `routeHref` を使用してください（`site.base` の設定が自動的に反映されます）。
-- ディレクトリのインデックスページの場合、`routePath` の末尾には常に `/` が付与されます（例: `/guide/`）。
+- **`routeHref` の活用:** ナビゲーションリンクには常に `routeHref` を使用してください。これにより、`site.base` の設定が正しく反映されます。
+- **末尾のスラッシュ:** ディレクトリのインデックスルートの `routePath` には、常に末尾にスラッシュが含まれます（例: `/guide/`）。これはパスのマッチングや相対リンクの解決において重要です。

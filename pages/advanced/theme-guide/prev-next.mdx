@@ -6,13 +6,13 @@ weight: 5
 
 # Adjacent Page Links
 
-Methanol provides a specialized helper for implementing "Previous" and "Next" page navigation:
+Methanol provides a helper to implement "Previous" and "Next" navigation, ensuring users can traverse your documentation in the intended order:
 
 ```js
 const { prev, next } = ctx.getSiblings() || {}
 ```
 
-The resulting sequence is perfectly aligned with the current navigation root and the display order in the sidebar.
+The returned sequence is automatically scoped to the current navigation root and respects the sidebar's display order.
 
 ## Implementation Example
 
@@ -22,8 +22,9 @@ const PrevNext = ({ ctx }) => {
 	const prev = siblings?.prev
 	const next = siblings?.next
 	if (!prev && !next) return null
+
 	return (
-		<nav aria-label="Page navigation">
+		<nav aria-label="Pagination">
 			{prev ? <a href={prev.routeHref}>← {prev.title}</a> : <span />}
 			{next ? <a href={next.routeHref}>{next.title} →</a> : <span />}
 		</nav>
@@ -51,5 +52,5 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 
 ## Best Practices
 
-- **Use `routeHref`**: Ensure links point to `routeHref` to correctly account for `site.base`.
-- **Filtering**: If you want to exclude specific pages from the adjacent navigation sequence, you can utilize `hidden: true` or similar frontmatter flags to remove them from the navigation tree.
+- **Base Path Awareness:** Use `routeHref` for all pagination links to ensure they work correctly with `site.base`.
+- **Filtering:** Pages marked as `hidden: true` are automatically excluded from the sibling sequence, maintaining a clean navigation flow.

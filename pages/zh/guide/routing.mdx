@@ -6,33 +6,32 @@ weight: 3
 
 # 路由
 
-Methanol 依托 `pages/` 目录构建文件路由体系。
+Methanol 依托 `pages/` 目录结构构建文件路由体系。
 
 ## MDX / Markdown 页面
 
 - `pages/about.mdx` → `/about`
 - `pages/guide/index.mdx` → `/guide/`（目录索引）
 
-## `.html` 页面
+## HTML 页面
 
-亦可将纯 HTML 文件置入 `pages/`。构建过程中，Vite 将对其进行处理并输出至 `dist/`：
+你也可以在 `pages/` 中放置纯 HTML 文件。构建过程中，Vite 将对其进行处理并输出至 `dist/`：
 
-- `pages/custom.html` → `dist/custom.html`（访问 `/custom.html`）
+- `pages/custom.html` → `dist/custom.html`（访问路径为 `/custom.html`）
 
 示例：
-
 - [自定义 HTML 页面](../../custom.html)
 
 ## 404 页面
 
-通过创建 `pages/404.mdx` 可自定义 404 Not Found 页面（默认不在导航中显示）。
+创建 `pages/404.mdx` 即可自定义 404 Not Found 页面。该页面默认不会在导航中显示。
 
 ## 离线页面
 
-通过创建 `pages/offline.mdx` 可自定义内置 PWA 的离线回退页面。该页面默认不在导航中显示。
+创建 `pages/offline.mdx` 即可自定义内置 PWA 的离线回退页面。该页面默认不会在导航中显示。
 
 ## hidden 与 exclude
 
-- `hidden: true` 仅在导航中隐藏，路由依然有效且可直接访问。
-- `exclude: true` 将在 dev/build 阶段被彻底排除（若在目录 `index.mdx` 中设置，则排除整个目录）。
-- 以 `_` 或 `.` 开头的文件或目录将被自动忽略。
+- **`hidden: true`**: 仅在导航菜单中隐藏，路由依然有效，用户仍可通过直接访问 URL 进入。
+- **`exclude: true`**: 将在开发（dev）及构建（build）阶段被完全排除。若在目录的 `index.mdx` 中设置，则整个目录都会被排除。
+- 以 `_` 或 `.` 开头的文件或目录将被系统自动忽略。

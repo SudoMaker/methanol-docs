@@ -6,63 +6,72 @@ weight: 2
 
 # Quick Start
 
-Methanol transforms a directory of Markdown and MDX files into a high-performance static site equipped with automatic routing, navigation, and a robust build pipeline.
+Methanol transforms a directory of Markdown and MDX files into a high-performance static site with automatic routing, navigation, and a robust build pipeline.
 
-Minimal setup is required: simply create `pages/index.mdx`, add your content, and Methanol will automatically construct the routes and navigation tree.
+Getting started is simple: create `pages/index.mdx`, add your content, and Methanol will automatically build the routes and navigation tree.
 
-## Run for a Quick Try
+## Instant Preview
 
-To experience Methanol immediately, execute the following command using `npx`:
+Experience Methanol immediately by running the development server via `npx`:
 
 ```bash
 npx methanol dev
 ```
 
-Then, navigate to `http://localhost:5173` in your browser.
+Then, open `http://localhost:5173` in your browser.
 
-## Use an Existing Markdown Directory
+## Using an Existing Directory
 
-If you already have a collection of Markdown or MDX files, you can point Methanol directly at that directory:
+If you already have a collection of Markdown or MDX files, point Methanol directly to that directory:
 
 ```bash
 npx methanol dev ./my-docs
 ```
 
-The specified folder becomes the content root; for example, `./my-docs/index.mdx` will map to the site root `/`.
+The specified folder becomes the content root; for example, `./my-docs/index.mdx` maps to the site root (`/`).
 
-## Workflow Optimization
+## Installation
 
-For frequent usage, we recommend a global installation to benefit from faster CLI startup times:
+For frequent use, we recommend installing Methanol globally to benefit from faster CLI startup:
 
 ```bash
 npm install methanol -g
 methanol dev
 ```
 
-## Production Deployment
+## Production Workflow
+
+Generate an optimized production build and preview it locally:
 
 ```bash
-npx methanol build
-npx methanol serve
+methanol build
+methanol serve
 ```
 
-The `serve` command initiates a local preview using the optimized production output located in the `dist/` directory.
+The `serve` command hosts the contents of the `dist/` directory for final verification.
 
-## Project Layout
+## Advanced Build Example
 
-```
-pages/        # MDX/MD source files (or use docs/)
-components/   # Reusable JSX/TSX components
-public/       # Static assets (overrides theme-provided assets)
-build/        # Intermediate HTML artifacts (optional)
-dist/         # Optimized production output
+Methanol's CLI supports various flags to override configurations on the fly:
+
+```bash
+methanol build --pwa --search --theme blog --site-name "My Site"
 ```
 
-Files within the `public/` directory are served at the root path (e.g., `public/logo.png` → `/logo.png`) and take precedence over theme-provided assets.
+This command enables PWA and search indexing, switches to the `blog` theme, and sets a custom site name.
+
+## Project Structure
+
+- `pages/`: MDX/MD source files (alternatively `docs/`).
+- `components/`: Reusable JSX/TSX components.
+- `public/`: Static assets (overrides theme-provided assets).
+- `dist/`: Optimized production output.
+
+Files in `public/` are served at the site root (e.g., `public/logo.png` → `/logo.png`).
 
 ## Creating Your First Page
 
-Create a file at `pages/index.mdx`:
+Create `pages/index.mdx` with the following content:
 
 ```mdx
 ---
@@ -71,7 +80,7 @@ title: Home
 
 # Welcome
 
-This is my documentation site.
+This is my new documentation site.
 ```
 
 The file structure is automatically mapped to URL routes:

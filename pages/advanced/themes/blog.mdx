@@ -5,15 +5,15 @@ description: Built-in blog theme features and customization notes.
 
 # Blog Theme
 
-Methanol includes a built-in blog theme located under `themes/blog`. It provides the following features:
+Methanol features a built-in blog theme (`themes/blog`) designed for content-focused sites. It provides:
 
-- Specialized layouts for the home page, categories, and collections.
+- Specialized layouts for home, category, and collection pages.
 - Dynamic client-side filtering powered by the `methanol:pages` virtual module.
-- Optimized performance: initial page lists are statically rendered for fast first paint, followed by hydration to support interactive filtering and pagination.
+- High-performance rendering: initial lists are statically rendered for a fast first paint, then hydrated to enable interactive filtering and pagination.
 
 ## Nav links
 
-The blog theme retrieves `navLinks` from `pages/index.mdx` (or the root page of your project). While the theme provides default links, you can override them in your frontmatter:
+The theme retrieves `navLinks` from your project's root page (`pages/index.mdx`). While sensible defaults are provided, you can customize the navigation in your frontmatter:
 
 ```mdx
 ---
@@ -29,12 +29,12 @@ navLinks:
 ---
 ```
 
-Internal links are automatically processed to be base-path aware (via `withBase`).
+Internal links are automatically processed to be base-path aware.
 
 ## Collections and titles
 
-Collections are automatically inferred from the first directory segment of a page's path (e.g., `/series/post` belongs to the `series` collection). The collection label is derived from the title of the collection's index page (e.g., `/series/index.mdx`) if available; otherwise, it defaults to the directory slug.
+Collections are automatically inferred from the top-level directory of a page (e.g., `/series/post` is grouped into the `series` collection). The collection label uses the title of the collection's index page (e.g., `/series/index.mdx`) if it exists; otherwise, it defaults to the directory slug.
 
 ## Hidden posts
 
-Pages marked with `hidden: true` in their frontmatter are excluded from all automated listings and from the `methanol:pages` index.
+Pages marked with `hidden: true` are excluded from all automated listings and the `methanol:pages` index.

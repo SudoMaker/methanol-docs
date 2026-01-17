@@ -6,22 +6,25 @@ weight: 6
 
 # Language Switcher
 
-In Methanol, multi-language support is organized by directory. Any directory whose `index.mdx` includes a `lang` property is identified as a language entry point.
+In Methanol, multi-language support is file-system based. Any directory containing an `index.mdx` with a `lang` property in its frontmatter is identified as a language entry point.
 
-The following context properties are available within your template:
+Your theme template receives the following language-related properties:
 
-- `ctx.languages`: A list of all identified language entries.
-- `ctx.language`: The currently active language entry (or `null` if none).
+- `ctx.languages`: A list of all identified language entry points.
+- `ctx.language`: The language entry point corresponding to the current page (or `null`).
 
-Each entry contains `routePath`, `routeHref`, `label`, and `code`.
+Each entry includes `routePath`, `routeHref`, `label`, and `code`.
 
-## Simple `<select>` Switcher Implementation
+## Dropdown Switcher Implementation
+
+A standard implementation using a `<select>` element:
 
 ```jsx
 const LanguageSwitch = ({ ctx }) => {
-	const languages = Array.isArray(ctx.languages) ? ctx.languages : []
-	if (!languages.length) return null
-	const currentHref = ctx.language?.routeHref || null
+	const languages = ctx.languages || []
+	if (languages.length === 0) return null
+
+	const currentHref = ctx.language?.routeHref
 	return (
 		<select
 			aria-label="Select language"
@@ -40,13 +43,16 @@ const LanguageSwitch = ({ ctx }) => {
 
 ## Link List Variant
 
+A list-based implementation suitable for footers or headers:
+
 ```jsx
 const LanguageLinks = ({ ctx }) => {
-	const languages = Array.isArray(ctx.languages) ? ctx.languages : []
-	if (!languages.length) return null
+	const languages = ctx.languages || []
+	if (languages.length === 0) return null
+
 	const currentHref = ctx.language?.routeHref
 	return (
-		<nav aria-label="Languages">
+		<nav aria-label="Language selection">
 			{languages.map((lang) => (
 				<a href={lang.routeHref} aria-current={lang.routeHref === currentHref ? 'page' : null}>
 					{lang.label}
@@ -59,5 +65,5 @@ const LanguageLinks = ({ ctx }) => {
 
 ## Implementation Notes
 
-- Always use `routeHref` for links, as it correctly includes the `site.base` prefix.
-- It is common to pair language roots with `isRoot: true` to ensure each language maintains its own independent navigation tree.
+- **URL Handling:** Always use `routeHref` for links to ensure they are base-path aware.
+- **Root Scoping:** It is common to set `isRoot: true` at each language's entry point to maintain independent navigation trees for each language.

@@ -6,21 +6,21 @@ weight: 2
 
 # 快速上手
 
-Methanol 可将包含 Markdown/MDX 的目录直接转化为具备完整路由、导航及构建流程的静态站点。
+Methanol 可将包含 Markdown/MDX 的目录直接转化为具备自动路由、导航及高效构建流程的高性能静态站点。
 
-几无配置门槛：只需创建 `pages/index.mdx` 并逐步添加文件或目录，路由与导航即可自动生成并实时更新。
+上手非常简单：只需创建 `pages/index.mdx` 并添加内容，Methanol 即可自动构建路由与导航树。
 
-## 快速体验
+## 实时预览
 
-如需快速体验，可直接通过 `npx` 运行：
+通过 `npx` 运行开发服务器，立即体验 Methanol：
 
 ```bash
 npx methanol dev
 ```
 
-随后访问 `http://localhost:5173`。
+随后在浏览器中访问 `http://localhost:5173`。
 
-## 使用现有 Markdown 目录
+## 使用现有目录
 
 若你已有一份 Markdown/MDX 文档目录，可直接指定该目录：
 
@@ -28,41 +28,50 @@ npx methanol dev
 npx methanol dev ./my-docs
 ```
 
-该目录将作为内容根目录，例如 `./my-docs/index.mdx` 将映射至 `/`。
+该目录将作为内容根目录，例如 `./my-docs/index.mdx` 将映射至站点根路径 (`/`)。
 
-## 提升本地开发效率
+## 安装
 
-若需频繁使用，建议进行全局安装以提升启动速度：
+若需频繁使用，建议进行全局安装以提升 CLI 启动速度：
 
 ```bash
 npm install methanol -g
 methanol dev
 ```
 
-## 生产构建
+## 生产环境工作流
+
+生成优化后的生产环境构建，并在本地进行预览：
 
 ```bash
-npx methanol build
-npx methanol serve
+methanol build
+methanol serve
 ```
 
-`serve` 命令将基于 `dist/` 中的产物启动本地预览。
+`serve` 命令将托管 `dist/` 目录中的内容，以便进行最终验证。
+
+## 进阶构建示例
+
+Methanol 的 CLI 支持多种参数，以便在运行时覆盖配置：
+
+```bash
+methanol build --pwa --search --theme blog --site-name "My Site"
+```
+
+此命令将启用 PWA 与搜索索引，切换至 `blog` 主题，并设置自定义站点名称。
 
 ## 项目结构
 
-```
-pages/        # MDX/MD 页面（亦可使用 docs/）
-components/   # 可在 MDX 中使用的 JSX/TSX 组件
-public/       # 静态资源（将覆盖主题默认资源）
-build/        # 中间 HTML 文件（可选）
-dist/         # 生产环境输出产物
-```
+- `pages/`: MDX/MD 源码文件（亦可使用 `docs/`）。
+- `components/`: 可复用的 JSX/TSX 组件。
+- `public/`: 静态资源（将覆盖主题提供的资源）。
+- `dist/`: 优化后的生产环境输出产物。
 
-`public/` 目录下的文件将服务于根路径 `/`（例如 `public/logo.png` → `/logo.png`），并会覆盖主题提供的同名资源。
+`public/` 目录下的文件将服务于站点根路径（例如 `public/logo.png` → `/logo.png`）。
 
 ## 创建首个页面
 
-创建 `pages/index.mdx`：
+创建包含以下内容的 `pages/index.mdx`：
 
 ```mdx
 ---
@@ -71,10 +80,10 @@ title: 首页
 
 # 欢迎
 
-这是我的个人站点。
+这是我的全新文档站点。
 ```
 
-文件路径将自动转换为路由：
+文件结构将自动映射为 URL 路由：
 
 ```
 pages/index.mdx       -> /

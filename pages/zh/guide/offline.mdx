@@ -8,7 +8,7 @@ weight: 10
 
 
 
-Methanol 原生集成了基于 Workbox 的 PWA 支持。该功能采用**高度优化**的 Service Worker 实现方案，在保障内容更新实时性的同时，能有效防止大型站点因资源过多而导致的安装停滞问题。
+Methanol 内置了基于 Workbox 的 PWA 支持。其 Service Worker 实现经过高度优化，在确保内容实时更新的同时，能有效防止大型站点因资源过多而导致的安装停滞。
 
 
 
@@ -16,7 +16,7 @@ Methanol 原生集成了基于 Workbox 的 PWA 支持。该功能采用**高度�
 
 
 
-在 `methanol.config.js` 配置文件中即可轻松开启：
+在 `methanol.config.js` 配置文件中开启：
 
 
 
@@ -36,7 +36,7 @@ export default () => ({
 
 
 
-你可以覆盖 PWA manifest 与 injectManifest 配置：
+你可以根据需要自定义 PWA Manifest 及 `injectManifest` 配置：
 
 
 
@@ -68,16 +68,16 @@ export default () => ({
 
 
 
-### 完全自定义
+### 进阶配置
 
 
 
-若需完全控制 PWA（如自定义插件配置、Service Worker 策略等），可设置 `pwa: false` 并在 `vite.plugins` 中自行配置 `vite-plugin-pwa`。
+若需完全控制 PWA 行为（如自定义 Service Worker 策略等），可设置 `pwa: false` 并在 `vite.plugins` 中自行配置 `vite-plugin-pwa`。
 
 
 
-## 离线页面
+## 自定义离线页面
 
 
 
-通过创建 `pages/offline.mdx` 可自定义离线回退页面。
+创建 `pages/offline.mdx` 即可自定义用户离线且请求资源未缓存时的回退页面。

@@ -4,11 +4,11 @@ description: 基于 `page.toc` 渲染当前页面目录。
 weight: 4
 ---
 
-# 渲染目录（ToC）
+# 渲染目录 (ToC)
 
-Methanol 在编译阶段自动提取标题生成目录结构，并注入 `ctx.page.toc`。
+Methanol 会在编译过程中自动提取标题，并通过 `ctx.page.toc` 提供结构化数据。
 
-条目数据结构如下：
+目录中的每个条目包含以下结构：
 
 ```js
 {
@@ -19,14 +19,17 @@ Methanol 在编译阶段自动提取标题生成目录结构，并注入 `ctx.pa
 }
 ```
 
-## 基础 TOC 渲染器实现
+## ToC 渲染器实现示例
+
+以下是一个标准递归实现的示例：
 
 ```jsx
 const Toc = ({ toc }) => {
-	if (!toc?.length) return null
+	if (!toc || toc.length === 0) return null
+
 	return (
-		<nav aria-label="On this page">
-			<div>On this page</div>
+		<nav aria-label="页面目录">
+			<div>本页目录</div>
 			<ul>
 				{toc.map((item) => (
 					<li>
@@ -60,7 +63,7 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-## 开发提示
+## 最佳实践
 
-- 大多数主题会对标题层级进行限制（例如仅显示 H2–H4）。
-- 若需实现滚动联动的“当前小节高亮”效果，建议采用 Client 组件（可参考默认主题的 `ThemeToCContainer.client.jsx`）。
+- **层级限制:** 为了保持清晰度，大多数主题会限制提取的标题层级（例如仅显示 H2–H4）。
+- **滚动同步:** 对于“滚动到当前小节高亮”等进阶功能，建议使用 Client 组件实现。Methanol 默认主题中的 `ThemeToCContainer.client.jsx` 组件是实现此类功能的极佳参考。

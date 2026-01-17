@@ -6,7 +6,7 @@ weight: 4
 
 # Rendering a Table of Contents (ToC)
 
-Methanol automatically extracts headings during the page compilation process and provides them as structured data within `ctx.page.toc`.
+Methanol automatically extracts headings during compilation and provides them as structured data via `ctx.page.toc`.
 
 Each entry in the ToC follows this structure:
 
@@ -19,13 +19,16 @@ Each entry in the ToC follows this structure:
 }
 ```
 
-## Simple ToC Renderer Implementation
+## ToC Renderer Implementation
+
+A standard recursive implementation:
 
 ```jsx
 const Toc = ({ toc }) => {
-	if (!toc?.length) return null
+	if (!toc || toc.length === 0) return null
+
 	return (
-		<nav aria-label="On this page">
+		<nav aria-label="Table of Contents">
 			<div>On this page</div>
 			<ul>
 				{toc.map((item) => (
@@ -60,7 +63,7 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 }
 ```
 
-## Implementation Advice
+## Best Practices
 
-- **Depth Constraints**: Most themes limit the display to specific heading levels (e.g., H2–H4) to maintain clarity.
-- **Scroll Synchronization**: For advanced features like "Scroll-to-Highlight," it is recommended to implement the UI as a client-side component. The `ThemeToCContainer.client.jsx` component in the default theme serves as an excellent reference.
+- **Depth Constraints:** Most themes limit ToC depth (e.g., H2–H4) to ensure readability and maintain focus.
+- **Scroll Synchronization:** For features like "Active Section Highlighting," we recommend using a client-side component. The `ThemeToCContainer.client.jsx` component in Methanol's default theme is a great reference for this implementation.

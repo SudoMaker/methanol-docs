@@ -6,9 +6,9 @@ weight: 4
 
 # ページ内目次（ToC）のレンダリング
 
-Methanol はページのコンパイル時に見出しを自動的に抽出し、`ctx.page.toc` に構造化されたデータとして格納します。
+Methanol はコンパイル時に見出しを自動的に抽出し、`ctx.page.toc` を通じて構造化されたデータを提供します。
 
-目次データの構造例:
+目次データの各エントリは以下の構造を持ちます。
 
 ```js
 {
@@ -19,14 +19,17 @@ Methanol はページのコンパイル時に見出しを自動的に抽出し�
 }
 ```
 
-## シンプルな ToC レンダラーの実装
+## ToC レンダラーの実装
+
+以下は、標準的な再帰的実装の例です。
 
 ```jsx
 const Toc = ({ toc }) => {
-	if (!toc?.length) return null
+	if (!toc || toc.length === 0) return null
+
 	return (
-		<nav aria-label="On this page">
-			<div>On this page</div>
+		<nav aria-label="目次">
+			<div>このページの内容</div>
 			<ul>
 				{toc.map((item) => (
 					<li>
@@ -62,5 +65,5 @@ export default function PageTemplate({ PageContent, ExtraHead, ctx }) {
 
 ## 実装のアドバイス
 
-- 多くのテーマでは、すべての見出しを表示するのではなく、特定のレベル（例: H2〜H4）のみを抽出して表示する制限を設けています。
-- スクロール位置に連動して現在表示中のセクションを強調する「アクティブハイライト」機能を実装する場合は、クライアントコンポーネントによる実装が推奨されます。デフォルトテーマの `ThemeToCContainer.client.jsx` が実装の参考になります。
+- **階層の制限:** 読みやすさを維持するために、多くのテーマでは抽出する見出しレベルを制限しています（例: H2〜H4）。
+- **スクロール同期:** 「アクティブなセクションの強調表示」などの機能を実装する場合は、クライアントコンポーネントの使用を推奨します。Methanol のデフォルトテーマにある `ThemeToCContainer.client.jsx` が非常に参考になります。

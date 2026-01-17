@@ -6,25 +6,22 @@ weight: 4
 
 # 主题实现指南
 
-本指南将引导开发者构建自定义主题（涵盖布局、组件、可选主题页面及资源），并完善导航、目录、前后页、语言切换及特殊页面处理等核心框架功能。
+本指南将详细介绍如何构建符合 Methanol 架构的自定义主题。你将学习如何实现导航、目录、多语言支持等文档站点的核心功能。
 
 ## 推荐目录结构
 
-建议结构：
+一个标准的主题通常遵循以下结构：
 
-```
-theme/
-  index.js          # 导出主题对象
-  page.jsx          # 模板组件（Layout）
-  components/       # 默认 MDX 组件（可选）
-  pages/            # 主题自带页面（可选）
-  public/           # 主题 Public 静态资源（可选）
-  sources/          # theme.sources 映射的资源（可选）
-```
+- `index.js`: 主题对象入口文件
+- `page.jsx`: 布局模板组件
+- `components/`: 默认 MDX 组件（可选）
+- `pages/`: 主题预设页面（可选）
+- `public/`: 主题静态资源（可选）
+- `sources/`: 通过 `theme.sources` 映射的资源（可选）
 
 ## 配置启用主题
 
-`methanol.config.js`：
+在 `methanol.config.js` 中通过指定主题根目录和模板组件来启用自定义主题：
 
 ```js
 import PageTemplate from './theme/page.jsx'
@@ -39,7 +36,7 @@ export default () => ({
 
 ## 主题对象定义
 
-`theme/index.js`：
+主题配置也可以在其入口文件（`index.js`）中定义。这对于可分发的主题特别有用：
 
 ```js
 import PageTemplate from './page.jsx'
@@ -58,19 +55,41 @@ export default () => ({
 })
 ```
 
-## 模板接口规范（Template Contract）
+## 发布与解析
 
-`theme.template` 将接收以下参数：
+主题可以作为名为 `methanol-theme-xxx` 的 npm 包发布。Methanol 按照以下优先级自动解析主题名称：
 
-- `ctx`：当前页面/站点上下文
-- `page`：`ctx.page` 的别名
-- `PageContent`：页面正文渲染组件
-- `ExtraHead`：需注入 `<head>` 的额外内容（Methanol 运行时、页面资源、页面 `<Head>` 输出等）
-- `withBase`：URL Base 处理函数（与 `ctx.withBase` 相同）
-- `components`：合并后的组件集合（主题默认 + 用户覆盖）
-- `HTMLRenderer`：refui 渲染工具集
+1.  **内置主题：** 内部预设（如 `default`、`blog`）。
+2.  **包解析：** 搜索名为 `methanol-theme-xxx` 的包。
+3.  **本地路径：** 解析为指向文件或目录的直接路径。
 
-最小模板示例：
+### 使用已发布的主题
+
+通过 CLI：
+```bash
+methanol build --theme xxx
+```
+
+通过 `methanol.config.js`：
+```js
+export default () => ({
+	theme: 'xxx'
+})
+```
+
+## 模板接口规范
+
+`theme.template` 函数接收一个包含以下属性的上下文对象：
+
+- `ctx`: 站点与页面上下文。
+- `page`: `ctx.page` 的别名。
+- `PageContent`: 渲染当前页面正文。
+- `ExtraHead`: 注入运行时脚本、样式及页面特定的 `<Head>` 内容。
+- `withBase`: 兼容基路径的 URL 处理函数。
+- `components`: 主题与用户组件的合并集合。
+- `HTMLRenderer`: rEFui 渲染工具集。
+
+### 最小实现示例
 
 ```jsx
 import { HTMLRenderer } from 'methanol'
@@ -78,7 +97,7 @@ import { HTMLRenderer } from 'methanol'
 export default ({ PageContent, ExtraHead, ctx }) => (
 	<>
 		{HTMLRenderer.rawHTML`<!doctype html>`}
-		<html lang="en">
+		<html lang="zh">
 			<head>
 				<meta charset="UTF-8" />
 				<meta name="viewport" content="width=device-width" />
@@ -93,10 +112,10 @@ export default ({ PageContent, ExtraHead, ctx }) => (
 )
 ```
 
-在实际主题开发中，通常需集成导航、目录及页面信息等模块。各功能实现详解如下：
+关于实际主题开发中的详细实现，请参阅以下专项指南：
 
 - [导航渲染](./navigation)
-- [目录（TOC）渲染](./toc)
+- [目录 (ToC) 渲染](./toc)
 - [相邻页面导航](./prev-next)
-- [多语言切换](./language-switch)
-- [特殊用途页面](./special-pages)
+- [语言切换实现](./language-switch)
+- [专门用途页面](./special-pages)

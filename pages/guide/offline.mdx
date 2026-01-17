@@ -1,10 +1,10 @@
 # Offline Access (PWA)
 
-Methanol includes built-in PWA support powered by Workbox. It features a **highly optimized** Service Worker implementation designed to efficiently serve frequent content updates while ensuring that installation remains smooth and won't stall, even on large-scale documentation sites.
+Methanol features built-in PWA support powered by Workbox. Its service worker implementation is highly optimized to ensure smooth installation and efficient content updates, even for large-scale documentation sites.
 
 ## Enabling PWA
 
-Activate PWA features within `methanol.config.js`:
+To activate PWA features, update your `methanol.config.js`:
 
 ```js
 export default () => ({
@@ -14,7 +14,7 @@ export default () => ({
 
 ### Manifest Customization
 
-You can override the default PWA manifest and `injectManifest` configurations as follows:
+You can customize the PWA manifest and `injectManifest` configuration as follows:
 
 ```js
 export default () => ({
@@ -30,10 +30,10 @@ export default () => ({
 })
 ```
 
-### Custom Configuration
+### Advanced Configuration
 
-If your project requires full control over the PWA setup (such as custom service worker strategies), set `pwa: false` and add your own `vite-plugin-pwa` configuration within the `vite.plugins` section.
+For full control over the PWA lifecycle (such as custom service worker strategies), set `pwa: false` and add your own `vite-plugin-pwa` configuration to the `vite.plugins` section.
 
 ## Custom Offline Page
 
-Create a file at `pages/offline.mdx` to customize the fallback page displayed when a requested route is not cached and the user is offline.
+Create `pages/offline.mdx` to customize the fallback page displayed when a user is offline and the requested content is not cached.

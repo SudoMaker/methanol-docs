@@ -6,25 +6,28 @@ weight: 6
 
 # 言語スイッチャー
 
-Methanol の多言語対応はディレクトリ単位で管理されます。ディレクトリ内の `index.mdx` に `lang` プロパティが設定されている場合、そのディレクトリは独立した言語エントリとして識別されます。
+Methanol の多言語対応は、ディレクトリ構造に基づいています。ディレクトリ内の `index.mdx` のフロントマターに `lang` プロパティが設定されている場合、そのディレクトリは言語のエントリポイントとして識別されます。
 
-テンプレート内では、以下の情報を利用可能です。
+テーマのテンプレートでは、言語に関する以下のプロパティを利用可能です。
 
-- `ctx.languages`: 定義されているすべての言語エントリのリスト。
-- `ctx.language`: 現在表示中のページに対応するアクティブな言語エントリ（設定がない場合は `null`）。
+- `ctx.languages`: 識別されたすべての言語エントリポイントのリスト。
+- `ctx.language`: 現在のページに対応する言語エントリポイント（存在しない場合は `null`）。
 
-各エントリには、`routePath`, `routeHref`, `label`, `code` などのプロパティが含まれます。
+各エントリには、`routePath`、`routeHref`、`label`、`code` が含まれます。
 
-## `<select>` タグによるシンプルなスイッチャーの実装
+## ドロップダウン形式のスイッチャー
+
+`<select>` 要素を使用した標準的な実装例です。
 
 ```jsx
 const LanguageSwitch = ({ ctx }) => {
-	const languages = Array.isArray(ctx.languages) ? ctx.languages : []
-	if (!languages.length) return null
-	const currentHref = ctx.language?.routeHref || null
+	const languages = ctx.languages || []
+	if (languages.length === 0) return null
+
+	const currentHref = ctx.language?.routeHref
 	return (
 		<select
-			aria-label="Select language"
+			aria-label="言語を選択"
 			onchange="location.href=this.value"
 			value={currentHref || undefined}
 		>
@@ -40,13 +43,16 @@ const LanguageSwitch = ({ ctx }) => {
 
 ## リンクリスト形式のスイッチャー
 
+ヘッダーやフッターに適した、リンクを並べる形式の実装例です。
+
 ```jsx
 const LanguageLinks = ({ ctx }) => {
-	const languages = Array.isArray(ctx.languages) ? ctx.languages : []
-	if (!languages.length) return null
+	const languages = ctx.languages || []
+	if (languages.length === 0) return null
+
 	const currentHref = ctx.language?.routeHref
 	return (
-		<nav aria-label="Languages">
+		<nav aria-label="言語選択">
 			{languages.map((lang) => (
 				<a href={lang.routeHref} aria-current={lang.routeHref === currentHref ? 'page' : null}>
 					{lang.label}
@@ -59,5 +65,5 @@ const LanguageLinks = ({ ctx }) => {
 
 ## 実装のポイント
 
-- リンク先には必ず `routeHref` を使用してください（`site.base` の設定が自動的に反映されます）。
-- 各言語のルートディレクトリに `isRoot: true` を設定することで、言語ごとに独立したナビゲーションツリーを構築できます。
+- **URL の扱い:** リンク先には必ず `routeHref` を使用してください。これにより、ベースパスの設定が正しく反映されます。
+- **ルートスコープ:** 各言語のエントリポイントで `isRoot: true` を設定することが一般的です。これにより、言語ごとに独立したナビゲーションツリーを維持できます。
