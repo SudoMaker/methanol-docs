@@ -2,7 +2,6 @@
 title: コードハイライト
 description: 構文ハイライトの有効化、設定、および拡張方法。
 weight: 5
-starryNight: true
 ---
 
 # コードハイライト
@@ -66,17 +65,25 @@ export default () => ({
 
 Methanol は、ハイライト用の CSS を自動的に挿入しません。使用するテーマ側で必要なスタイルを読み込むか、独自にスタイル定義を用意してください。
 
-## サポート言語の追加
+## 言語の自動読み込み
 
-Starry Night には標準的な言語セットが含まれています。特定の言語を追加したい場合は、`starryNight.grammars` オプションを使用します。
+Methanol はコンテンツ内のフェンスコードに指定された言語を検出し、Starry Night が対応している文法を自動で読み込みます。通常は手動設定は不要です。
+
+次の場合のみ `starryNight.grammars` を設定してください。
+
+- 同じ拡張子に複数の言語があり、特定の文法を強制したい場合
+- Starry Night が対応していない言語に独自の文法を追加したい場合
+
+## サポート言語の上書き
+
+文法セットを上書き／拡張したい場合は、`starryNight.grammars` を指定します。
 
 ```js
-import { common } from '@wooorm/starry-night'
 import sourceMDX from '@wooorm/starry-night/source.mdx'
 
 export default () => ({
 	starryNight: {
-		grammars: [...common, sourceMDX]
+		grammars: [sourceMDX]
 	}
 })
 ```

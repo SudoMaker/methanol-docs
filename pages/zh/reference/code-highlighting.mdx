@@ -2,7 +2,6 @@
 title: 代码高亮
 description: 代码高亮启用与高级配置。
 weight: 5
-starryNight: true
 ---
 
 # 代码高亮
@@ -66,17 +65,25 @@ export default () => ({
 
 Methanol 不会自动注入高亮样式。通常由主题负责加载 CSS，开发者亦可自行引入 CSS 文件定义 Starry Night 样式。
 
+## 语言自动加载
+
+Methanol 会根据内容中的 fenced code 语言标记，自动加载 Starry Night 已支持的语法。一般无需手动配置。
+
+仅在以下场景需要配置 `starryNight.grammars`：
+
+- 语言有歧义，需要强制指定某个 grammar
+- Starry Night 未支持该语言，需要自行补充 grammar
+
 ## 扩展语言支持
 
-Starry Night 内置基础语法集。如需支持更多语言，可在 `starryNight.grammars` 中进行扩展。
+如需覆盖或扩展 grammar 集合，可在 `starryNight.grammars` 中显式指定：
 
 ```js
-import { common } from '@wooorm/starry-night'
 import sourceMDX from '@wooorm/starry-night/source.mdx'
 
 export default () => ({
 	starryNight: {
-		grammars: [...common, sourceMDX]
+		grammars: [sourceMDX]
 	}
 })
 ```

@@ -2,7 +2,6 @@
 title: Code Highlighting
 description: Configuring and extending syntax highlighting within the Methanol pipeline.
 weight: 5
-starryNight: true
 ---
 
 # Code Highlighting
@@ -66,17 +65,25 @@ export default () => ({
 
 Methanol does not automatically inject CSS for code highlighting. The visual appearance is managed by the active theme, or can be customized by providing your own stylesheet.
 
+## Language Loading
+
+Methanol automatically loads Starry Night grammars that correspond to the fenced languages it finds in your content. You generally don’t need to configure anything.
+
+Only configure `starryNight.grammars` when:
+
+- a language is ambiguous and you want to force a specific grammar, or
+- the language isn’t supported by Starry Night and you want to plug in your own grammar.
+
 ## Extending Language Support
 
-Starry Night includes a standard set of grammars. To support additional languages, include them in the `starryNight.grammars` array:
+To override or extend the grammar set, include explicit grammars in `starryNight.grammars`:
 
 ```js
-import { common } from '@wooorm/starry-night'
 import sourceMDX from '@wooorm/starry-night/source.mdx'
 
 export default () => ({
 	starryNight: {
-		grammars: [...common, sourceMDX]
+		grammars: [sourceMDX]
 	}
 })
 ```

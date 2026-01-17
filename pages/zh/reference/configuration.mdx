@@ -224,6 +224,7 @@ starryNight: {
 - 当 `starryNight` 配置为对象时，除非显式设置 `enabled: false`，否则视为开启。
 - 页面 Frontmatter 的 `starryNight` 优先级最高。
 - CLI 参数 `--highlight`/`--no-highlight` 可运行时切换是否启用全局代码高亮。
+- Methanol 会自动加载 fenced code 中出现的语言对应语法。仅在语言歧义或 Starry Night 未支持的情况下才需要配置 `starryNight.grammars`。
 
 ### `jobs`
 
