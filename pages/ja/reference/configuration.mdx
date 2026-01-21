@@ -41,6 +41,7 @@ export default ({ mode, root, HTMLRenderer }) => ({
 テンプレート内で参照されるサイトのメタ情報。
 
 - `site.name`: サイトのタイトル
+- `site.owner`: サイトの所有者/作者（ブログテーマのフッターとフィードで使用）
 - `site.logo`: ロゴファイルへのパス（文字列）、または `false`（デフォルトテーマで非表示にする場合）
 - `site.favicon`: ファビコンへのパス（文字列）、または `false`（デフォルトテーマで非表示にする場合）
 - `site.base`: サブパス配信時のベースパス（例: `'/docs/'`）
@@ -75,6 +76,32 @@ pagefind: {
 
 - `enabled` および `build` 以外のキーは、Pagefind JS の `options()` に直接渡されます。
 - `build` オブジェクトはビルド時専用の構成エントリです。
+
+### `feed`
+
+RSS/Atom フィードの生成を有効化します。デフォルト: `false`。
+
+```js
+feed: true
+// または
+feed: {
+	enabled: true,
+	path: '/rss.xml',
+	limit: 10,
+	siteUrl: 'https://example.com',
+	title: 'My Site',
+	description: 'Updates from my site',
+	language: 'en',
+	atom: false
+}
+```
+
+注意点:
+
+- `atom: true` で Atom を出力します（既定のパスは `/rss.xml` または `/atom.xml`）。
+- `siteUrl` は絶対 URL が必要です。未指定の場合は `site.base` を使用するため、`https://example.com/` のように完全な URL を設定してください。
+- `hidden` なページは除外されます。`limit` の既定値は `10` です。
+- フィード項目は `frontmatter.author` があればそれを使用し、無い場合は `site.owner` を利用します。
 
 ### `pwa`
 
@@ -230,8 +257,11 @@ Vite の設定を詳細にマージします。`{ command, mode, root, isPreview
 - `--assets`: `publicDir` を上書きします。
 - `--output`: `distDir` を上書きします。
 - `--site-name`: `site.name` を上書きします。
+- `--owner`: `site.owner` を上書きします。
 - `--base`: 実行時の `site.base` を一時的に上書きします。
 - `--search`/`--no-search`: `pagefind.enabled` を上書きします。
+- `--rss`/`--no-rss`: `feed.enabled` を上書きします。
+- `--atom`/`--no-atom`: `feed.atom` を上書きします。
 - `--pwa`/`--no-pwa`: `pwa` 設定を上書きします。
 - `-v`/`--verbose`: 詳細なログ出力を有効化します。
 - `--config`: 使用する設定ファイルのパスを指定します。

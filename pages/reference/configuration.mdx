@@ -41,6 +41,7 @@ The project root directory. Defaults to the current working directory (CWD).
 Site-wide metadata utilized by templates:
 
 - `site.name`: The title of the site.
+- `site.owner`: The site owner or author (used in the blog theme footer and feeds).
 - `site.logo`: Path to the logo asset (string), or `false` to disable (standard theme support).
 - `site.favicon`: Path to the favicon asset (string), or `false` to disable (standard theme support).
 - `site.base`: The Base Path prefix used when the site is hosted under a subpath (e.g., `'/docs/'`).
@@ -75,6 +76,32 @@ Notes:
 
 - Properties other than `enabled` and `build` are passed directly to the Pagefind JavaScript `options()` initialization.
 - The `build` object contains options specific to the build-time indexing process.
+
+### `feed`
+
+Enables RSS/Atom feed generation. Default: `false`.
+
+```js
+feed: true
+// or
+feed: {
+	enabled: true,
+	path: '/rss.xml',
+	limit: 10,
+	siteUrl: 'https://example.com',
+	title: 'My Site',
+	description: 'Updates from my site',
+	language: 'en',
+	atom: false
+}
+```
+
+Notes:
+
+- Use `atom: true` to output Atom instead of RSS (default paths: `/rss.xml` or `/atom.xml`).
+- `siteUrl` must be an absolute URL. If omitted, Methanol uses `site.base`, so set it to a full origin (e.g. `https://example.com/`).
+- Hidden pages are excluded. `limit` defaults to `10`.
+- Feed items use `frontmatter.author` when provided, falling back to `site.owner`.
 
 ### `pwa`
 
@@ -255,8 +282,11 @@ Command-line arguments take precedence over configuration file settings:
 - `--assets` overrides `publicDir`.
 - `--output` overrides `distDir`.
 - `--site-name` overrides `site.name`.
+- `--owner` overrides `site.owner`.
 - `--base` temporarily overrides `site.base` (ignored in `dev`).
 - `--search`/`--no-search` override `pagefind.enabled`.
+- `--rss`/`--no-rss` override `feed.enabled`.
+- `--atom`/`--no-atom` override `feed.atom`.
 - `--pwa`/`--no-pwa` override the `pwa` toggle.
 - `-v`/`--verbose` enables detailed build logging.
 - `--config` specifies a non-standard configuration file.

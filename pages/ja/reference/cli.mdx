@@ -46,6 +46,7 @@ npx methanol dev ./pages
 - `--config`, `-c`: 設定ファイルのパスを明示的に指定します。
 - `--theme`: 設定ファイルの `theme` を上書きします。文字列を指定した場合、Methanol はまず組み込みテーマ（`default`、`blog` など）から検索し、見つからない場合は `methanol-theme-xxx`（`xxx` は指定した文字列）という名前のパッケージを検索します。ローカルテーマを使う場合は `methanol.config.*` で import して `theme` に渡してください。
 - `--site-name`: 設定ファイルのサイト名を上書きします。
+- `--owner`: `site.owner` を上書きします。
 - `--base`: 今回の実行に限り `site.base` を上書きします（`dev` モードでは無視されます）。
 - `--port`: 開発およびプレビューサーバーのポート番号（デフォルト: 5173）。
 - `--host`: サーバーを指定したホストにバインドします（`--host` 単体指定ですべてのインターフェースにバインドします）。
@@ -54,6 +55,8 @@ npx methanol dev ./pages
 - `--highlight`/`--no-highlight`: 構文ハイライトの有効/無効を制御します。
 - `--jobs`, `-j`: ビルド時のワーカースレッド数を指定します（`0` はページ数に応じて自動設定）。
 - `--search`/`--no-search`: Pagefind による検索インデックス生成の有効/無効を制御します。
+- `--rss`/`--no-rss`: RSS/Atom フィードの出力を制御します。
+- `--atom`/`--no-atom`: Atom 出力の有効/無効を制御します（`--rss` を内包）。
 - `--pwa`/`--no-pwa`: PWA 機能サポートの有効/無効を制御します。
 - `-v`, `--verbose`: 詳細なログを出力します（ビルド時の Vite や Pagefind のログが含まれます）。
 

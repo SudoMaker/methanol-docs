@@ -46,6 +46,7 @@ npx methanol dev ./pages
 - `--config`, `-c`: Defines the path to a custom configuration file.
 - `--theme`: Overrides the `theme` configuration. When a string is provided, Methanol first attempts to resolve it as a built-in theme (e.g., `default`, `blog`). If not found, it searches for a package named `methanol-theme-xxx` (where `xxx` is the provided string). For local themes, import them in `methanol.config.*` and set `theme` to the imported theme object/factory.
 - `--site-name`: Overrides the site title defined in configuration.
+- `--owner`: Overrides the site owner (`site.owner`).
 - `--base`: Temporarily overrides `site.base` for the current execution (ignored in `dev` mode).
 - `--port`: Sets the port for the development and preview servers (default: 5173).
 - `--host`: Binds the server to a specific host (using `--host` without a value binds to all interfaces).
@@ -54,6 +55,8 @@ npx methanol dev ./pages
 - `--highlight`/`--no-highlight`: Controls syntax highlighting.
 - `--jobs`, `-j`: Sets the build worker thread count (`0` auto scales with page count).
 - `--search`/`--no-search`: Controls Pagefind search indexing.
+- `--rss`/`--no-rss`: Controls RSS/Atom feed generation.
+- `--atom`/`--no-atom`: Outputs Atom when enabled (`--rss` is implied).
 - `--pwa`/`--no-pwa`: Controls PWA support.
 - `-v`, `--verbose`: Enables detailed logging, including Vite and Pagefind output during the build process.
 

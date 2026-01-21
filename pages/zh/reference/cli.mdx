@@ -46,6 +46,7 @@ npx methanol dev ./pages
 - `--config`, `-c`: 指定自定义配置文件路径
 - `--theme`: 覆盖配置文件中的 `theme`。当提供字符串时，Methanol 首先尝试将其解析为内置主题（如 `default`、`blog`）；若未找到，则搜索名为 `methanol-theme-xxx`（`xxx` 为指定的字符串）的包。本地主题请在 `methanol.config.*` 中 import 后，将 `theme` 设为导入的主题对象/工厂函数。
 - `--site-name`: 指定站点名称（覆盖配置）
+- `--owner`: 指定站点拥有者（覆盖 `site.owner`）
 - `--base`: 临时覆盖 `site.base`（dev 模式下会被忽略）
 - `--port`: dev/preview 服务端口（默认 5173）
 - `--host`: dev/preview 绑定 Host（仅写 `--host` 表示绑定全部接口）
@@ -54,6 +55,8 @@ npx methanol dev ./pages
 - `--highlight`/`--no-highlight`: 控制代码高亮功能。
 - `--jobs`, `-j`: 设置构建 worker 线程数（`0` 表示按页面数量自动调整）
 - `--search`/`--no-search`: 控制 Pagefind 搜索索引构建。
+- `--rss`/`--no-rss`: 控制 RSS/Atom 订阅源输出。
+- `--atom`/`--no-atom`: 输出 Atom（启用时等同于打开订阅源）。
 - `--pwa`/`--no-pwa`: 控制 PWA 功能支持。
 - `-v`, `--verbose`: 启用详细日志模式（build 时显示 Vite / Pagefind 日志）
 

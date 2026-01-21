@@ -41,6 +41,7 @@ export default ({ mode, root, HTMLRenderer }) => ({
 站点元信息（供模板使用）：
 
 - `site.name`: 站点名称/标题
+- `site.owner`: 站点拥有者/作者（用于博客主题页脚与订阅源）
 - `site.logo`: Logo 路径（字符串）或设为 `false` 以禁用（默认主题生效）
 - `site.favicon`: Favicon 路径（字符串）或设为 `false` 以禁用（默认主题生效）
 - `site.base`: 站点部署在子路径下时的 Base Path（例如 `'/docs/'`）
@@ -183,6 +184,32 @@ pagefind: {
 - `enabled` 和 `build` 以外的键会传给 Pagefind JS 的 `options()`。
 - `build` 属性专用于构建配置。
 
+### `feed`
+
+启用 RSS/Atom 订阅源输出。默认值：`false`。
+
+```js
+feed: true
+// or
+feed: {
+	enabled: true,
+	path: '/rss.xml',
+	limit: 10,
+	siteUrl: 'https://example.com',
+	title: 'My Site',
+	description: 'Updates from my site',
+	language: 'en',
+	atom: false
+}
+```
+
+说明：
+
+- 设置 `atom: true` 输出 Atom（默认路径：`/rss.xml` 或 `/atom.xml`）。
+- `siteUrl` 必须是绝对 URL。若未提供，将使用 `site.base`，因此请设置为完整域名（例如 `https://example.com/`）。
+- 隐藏页面不会进入订阅源，`limit` 默认是 `10`。
+- 订阅项优先使用 `frontmatter.author`，没有则使用 `site.owner`。
+
 ### `pwa`
 
 启用 Methanol 内置的 PWA 支持（基于 `vite-plugin-pwa`）。默认值：`false`。
@@ -258,8 +285,11 @@ gfm: false
 - `--assets` 覆盖 `publicDir`
 - `--output` 覆盖 `distDir`
 - `--site-name` 覆盖 `site.name`
+- `--owner` 覆盖 `site.owner`
 - `--base` 临时覆盖 `site.base`（dev 模式下会被忽略）
 - `--search`/`--no-search` 覆盖 `pagefind.enabled`
+- `--rss`/`--no-rss` 覆盖 `feed.enabled`
+- `--atom`/`--no-atom` 覆盖 `feed.atom`
 - `--pwa`/`--no-pwa` 覆盖 `pwa` 开关
 - `-v`/`--verbose` 开启详细日志模式
 - `--config` 指定配置文件路径
