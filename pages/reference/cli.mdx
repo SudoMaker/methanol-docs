@@ -37,6 +37,12 @@ In `dev` mode, only the `input` argument is utilized:
 npx methanol dev ./pages
 ```
 
+For `serve`/`preview`, the first positional argument is treated as the output directory:
+
+```bash
+npx methanol serve ./dist
+```
+
 ## Flag Reference
 
 - `--input`, `-i`: Specifies the source directory (overrides the default `pages/`).

@@ -17,7 +17,7 @@ import { pages } from 'methanol:pages'
 
 索引中的每个条目代表一个页面及其元数据。为了保持 Bundle 体积轻量，大型字段会被自动移除：
 
-- **移除的字段：** `content`、`mdxComponent`、`mdxCtx` 以及 `getSiblings`。
+- **移除的字段：** `content`、`mdxCtx` 以及 `getSiblings`。
 - **忽略的内容：** 任何函数类型的字段。
 - **始终包含：** `excerpt`（摘要）。若 Frontmatter 中未定义，Methanol 会自动从页面正文生成。
 - **排除规则：** 标记为 `hidden: true` 的页面不会包含在索引中。

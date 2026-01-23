@@ -6,7 +6,7 @@ weight: 7
 
 # Page-specific Scripts and Styles
 
-Methanol automatically detects and includes scripts or stylesheets located in the same directory as a page file, provided they share the same base filename.
+Methanol features built-in support for page-specific assets. It automatically detects and includes scripts or stylesheets located in the same directory as a page file, provided they share the same base filename.
 
 ## Mechanism
 
@@ -20,22 +20,16 @@ pages/
     components.js
 ```
 
-When `/guide/components` is rendered, both `components.css` and `components.js` are automatically injected into the page `<head>`.
+When the `/guide/components` route is rendered, both `components.css` and `components.js` are automatically injected into the page `<head>`.
 
 ## Supported File Extensions
 
-Stylesheets:
-
+**Stylesheets:**
 - `.css`
 
-Scripts:
-
-- `.js`
-- `.mjs`
-- `.cjs`
-- `.ts`
-- `.mts`
-- `.cts`
+**Scripts:**
+- `.js`, `.mjs`, `.cjs`
+- `.ts`, `.mts`, `.cts`
 
 ## Usage Example
 
@@ -46,9 +40,9 @@ pages/
   about.ts
 ```
 
-In this configuration, `about.css` and `about.ts` will be loaded exclusively when accessing the `/about` route.
+In this configuration, `about.css` and `about.ts` will be loaded exclusively for the `/about` route.
 
-## Notes and Limitations
+## Important Notes
 
-- Resource resolution is performed relative to the page's parent directory.
-- Global assets (such as `pages/style.css` and `pages/index.js`) will continue to be applied across all pages.
+- **Resolution:** Resource resolution is relative to the page's parent directory.
+- **Global Assets:** Global assets, such as `pages/style.css` and `pages/index.js`, are always applied across all pages in addition to page-specific ones.

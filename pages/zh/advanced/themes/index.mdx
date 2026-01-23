@@ -62,9 +62,9 @@ export default () => ({
 ### 默认值与校验
 
 - `componentsDir` / `pagesDir` / `publicDir` 支持三种配置模式：
-	- 省略：默认映射至主题根目录下的 `./components` / `./pages` / `./public`（若目录不存在则自动跳过）
-	- 设置为 `false`：显式禁用该功能
-	- 显式路径字符串：指定特定目录（若目录不存在将抛出错误）
+	- **省略**：默认映射至主题根目录下的 `./components` / `./pages` / `./public`（若目录不存在则自动跳过）
+	- **设置为 `false`**：显式禁用该功能
+	- **显式路径字符串**：指定特定目录（若目录不存在将抛出错误）
 
 ## 推荐目录结构
 
@@ -88,11 +88,11 @@ theme/
 
 - `PageContent`: 渲染当前页面内容的 JSX 组件
 - `ExtraHead`: 需注入 `<head>` 的额外内容（包含页面资源、Methanol 运行时及页面自定义 `<Head>`/`head` 内容）
-- `ctx`: 页面与站点上下文（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`）
-- `page`: `ctx.page` 别名
+- `ctx`: 页面与站点上下文（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`, `ctx.routePath`, `ctx.routeHref`, `ctx.path`, `ctx.getSiblings`）
+- `page`: `ctx.page` 别名，提供页面信息
 - `withBase`: URL Base 处理函数（等同于 `ctx.withBase`）
 - `HTMLRenderer`: refui HTML 渲染器（提供 `rawHTML` 与 `serialize` 方法，或用于手动渲染 JSX 组件）
-- `components`: 合并后的组件集合（包括主题组件与用户自定义组件）
+- `components`: 合并后的组件集合（包括主题组件与用户自定义组件，适用于导航、搜索等布局级组件）
 
 函数需返回一个完整的 JSX 树。
 

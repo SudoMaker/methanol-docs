@@ -88,7 +88,7 @@ Theme `public/` is merged into the project `publicDir` during dev/build. If a pa
 
 - `PageContent`: JSX component for the current page content
 - `ExtraHead`: extra `<head>` content (page assets + Methanol runtime + per-page `<Head>`/`head` output)
-- `ctx`: page/site context (`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`)
+- `ctx`: page/site context (`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`, `ctx.routePath`, `ctx.routeHref`, `ctx.path`, `ctx.getSiblings`)
 - `page`: alias for `ctx.page`, providing page info
 - `withBase`: helper for base-aware URLs (same function as `ctx.withBase`)
 - `HTMLRenderer`: refui HTML renderer (for `rawHTML`/`serialize`, or for manually rendering JSX components)

@@ -17,7 +17,7 @@ import { pages } from 'methanol:pages'
 
 Each entry in the index represents a page and its metadata. Heavy fields are automatically stripped to keep the bundle size small:
 
-- **Stripped fields:** `content`, `mdxComponent`, `mdxCtx`, and `getSiblings`.
+- **Stripped fields:** `content`, `mdxCtx`, and `getSiblings`.
 - **Omitted values:** Any function-type fields.
 - **Always included:** `excerpt`. If not explicitly defined in the frontmatter, Methanol generates one from the page content.
 - **Exclusion:** Hidden pages (`hidden: true`) are omitted from the index.

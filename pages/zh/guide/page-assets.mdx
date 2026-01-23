@@ -6,7 +6,7 @@ weight: 7
 
 # 页面专用脚本与样式
 
-Methanol 支持自动加载与页面同名且同目录的脚本及样式文件。
+Methanol 内置支持页面级专属资源。它会自动检测并加载与页面文件同名且位于同目录下的脚本及样式文件。
 
 ## 机制详解
 
@@ -20,24 +20,18 @@ pages/
     components.js
 ```
 
-访问 `/guide/components` 时，系统将自动把 `components.css` 与 `components.js` 注入至页面 `<head>` 中。
+当渲染 `/guide/components` 路由时，系统将自动把 `components.css` 与 `components.js` 注入至页面的 `<head>` 中。
 
 ## 支持的文件扩展名
 
-样式：
-
+**样式：**
 - `.css`
 
-脚本：
+**脚本：**
+- `.js`, `.mjs`, `.cjs`
+- `.ts`, `.mts`, `.cts`
 
-- `.js`
-- `.mjs`
-- `.cjs`
-- `.ts`
-- `.mts`
-- `.cts`
-
-## 示例
+## 使用示例
 
 ```
 pages/
@@ -46,9 +40,9 @@ pages/
   about.ts
 ```
 
-`about.css` 与 `about.ts` 将仅在 `/about` 页面加载。
+在这种配置下，`about.css` 与 `about.ts` 将仅针对 `/about` 路由加载。
 
 ## 注意事项
 
-- 文件路径解析以页面所在目录为基准。
-- 全局资源（`pages/style.css`、`pages/index.js/ts`）依然对所有页面生效。
+- **路径解析：** 资源路径解析以页面文件所在的父目录为基准。
+- **全局资源：** 全局资源（如 `pages/style.css`、`pages/index.js/ts`）依然对所有页面生效，并与页面专属资源并存。

@@ -27,14 +27,28 @@ MDX ページ内では、以下のヘルパー変数が常に利用可能です�
 `ctx` オブジェクトで利用可能な主要プロパティは以下の通りです。
 
 - `ctx.page`: 現在のページのメタデータ（詳細なスキーマは後述）。
-- `ctx.pages`: サイト内の全ページ（非表示ページやインデックスページを含む）を網羅したフラットなリスト。
+- `ctx.pages`: サイト内の全ページ（非表示ページやインデックスページを含む）を網羅したフラットなリスト（`exclude: true` を除外し、`hidden: false` でない限り `/404` と `/offline` を省略します）。
+- `ctx.pagesByRoute`: 高速なルックアップのための `routePath -> page` の `Map`。
 - `ctx.pagesTree`: 現在のルートにスコープされた階層的なナビゲーションツリー。
 - `ctx.site`: サイト全体のメタデータ（`name`, `root`, `pagesDir`, `distDir`, `pagefind` 等）。
 - `ctx.withBase(path)`: `/` で始まる URL に対して、設定された `site.base` または Vite の base を付与するユーティリティ（相対 URL は変更されません）。
 - `ctx.language`: 現在アクティブな言語エントリ（`lang` を持つディレクトリインデックスページから派生。`label` と `code` を含む）。
 - `ctx.getSiblings()`: 現在のナビゲーションルートを考慮した上で、前後（`prev`, `next`）のページオブジェクトを返します。
+- `ctx.routePath` / `ctx.routeHref`: 現在のページのルート情報。
+- `ctx.path`: 現在のページのファイルシステム上の絶対パス。
 
 *注: `theme.sources` や `public/` 内の静的ファイルについては、Methanol がビルド時に解決するため、通常 `ctx.withBase()` を使用する必要はありません。ただし、開発環境において JavaScript で動的に URL を生成する場合の安全策として有用です。*
+
+### ctx.site
+
+`ctx.site` は、サイトレベルのメタデータとビルドフラグのスナップショットであり、以下を含みます。
+
+- `name`, `owner`, `base`, `mode`
+- `root`, `pagesDir`, `componentsDir`, `publicDir`, `distDir`
+- `pagefind` (`enabled`, `options`, `build`)
+- `feed` (`enabled`, `atom`, `path`, `href`)
+- `pwa` (`enabled`, `manifestPath`, `manifestHref`)
+- `generatedAt`
 
 ### ctx.page メタデータオブジェクト
 
@@ -77,7 +91,7 @@ MDX ページ内では、以下のヘルパー変数が常に利用可能です�
 
 ### ctx.pages リスト
 
-`ctx.pages` は、プロジェクトおよびテーマ内の全ページ（`ctx.page` スキーマに一致）を含むフラットな配列です。インデックスページや非表示ページは含まれますが、`exclude: true` が設定されたページは除外されます。
+`ctx.pages` は、プロジェクトおよびテーマ内の全ページ（`ctx.page` スキーマに一致）を含むフラットな配列です。`exclude: true` が設定されたページは除外され、`/404` および `/offline` ページは `hidden: false` が明示的に設定されていない限り除外されます。非表示ページ（`hidden: true`）はここに含まれる場合がありますが、`ctx.pagesTree` ではフィルタリングされます。
 
 カスタムインデックス、サイトマップ、または手動ナビゲーション構造の生成に最適です。
 

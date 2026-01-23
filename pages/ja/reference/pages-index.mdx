@@ -17,7 +17,7 @@ import { pages } from 'methanol:pages'
 
 インデックスの各エントリはページとそのメタデータを表します。バンドルサイズを小さく保つために、データ量の大きいフィールドは自動的に除外されます。
 
-- **除外されるフィールド:** `content`、`mdxComponent`、`mdxCtx`、`getSiblings`
+- **除外されるフィールド:** `content`、`mdxCtx`、`getSiblings`
 - **除外される値:** 関数型のフィールドすべて
 - **常に含まれるフィールド:** `excerpt`（概要）。フロントマターで指定されていない場合、Methanol は本文から自動生成します。
 - **除外対象:** `hidden: true` が設定されたページはインデックスに含まれません。

@@ -27,14 +27,28 @@ Methanol 默认为每个 MDX 文件注入轻量级运行时上下文，旨在简
 `ctx` 对象包含的核心属性如下：
 
 - `ctx.page`: 当前页面的元数据对象（详见下文模式说明）。
-- `ctx.pages`: 包含全站页面（含隐藏页及索引页）的扁平化集合。
+- `ctx.pages`: 包含全站页面（含隐藏页及索引页）的扁平化集合（排除 `exclude: true`，且除非显式设置 `hidden: false`，否则不包含 `/404` 和 `/offline`）。
+- `ctx.pagesByRoute`: `routePath -> page` 的 `Map` 对象，用于快速查询。
 - `ctx.pagesTree`: 基于当前根目录范围的层级导航树。
 - `ctx.site`: 全局站点元数据（如 `name`, `root`, `pagesDir`, `distDir`, `pagefind` 等）。
 - `ctx.withBase(path)`: 路径处理工具，自动为以 `/` 开头的 URL 附加配置的 `site.base` 或 Vite base（相对 URL 保持不变）。
 - `ctx.language`: 当前激活的语言入口对象（源自目录索引页的 `lang` 配置；包含 `label` 与 `code`）。
 - `ctx.getSiblings()`: 返回当前页面的相邻节点对象 `{ prev, next }`，遵循当前导航根范围。
+- `ctx.routePath` / `ctx.routeHref`: 当前页面的路由信息。
+- `ctx.path`: 当前页面的绝对文件系统路径。
 
 *注意：对于 `theme.sources` 中的 URL 或 `public/` 目录下的静态文件，通常无需手动调用 `ctx.withBase()`（构建系统将自动解析）。但在 JS 中动态生成 URL 且遇到开发环境路径解析不一致时，该工具是有效的解决方案。*
+
+### ctx.site
+
+`ctx.site` 是站点级元数据和构建标志的快照，包括：
+
+- `name`, `owner`, `base`, `mode`
+- `root`, `pagesDir`, `componentsDir`, `publicDir`, `distDir`
+- `pagefind` (`enabled`, `options`, `build`)
+- `feed` (`enabled`, `atom`, `path`, `href`)
+- `pwa` (`enabled`, `manifestPath`, `manifestHref`)
+- `generatedAt`
 
 ### ctx.page 元数据对象
 
@@ -77,7 +91,7 @@ Methanol 默认为每个 MDX 文件注入轻量级运行时上下文，旨在简
 
 ### ctx.pages 集合
 
-`ctx.pages` 是一个包含项目及主题中所有页面元数据（结构同 `ctx.page`）的扁平数组。该集合包含索引页及隐藏页，但会自动剔除标记为 `exclude: true` 的页面。
+`ctx.pages` 是一个包含项目及主题中所有页面元数据（结构同 `ctx.page`）的扁平数组。它会自动剔除标记为 `exclude: true` 的页面，并且除非显式设置 `hidden: false`，否则会忽略 `/404` 和 `/offline` 页面。隐藏页面可能仍会出现在此集合中，但 `ctx.pagesTree` 会将其过滤掉。
 
 此属性适用于生成自定义索引、站点地图或手动构建导航结构：
 

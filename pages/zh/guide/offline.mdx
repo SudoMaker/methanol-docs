@@ -6,78 +6,41 @@ weight: 10
 
 # 离线访问 (PWA)
 
-
-
-Methanol 内置了基于 Workbox 的 PWA 支持。其 Service Worker 实现经过高度优化，在确保内容实时更新的同时，能有效防止大型站点因资源过多而导致的安装停滞。
-
-
+Methanol 内置 PWA 支持，提供自研 Service Worker 与预缓存清单。它会在安装时预缓存关键资源，并在后台按版本增量更新其余内容。
 
 ## 启用 PWA
 
-
-
-在 `methanol.config.js` 配置文件中开启：
-
-
+在 `methanol.config.js` 中开启：
 
 ```js
-
 export default () => ({
-
 	pwa: true
-
 })
-
 ```
-
-
 
 ### 自定义 Manifest
 
-
-
-你可以根据需要自定义 PWA Manifest 及 `injectManifest` 配置：
-
-
+你可以按需自定义 PWA Manifest 与预缓存策略：
 
 ```js
-
 export default () => ({
-
 	pwa: {
-
 		manifest: {
-
 			name: 'My Site',
-
 			short_name: 'My Site'
-
 		},
-
-		injectManifest: {
-
-			globPatterns: ['**/*.{js,css,html,ico,png,svg}']
-
+		precache: {
+			include: ['**/*.{html,js,css,ico,png,svg,webp,jpg,jpeg,gif,woff,woff2,ttf}'],
+			exclude: ['**/*.map', '**/pagefind/**']
 		}
-
 	}
-
 })
-
 ```
-
-
 
 ### 进阶配置
 
-
-
-若需完全控制 PWA 行为（如自定义 Service Worker 策略等），可设置 `pwa: false` 并在 `vite.plugins` 中自行配置 `vite-plugin-pwa`。
-
-
+如需完全自定义 PWA 行为，请设置 `pwa: false` 并自行提供 manifest / Service Worker。
 
 ## 自定义离线页面
 
-
-
-创建 `pages/offline.mdx` 即可自定义用户离线且请求资源未缓存时的回退页面。
+创建 `pages/offline.mdx` 可自定义离线回退页面；`pages/404.mdx` 可自定义未找到页面。两者默认不会出现在导航中。

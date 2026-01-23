@@ -86,11 +86,11 @@ theme/
 
 - `PageContent`: 現在のページの本文をレンダリングする JSX コンポーネント。
 - `ExtraHead`: `<head>` セクションに注入すべき動的な内容（アセット、ランタイム、ページ固有のメタタグなど）。
-- `ctx`: サイトおよびページのコンテキストオブジェクト（`ctx.page`, `ctx.pagesTree` など）。
-- `page`: `ctx.page` へのエイリアス。
+- `ctx`: サイトおよびページのコンテキストオブジェクト（`ctx.page`, `ctx.pages`, `ctx.pagesTree`, `ctx.pagesByRoute`, `ctx.languages`, `ctx.language`, `ctx.site`, `ctx.withBase`, `ctx.routePath`, `ctx.routeHref`, `ctx.path`, `ctx.getSiblings`）。
+- `page`: `ctx.page` へのエイリアス。ページ情報を提供します。
 - `withBase`: Base Path を考慮した URL を生成するヘルパー関数（`ctx.withBase` と同等）。
 - `HTMLRenderer`: rEFui HTML レンダラー（`rawHTML` の利用や、JSX の手動レンダリングに使用）。
-- `components`: テーマとユーザー定義がマージされたコンポーネントセット。
+- `components`: テーマとユーザー定義がマージされたコンポーネントセット（ナビゲーションや検索などのレイアウトレベルのコンポーネントに有用）。
 
 戻り値として、ページ全体を構成する JSX ツリーを返してください。
 

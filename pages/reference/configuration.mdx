@@ -105,7 +105,7 @@ Notes:
 
 ### `pwa`
 
-Enables Methanol's integrated PWA support (powered by `vite-plugin-pwa`). Default: `false`.
+Enables Methanol's built-in PWA support (custom service worker + precache manifest). Default: `false`.
 
 ```js
 pwa: true
@@ -117,15 +117,21 @@ pwa: {
 		name: 'My Site',
 		short_name: 'My Site'
 	},
-	injectManifest: {
-		globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+	precache: {
+		include: ['**/*.{html,js,css,ico,png,svg,webp,jpg,jpeg,gif,woff,woff2,ttf}'],
+		exclude: ['**/*.map', '**/pagefind/**'],
+		priority: null,
+		limit: null,
+		batchSize: null
 	}
 }
 ```
 
 Notes:
 
-- If you require bespoke PWA logic (such as custom service worker strategies), set `pwa: false` and implement your own configuration within `vite.plugins`.
+- `manifest` is merged into the generated `manifest.webmanifest`.
+- `precache` controls `precache-manifest.json`, which the built-in service worker uses for install/warmup caching.
+- To fully customize PWA behavior, set `pwa: false` and provide your own manifest/service worker.
 
 ### `starryNight`
 

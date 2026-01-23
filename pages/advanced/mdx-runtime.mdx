@@ -27,14 +27,28 @@ Current Route: {ctx.routePath}
 Key properties available on the `ctx` object:
 
 - `ctx.page`: Metadata for the current page (see detailed schema below).
-- `ctx.pages`: A comprehensive flat list of all pages (including hidden and index pages).
+- `ctx.pages`: Flat list of pages for navigation (excludes `exclude: true` and omits `/404` + `/offline` unless `hidden: false`).
+- `ctx.pagesByRoute`: `Map` of `routePath -> page` for fast lookup.
 - `ctx.pagesTree`: The hierarchical navigation tree scoped to the current root.
 - `ctx.site`: Site-wide metadata (e.g., `name`, `root`, `pagesDir`, `distDir`, `pagefind`).
 - `ctx.withBase(path)`: A utility that prefixes URLs starting with `/` with the configured `site.base` or Vite base (relative URLs remain unchanged).
 - `ctx.language`: The currently active language entry (derived from directory index pages with `lang`; includes `label` and `code`).
 - `ctx.getSiblings()`: Returns the `{ prev, next }` page objects for the current page, respecting the active navigation root.
+- `ctx.routePath` / `ctx.routeHref`: Route information for the current page.
+- `ctx.path`: Absolute filesystem path for the current page.
 
 *Note: You typically do not need to use `ctx.withBase()` for `theme.sources` or static files in `public/`, as Methanol resolves these at build time. However, it is a useful safeguard for URLs generated dynamically via JavaScript in development environments.*
+
+### ctx.site
+
+`ctx.site` is a snapshot of site-level metadata and build flags, including:
+
+- `name`, `owner`, `base`, `mode`
+- `root`, `pagesDir`, `componentsDir`, `publicDir`, `distDir`
+- `pagefind` (`enabled`, `options`, `build`)
+- `feed` (`enabled`, `atom`, `path`, `href`)
+- `pwa` (`enabled`, `manifestPath`, `manifestHref`)
+- `generatedAt`
 
 ### ctx.page Metadata Object
 
@@ -77,7 +91,7 @@ Usage Example:
 
 ### ctx.pages List
 
-`ctx.pages` is a flat array containing metadata objects (matching the `ctx.page` schema) for every page in the project and theme. It includes index pages and hidden pages but omits those marked with `exclude: true`.
+`ctx.pages` is a flat array containing metadata objects (matching the `ctx.page` schema) for navigation. It excludes pages marked with `exclude: true`, and it omits `/404` and `/offline` unless those pages are explicitly set to `hidden: false`. Hidden pages may still appear here, but `ctx.pagesTree` will filter them out.
 
 This is ideal for generating custom indices, sitemaps, or manual navigation structures:
 

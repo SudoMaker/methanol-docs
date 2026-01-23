@@ -1,6 +1,6 @@
 # Offline Access (PWA)
 
-Methanol features built-in PWA support powered by Workbox. Its service worker implementation is highly optimized to ensure smooth installation and efficient content updates, even for large-scale documentation sites.
+Methanol ships a built-in PWA implementation with a custom service worker and a generated precache manifest. It precaches critical files during install and warms the rest in the background with revision-aware updates.
 
 ## Enabling PWA
 
@@ -14,7 +14,7 @@ export default () => ({
 
 ### Manifest Customization
 
-You can customize the PWA manifest and `injectManifest` configuration as follows:
+You can customize the PWA manifest and precache behavior as follows:
 
 ```js
 export default () => ({
@@ -23,8 +23,9 @@ export default () => ({
 			name: 'My Site',
 			short_name: 'My Site'
 		},
-		injectManifest: {
-			globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+		precache: {
+			include: ['**/*.{html,js,css,ico,png,svg,webp,jpg,jpeg,gif,woff,woff2,ttf}'],
+			exclude: ['**/*.map', '**/pagefind/**']
 		}
 	}
 })
@@ -32,8 +33,8 @@ export default () => ({
 
 ### Advanced Configuration
 
-For full control over the PWA lifecycle (such as custom service worker strategies), set `pwa: false` and add your own `vite-plugin-pwa` configuration to the `vite.plugins` section.
+For full control over the PWA lifecycle (such as custom service worker strategies), set `pwa: false` and provide your own manifest/service worker.
 
 ## Custom Offline Page
 
-Create `pages/offline.mdx` to customize the fallback page displayed when a user is offline and the requested content is not cached.
+Create `pages/offline.mdx` to customize the fallback page displayed when a user is offline and the requested content is not cached. You can also define `pages/404.mdx` for the not-found page; both are hidden from navigation by default.

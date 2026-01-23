@@ -212,7 +212,7 @@ feed: {
 
 ### `pwa`
 
-启用 Methanol 内置的 PWA 支持（基于 `vite-plugin-pwa`）。默认值：`false`。
+启用 Methanol 内置的 PWA 支持（自带 Service Worker 与预缓存清单）。默认值：`false`。
 
 ```js
 pwa: true
@@ -224,15 +224,21 @@ pwa: {
 		name: 'My Site',
 		short_name: 'My Site'
 	},
-	injectManifest: {
-		globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+	precache: {
+		include: ['**/*.{html,js,css,ico,png,svg,webp,jpg,jpeg,gif,woff,woff2,ttf}'],
+		exclude: ['**/*.map', '**/pagefind/**'],
+		priority: null,
+		limit: null,
+		batchSize: null
 	}
 }
 ```
 
 注意：
 
-- 若需完全自定义 PWA 逻辑（如自定义 Service Worker 策略等），可设置 `pwa: false` 并在 `vite.plugins` 中自行配置 `vite-plugin-pwa`。
+- `manifest` 会合并到生成的 `manifest.webmanifest` 中。
+- `precache` 控制 `precache-manifest.json`，内置 Service Worker 会根据它进行安装与预热缓存。
+- 如需完全自定义 PWA 行为，请设置 `pwa: false` 并自行提供 manifest / Service Worker。
 
 ### `starryNight`
 

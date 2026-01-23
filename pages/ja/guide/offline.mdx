@@ -1,16 +1,10 @@
----
-title: オフライン対応 (PWA)
-description: PWA（Progressive Web App）機能の導入によるオフライン対応。
-weight: 10
----
-
 # オフライン対応 (PWA)
 
-Methanol は Workbox をベースとした PWA 機能を標準でサポートしています。**高度に最適化された** Service Worker 実装を採用しており、頻繁なコンテンツ更新に柔軟に対応しつつ、大規模なサイトでもインストールの停滞を招くことなくスムーズに動作するよう設計されています。
+Methanol は、Workbox を基盤とした PWA（Progressive Web App）機能を標準搭載しています。Service Worker の実装は高度に最適化されており、大規模なドキュメントサイトであっても、スムーズなインストールと効率的なコンテンツ更新を両立します。
 
 ## PWA の有効化
 
-`methanol.config.js` において、以下の設定で有効化できます。
+PWA 機能を有効にするには、`methanol.config.js` を以下のように更新します。
 
 ```js
 export default () => ({
@@ -20,7 +14,7 @@ export default () => ({
 
 ### Manifest のカスタマイズ
 
-PWA の manifest と injectManifest 設定を上書きできます。
+PWA の Manifest や `injectManifest` の設定を自由にカスタマイズ可能です。
 
 ```js
 export default () => ({
@@ -36,11 +30,10 @@ export default () => ({
 })
 ```
 
-### さらに細かく制御する場合
+### 高度なカスタマイズ
 
-PWA を完全にカスタマイズしたい場合は `pwa: false` を設定し、
-`vite.plugins` で自分の `vite-plugin-pwa` 設定を追加してください。
+Service Worker の戦略など、PWA のライフサイクルを詳細に制御したい場合は、`pwa: false` に設定した上で、`vite.plugins` セクションに独自の `vite-plugin-pwa` 設定を追加してください。
 
-## オフラインページ
+## オフライン専用ページ
 
-`pages/offline.mdx` を作成することで、オフライン用のフォールバックページをカスタマイズできます。
+`pages/offline.mdx` を作成することで、ユーザーがオフラインで、かつ要求されたコンテンツがキャッシュされていない場合に表示されるフォールバックページをカスタマイズできます。
