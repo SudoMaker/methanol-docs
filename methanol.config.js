@@ -3,6 +3,7 @@ import Sitemap from 'vite-plugin-sitemap'
 export default ({ mode }) => ({
 	site: {
 		name: 'Methanol Docs',
+		owner: 'Yukino Song',
 		repoBase: 'https://github.com/SudoMaker/methanol-docs/tree/main/pages/'
 	},
 	pagefind: true,
