@@ -7,6 +7,10 @@ export default ({ mode }) => ({
 	},
 	pagefind: true,
 	pwa: true,
+	feed: {
+		atom: true,
+		siteUrl: 'https://methanol.sudomaker.com/'
+	},
 	vite: {
 		plugins: [
 			Sitemap({
