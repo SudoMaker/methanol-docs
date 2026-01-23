@@ -1,18 +1,18 @@
 ---
 title: 自定义组件
-description: 组件高级用法及客户端组件详解。
+description: 包含客户端组件在内的高级组件模式。
 weight: 1
 ---
 
 # 自定义组件
 
-Methanol 自动加载 `components/` 目录下的组件，并使其在所有 MDX 页面中全局可用。鉴于组件由 [rEFui](https://github.com/SudoMaker/rEFui) 渲染，开发者可直接调用 rEFui 的 JSX 运行时及相关 API。
+Methanol 会加载 `components/` 目录下的组件，并使其在每个 MDX 文件中可用。组件使用 [rEFui](https://github.com/SudoMaker/rEFui) 进行渲染，因此在构建自定义 UI 时，你可以依赖其 JSX 运行时和 API。
 
-## 组件加载机制
+## 组件发现
 
-- 支持 `.jsx` / `.tsx` / `.js` / `.ts`
-- 组件名与文件名保持一致
-- 若遇同名冲突，用户自定义组件优先级高于主题组件
+- 支持的文件扩展名：`.jsx`, `.tsx`, `.js`, `.ts`。
+- 文件名即为组件名。
+- 用户自定义组件会覆盖同名的主题组件。
 
 示例：
 
@@ -23,23 +23,25 @@ components/
   Toc.static.jsx
 ```
 
-## 客户端专用组件
+## 客户端组件
 
-若组件依赖浏览器特有 API，请使用 `.client` 后缀。
+使用 `.client` 后缀标记仅在客户端运行的组件。这对于依赖浏览器 API 的组件非常有用。
 
 ```
 components/ThemeSearch.client.jsx
 ```
 
-## 服务端静态组件
+## 静态组件
 
-若需在构建阶段进行求值计算，请使用 `.static` 后缀。若客户端组件未提供对应的服务端版本，Methanol 将尝试直接利用客户端组件进行静态渲染。倘若客户端组件调用了服务端缺失的 API，则必须提供相应的静态组件以确保服务端渲染正常进行。
+使用 `.static` 后缀标记应在构建时求值的组件。
+
+如果客户端组件没有对应的服务端/静态副本，Methanol 会尝试静态渲染该客户端组件。如果客户端组件使用了仅限浏览器的 API，则必须提供相应的静态组件以供服务端渲染。
 
 ```
 components/Notice.static.jsx
 ```
 
-## 组件定义与调用
+## 定义与使用
 
 ```jsx
 // components/Callout.jsx
@@ -55,6 +57,6 @@ export default function Callout({ title }, ...children) {
 
 ```jsx
 <Callout title="Tip">
-  段落宜简短，以利于快速阅览。
+  保持段落简短，以便于快速浏览。
 </Callout>
 ```

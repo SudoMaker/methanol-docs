@@ -1,4 +1,4 @@
-export default function Counter({ initial = 0 }) {
+export default function Counter() {
 	return (
 		<div>
 			[ You need to enable JavaScript to load this component. ]
