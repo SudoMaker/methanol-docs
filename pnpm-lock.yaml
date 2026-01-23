@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       methanol:
-        specifier: ^0.0.22
-        version: 0.0.22(rollup@4.55.1)(terser@5.44.1)
+        specifier: ^0.0.23
+        version: 0.0.23(rollup@4.55.1)(terser@5.44.1)
       pagefind:
         specifier: ^1.4.0
         version: 1.4.0
@@ -762,8 +762,8 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  methanol@0.0.22:
-    resolution: {integrity: sha512-UwEwNuCcHmiEv3Pfy4k+q1f9s0gV3gd2I2ExV/EgnU9Ka45qyYZ6JiSLMfZTNUztgG8LtM97QaBaohARnav8VA==}
+  methanol@0.0.23:
+    resolution: {integrity: sha512-ip2Brqc4Ewt+t1vO77uLLBWrK5ftd94JkuoCh9xl9LkRl1aFJP1OBUS2SJr6Az+n0M4c1m/XaY6x5HqFQSDJ0A==}
     hasBin: true
 
   micromark-core-commonmark@2.0.3:
@@ -1935,7 +1935,7 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  methanol@0.0.22(rollup@4.55.1)(terser@5.44.1):
+  methanol@0.0.23(rollup@4.55.1)(terser@5.44.1):
     dependencies:
       '@mdx-js/mdx': 3.1.1
       '@sindresorhus/fnv1a': 3.1.0
