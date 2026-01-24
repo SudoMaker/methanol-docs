@@ -1,10 +1,10 @@
 # Offline Access (PWA)
 
-Methanol ships a built-in PWA implementation with a custom service worker and a generated precache manifest. It precaches critical files during install and warms the rest in the background with revision-aware updates.
+Methanol includes a built-in PWA implementation featuring a custom service worker and an automated precache manifest. Critical assets are cached upon installation, while remaining content is warmed in the background with revision-aware updates.
 
 ## Enabling PWA
 
-To activate PWA features, update your `methanol.config.js`:
+Enable PWA support in `methanol.config.js`:
 
 ```js
 export default () => ({
@@ -14,7 +14,7 @@ export default () => ({
 
 ### Manifest Customization
 
-You can customize the PWA manifest and precache behavior as follows:
+Customize the PWA manifest and precaching strategy as follows:
 
 ```js
 export default () => ({
@@ -31,10 +31,16 @@ export default () => ({
 })
 ```
 
+Precache configuration:
+
+- `priority`: Glob patterns to cache immediately (moved to the top of the manifest).
+- `limit`: Maximum number of entries in the precache manifest.
+- `batchSize`: Number of concurrent fetches during installation/warmup.
+
 ### Advanced Configuration
 
-For full control over the PWA lifecycle (such as custom service worker strategies), set `pwa: false` and provide your own manifest/service worker.
+For full control over the PWA lifecycle (e.g., custom service worker strategies), set `pwa: false` and supply your own manifest and service worker.
 
 ## Custom Offline Page
 
-Create `pages/offline.mdx` to customize the fallback page displayed when a user is offline and the requested content is not cached. You can also define `pages/404.mdx` for the not-found page; both are hidden from navigation by default.
+Create `pages/offline.mdx` to define the fallback page displayed when a user is offline and the requested content is uncached. You may also define `pages/404.mdx` for "Not Found" errors; both are excluded from navigation by default.

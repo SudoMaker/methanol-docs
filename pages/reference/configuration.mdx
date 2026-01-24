@@ -105,7 +105,7 @@ Notes:
 
 ### `pwa`
 
-Enables Methanol's built-in PWA support (custom service worker + precache manifest). Default: `false`.
+Enables Methanol's built-in PWA support, featuring a custom service worker and an automated precache manifest. Default: `false`.
 
 ```js
 pwa: true
@@ -130,8 +130,11 @@ pwa: {
 Notes:
 
 - `manifest` is merged into the generated `manifest.webmanifest`.
-- `precache` controls `precache-manifest.json`, which the built-in service worker uses for install/warmup caching.
-- To fully customize PWA behavior, set `pwa: false` and provide your own manifest/service worker.
+- `precache` configuration governs `precache-manifest.json`, used by the built-in service worker for installation and warming.
+- `precache.priority`: Ordered list of glob patterns to cache immediately.
+- `precache.limit`: Maximum number of entries in the precache manifest (`null` for unlimited).
+- `precache.batchSize`: Number of concurrent fetches during installation/warmup.
+- To fully customize PWA behavior, set `pwa: false` and provide your own manifest and service worker.
 
 ### `starryNight`
 

@@ -45,14 +45,14 @@ class Rocket {
 		this.history = []
 	}
 
-	update() {
+	update(dt) {
 		this.history.push({ x: this.x, y: this.y })
 		if (this.history.length > 8) this.history.shift()
 
 		if (!this.reachedPeak) {
-			this.x += this.vx
-			this.y += this.vy
-			this.vy += this.gravity
+			this.x += this.vx * dt
+			this.y += this.vy * dt
+			this.vy += this.gravity * dt
 
 			// Gradually fade out to completely transparent at the peak
 			this.alpha = Math.max(0, (this.vy / this.startVy))
@@ -64,7 +64,7 @@ class Rocket {
 				this.alpha = 0
 			}
 		} else {
-			this.peakDelay--
+			this.peakDelay -= dt
 			this.alpha = 0
 			if (this.peakDelay <= 0) {
 				this.explode()
@@ -123,16 +123,17 @@ class Particle {
 		this.maxHistory = 15
 	}
 
-	update() {
+	update(dt) {
 		this.history.push({ x: this.x, y: this.y })
 		if (this.history.length > this.maxHistory) this.history.shift()
 
-		this.vx *= this.friction
-		this.vy *= this.friction
-		this.vy += this.gravity
-		this.x += this.vx
-		this.y += this.vy
-		this.alpha -= this.decay
+		const frictionFactor = Math.pow(this.friction, dt)
+		this.vx *= frictionFactor
+		this.vy *= frictionFactor
+		this.vy += this.gravity * dt
+		this.x += this.vx * dt
+		this.y += this.vy * dt
+		this.alpha -= this.decay * dt
 	}
 
 	draw() {
@@ -160,12 +161,21 @@ function launchFirework(x, y) {
 	rockets.push(new Rocket(x, height, x, y, color))
 }
 
+let lastTime = performance.now()
+
 function loop() {
+	const now = performance.now()
+	let dt = (now - lastTime) / 16.667 // Normalize to ~60FPS unit
+	lastTime = now
+
+	// Cap dt to prevent huge jumps
+	if (dt > 4) dt = 4
+
 	ctx.clearRect(0, 0, width, height)
 
 	for (let i = rockets.length - 1; i >= 0; i--) {
 		const r = rockets[i]
-		r.update()
+		r.update(dt)
 		if (r.exploded) {
 			rockets.splice(i, 1)
 		} else {
@@ -175,7 +185,7 @@ function loop() {
 
 	for (let i = particles.length - 1; i >= 0; i--) {
 		const p = particles[i]
-		p.update()
+		p.update(dt)
 		if (p.alpha <= 0 && p.history.length === 0) {
 			particles.splice(i, 1)
 		} else {

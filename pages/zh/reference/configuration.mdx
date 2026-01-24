@@ -212,7 +212,7 @@ feed: {
 
 ### `pwa`
 
-启用 Methanol 内置的 PWA 支持（自带 Service Worker 与预缓存清单）。默认值：`false`。
+启用 Methanol 内置的 PWA 支持（包含自定义 Service Worker 及预缓存清单）。默认值：`false`。
 
 ```js
 pwa: true
@@ -236,9 +236,12 @@ pwa: {
 
 注意：
 
-- `manifest` 会合并到生成的 `manifest.webmanifest` 中。
-- `precache` 控制 `precache-manifest.json`，内置 Service Worker 会根据它进行安装与预热缓存。
-- 如需完全自定义 PWA 行为，请设置 `pwa: false` 并自行提供 manifest / Service Worker。
+- `manifest` 配置将合并至生成的 `manifest.webmanifest` 中。
+- `precache` 配置控制 `precache-manifest.json` 的生成，供内置 Service Worker 用于安装和预热缓存。
+- `precache.priority`: 优先缓存的 glob 模式列表（将被移至清单前部）。
+- `precache.limit`: 预缓存清单的最大条目数限制（`null` 表示无限制）。
+- `precache.batchSize`: Service Worker 在安装及预热时的并发请求数量。
+- 如需完全自定义 PWA 行为，请设置 `pwa: false` 并自行提供 Manifest 和 Service Worker。
 
 ### `starryNight`
 

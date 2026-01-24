@@ -105,7 +105,7 @@ feed: {
 
 ### `pwa`
 
-Methanol の内蔵 PWA 機能（自前の Service Worker とプリキャッシュマニフェスト）を有効化します。デフォルト: `false`。
+Methanol の内蔵 PWA 機能（カスタム Service Worker とプリキャッシュマニフェスト）を有効化します。デフォルト: `false`。
 
 ```js
 pwa: true
@@ -130,8 +130,11 @@ pwa: {
 注意点:
 
 - `manifest` は生成される `manifest.webmanifest` にマージされます。
-- `precache` は `precache-manifest.json` を制御し、内蔵 Service Worker がインストール/ウォームアップに利用します。
-- PWA の挙動を完全にカスタマイズしたい場合は `pwa: false` に設定し、独自の manifest / Service Worker を用意してください。
+- `precache` は `precache-manifest.json` の生成を制御し、内蔵 Service Worker がインストールおよびウォームアップに使用します。
+- `precache.priority`: 優先的にキャッシュする glob パターンの配列です。マッチした項目はマニフェストの先頭に配置されます。
+- `precache.limit`: プリキャッシュマニフェストに含めるエントリ数の上限です（`null` は無制限）。
+- `precache.batchSize`: インストールおよびウォームアップ時に Service Worker が同時に取得するリクエスト数です。
+- PWA の挙動を完全にカスタマイズする場合は `pwa: false` に設定し、独自のマニフェストと Service Worker を提供してください。
 
 ### `starryNight`
 

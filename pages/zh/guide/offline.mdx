@@ -6,11 +6,11 @@ weight: 10
 
 # 离线访问 (PWA)
 
-Methanol 内置 PWA 支持，提供自研 Service Worker 与预缓存清单。它会在安装时预缓存关键资源，并在后台按版本增量更新其余内容。
+Methanol 内置 PWA 支持，配备自定义 Service Worker 及自动生成的预缓存清单。关键资源将在安装阶段优先缓存，其余内容则在后台进行版本感知的增量更新。
 
 ## 启用 PWA
 
-在 `methanol.config.js` 中开启：
+在 `methanol.config.js` 中启用：
 
 ```js
 export default () => ({
@@ -37,10 +37,16 @@ export default () => ({
 })
 ```
 
+预缓存配置说明：
+
+- `priority`: 优先缓存的 glob 模式列表（将被移至清单前部）。
+- `limit`: 预缓存清单的最大条目数限制。
+- `batchSize`: Service Worker 在安装/预热时的并发请求数量。
+
 ### 进阶配置
 
-如需完全自定义 PWA 行为，请设置 `pwa: false` 并自行提供 manifest / Service Worker。
+如需完全掌控 PWA 生命周期（例如自定义 Service Worker 策略），请设置 `pwa: false` 并自行提供 Manifest 和 Service Worker。
 
 ## 自定义离线页面
 
-创建 `pages/offline.mdx` 可自定义离线回退页面；`pages/404.mdx` 可自定义未找到页面。两者默认不会出现在导航中。
+创建 `pages/offline.mdx` 可定义离线且无缓存时的回退页面；`pages/404.mdx` 用于定义未找到页面。两者默认均从导航中排除。
