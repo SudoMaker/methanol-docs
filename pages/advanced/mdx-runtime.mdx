@@ -73,8 +73,8 @@ Key properties available on the `ctx` object:
 - `date`: Normalized ISO date string (from frontmatter).
 - `isRoot`: Boolean, `true` if the page defines a navigation root.
 - `hidden`: Boolean, `true` if the page is hidden from navigation.
-- `hiddenByParent`: Boolean, `true` if the page is inside but not equals a hidden route.
-- `hiddenByFrontmatter`: Boolean, `true` if `hidden: true` was explicitly set in frontmatter.
+- `hiddenByParent`: String or `null`, the nearest hidden ancestor route (e.g., `/hidden/`).
+- `hiddenByParents`: Boolean, `true` if the page is inside any hidden section.
 - `exclude`: Boolean, `true` if the page is excluded from the build.
 - `stats.size`: File size in bytes.
 - `stats.createdAt`: File creation timestamp (ISO) if available.

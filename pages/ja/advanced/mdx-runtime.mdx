@@ -73,8 +73,8 @@ MDX ページ内では、以下のヘルパー変数が常に利用可能です�
 - `date`: 正規化された ISO 日付文字列（フロントマター由来）。
 - `isRoot`: ページがナビゲーションルートを定義している場合に `true`。
 - `hidden`: ページがナビゲーションから隠されている場合に `true`。
-- `hiddenByParent`: ページが非表示ルートの配下にあるが、そのルート自体ではない場合に `true`。
-- `hiddenByFrontmatter`: フロントマターで `hidden: true` が明示的に設定されている場合に `true`。
+- `hiddenByParent`: 最も近い非表示ルートのパス（例: `/hidden/`）。該当しない場合は `null`。
+- `hiddenByParents`: 非表示ルートの配下にある場合に `true`。
 - `exclude`: ページがビルドから除外されている場合に `true`。
 - `stats.size`: ファイルサイズ（バイト単位）。
 - `stats.createdAt`: ファイル作成日時（ISO、利用可能な場合）。

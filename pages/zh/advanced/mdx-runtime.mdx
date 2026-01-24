@@ -73,8 +73,8 @@ Methanol 默认为每个 MDX 文件注入轻量级运行时上下文，旨在简
 - `date`: 标准化的 ISO 日期字符串（来自 Frontmatter）。
 - `isRoot`: 布尔值，若页面定义了导航根节点则为 `true`。
 - `hidden`: 布尔值，若页面在导航中隐藏则为 `true`。
-- `hiddenByParent`: 布尔值，若页面位于隐藏路由内部但并不等于该隐藏路由时为 `true`。
-- `hiddenByFrontmatter`: 布尔值，若在 Frontmatter 中显式设置了 `hidden: true` 则为 `true`。
+- `hiddenByParent`: 字符串或 `null`，最近的隐藏父级路由（例如 `/hidden/`）。
+- `hiddenByParents`: 布尔值，若页面位于任意隐藏分区下则为 `true`。
 - `exclude`: 布尔值，若页面被构建流程排除则为 `true`。
 - `stats.size`: 文件大小（字节）。
 - `stats.createdAt`: 文件创建时间戳（ISO 格式，如可用）。
