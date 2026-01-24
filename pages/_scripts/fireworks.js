@@ -32,11 +32,11 @@ class Rocket {
 		this.color = color
 		this.exploded = false
 		this.reachedPeak = false
-		this.peakDelay = 40
+		this.peakDelay = 35 // Slightly reduced delay
 		this.alpha = 1.0
 		
 		const heightDiff = startY - targetY
-		this.gravity = 0.12
+		this.gravity = 0.16 // Slightly higher gravity for a faster launch
 		// Calculate initial velocity to peak at targetY
 		this.vy = -Math.sqrt(2 * this.gravity * heightDiff)
 		this.vx = (targetX - startX) / (Math.abs(this.vy) / this.gravity)
@@ -111,21 +111,23 @@ class Particle {
 		this.y = y
 		this.color = color
 		this.angle = Math.random() * Math.PI * 2
-		this.speed = Math.random() * 10 + 3 
+		this.speed = Math.random() * 12 + 4 // Faster initial speed
 		this.vx = Math.cos(this.angle) * this.speed
 		this.vy = Math.sin(this.angle) * this.speed
-		this.friction = 0.98 // Reduced friction (higher value) for further travel
-		this.gravity = 0.045
+		this.friction = 0.975 // Slightly less friction for faster spread
+		this.gravity = 0.06 // Slightly higher gravity
 		this.alpha = 1
-		this.decay = Math.random() * 0.006 + 0.003 // Slower fade out
+		this.decay = Math.random() * 0.008 + 0.004 // Slightly faster fade
 		
 		this.history = []
 		this.maxHistory = 15
 	}
 
 	update(dt) {
-		this.history.push({ x: this.x, y: this.y })
-		if (this.history.length > this.maxHistory) this.history.shift()
+		if (this.alpha > 0) {
+			this.history.push({ x: this.x, y: this.y })
+			if (this.history.length > this.maxHistory) this.history.shift()
+		}
 
 		const frictionFactor = Math.pow(this.friction, dt)
 		this.vx *= frictionFactor
@@ -155,20 +157,28 @@ class Particle {
 	}
 }
 
+let isRunning = false
+let lastTime = performance.now()
+
 function launchFirework(x, y) {
 	const colors = ['#ff3333', '#33ff33', '#3333ff', '#ffff33', '#ff33ff', '#33ffff', '#ffffff']
 	const color = colors[Math.floor(Math.random() * colors.length)]
 	rockets.push(new Rocket(x, height, x, y, color))
+
+	if (!isRunning) {
+		isRunning = true
+		lastTime = performance.now()
+		requestAnimationFrame(loop)
+	}
 }
 
-let lastTime = performance.now()
-
 function loop() {
+	if (!isRunning) return
+
 	const now = performance.now()
-	let dt = (now - lastTime) / 16.667 // Normalize to ~60FPS unit
+	let dt = (now - lastTime) / 16.667
 	lastTime = now
 
-	// Cap dt to prevent huge jumps
 	if (dt > 4) dt = 4
 
 	ctx.clearRect(0, 0, width, height)
@@ -185,18 +195,27 @@ function loop() {
 
 	for (let i = particles.length - 1; i >= 0; i--) {
 		const p = particles[i]
-		p.update(dt)
+		if (p.alpha > 0) {
+			p.update(dt)
+		} else {
+			p.history.shift()
+		}
+		
 		if (p.alpha <= 0 && p.history.length === 0) {
 			particles.splice(i, 1)
 		} else {
-			if (p.alpha <= 0) p.history.shift() 
 			p.draw()
 		}
 	}
+
+	if (rockets.length === 0 && particles.length === 0) {
+		isRunning = false
+		ctx.clearRect(0, 0, width, height)
+		return
+	}
+
 	requestAnimationFrame(loop)
 }
-
-loop()
 
 window.addEventListener('pointerdown', (e) => {
 	launchFirework(e.clientX, e.clientY)
